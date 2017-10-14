@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.qsys.yousi.CustomApplication;
 import com.example.qsys.yousi.R;
+import com.example.qsys.yousi.common.util.LogUtils;
 import com.example.qsys.yousi.common.util.NetworkUtils;
 import com.example.qsys.yousi.common.util.ToastUtils;
 import com.example.qsys.yousi.common.widget.LoadingDialog;
@@ -77,6 +78,7 @@ public abstract class RxSubscriber<T> extends Subscriber<T> {
        /* if (showDialog)
             LoadingDialog.cancelDialogForLoading();*/
         e.printStackTrace();
+        LogUtils.d(e.toString());
         //网络
         if (!NetworkUtils.isConnected()) {
             _onError(CustomApplication.getAppContext().getString(R.string.no_net));

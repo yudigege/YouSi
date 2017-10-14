@@ -70,8 +70,8 @@ public class ReadyLoginPresenter implements ReadyLoginContract.Presenter {
 
                     @Override
                     protected void _onError(String message) {
+                        weakRefView.get().showMessage(message);
                         weakRefView.get().showProgressView(false);
-
                     }
 
                     @Override
@@ -79,8 +79,8 @@ public class ReadyLoginPresenter implements ReadyLoginContract.Presenter {
                         weakRefView.get().showMessage(CustomApplication.getAppContext().getResources().getString(R.string.on_login));
                         weakRefView.get().showProgressView(true);
                     }
-
                 });
+
         if (!weakRefView.get().isActive()) {
             return;
         }

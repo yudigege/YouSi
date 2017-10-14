@@ -17,5 +17,5 @@ public interface ApiService {
     Observable<UserResponse> getUser(@Path("userId") int userId);
 
     @POST("users/login")
-    Observable<UserResponse> toLogin(@Query("mobile") String mobile, @Query("mobile") String moblie);
+    Observable<UserResponse> toLogin(@Query("account") String account, @Query("password") String password);
 }

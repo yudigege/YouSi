@@ -25,7 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NetManager {
     private final long connectTimeoutMills = 10 * 1000L;
-    private final long readTimeoutMills = 10 * 1000L;
+    private final long readTimeoutMills = 10* 1000L;
     private NetProvider sProvider = null;
     private static NetManager instance;
     private Map<String, NetProvider> providerMap = new HashMap<>();
@@ -180,7 +180,10 @@ public class NetManager {
 
     // 得到配置好的retrofit
     public static Retrofit retrofitClient() {
-        return NetManager.getInstance().getRetrofit(Constant.BASE_URL);
+        return NetManager.getInstance().getRetrofit(Constant.
+
+
+                BASE_URL);
     }
 
     public static ApiService getApiService() {

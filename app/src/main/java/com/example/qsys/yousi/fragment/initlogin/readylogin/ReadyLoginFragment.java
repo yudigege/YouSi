@@ -18,11 +18,12 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.qsys.yousi.MainActivity;
 import com.example.qsys.yousi.R;
 import com.example.qsys.yousi.bean.UserResponse;
 import com.example.qsys.yousi.common.Constant;
+import com.example.qsys.yousi.common.util.ActivityUtils;
 import com.example.qsys.yousi.common.util.ToastUtils;
 import com.example.qsys.yousi.fragment.BaseFragment;
 
@@ -156,6 +157,7 @@ public class ReadyLoginFragment extends BaseFragment {
         switch (user.getRequstCode()) {
             case Constant.USER_LOGIN_SUCESS:
                 ToastUtils.showShort(getResources().getString(R.string.login_sucess));
+                ActivityUtils.startActivity(baseFragmentActivity, MainActivity.class);//跳转到主页
                 break;
             case Constant.USER_NOT_EXIT:
                 ToastUtils.showShort(getResources().getString(R.string.user_not_exit));
@@ -169,7 +171,7 @@ public class ReadyLoginFragment extends BaseFragment {
 
     @Override
     public void showMessage(String smg) {
-        Toast.makeText(baseFragmentActivity, smg, Toast.LENGTH_SHORT).show();
+        ToastUtils.showShort(smg);
     }
 
 

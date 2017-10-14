@@ -18,7 +18,7 @@ import okhttp3.Response;
 
 public class BaseNetProvider implements NetProvider {
 
-    private static final long CONNECT_TIME_OUT = 30;
+    private static final long CONNECT_TIME_OUT = 60;
     private static final long READ_TIME_OUT = 180;
     private static final long WRITE_TIME_OUT = 30;
 
