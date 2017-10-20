@@ -23,6 +23,8 @@ import com.example.qsys.yousi.manager.AppManager;
  */
 
 public abstract class BaseActivity extends AppCompatActivity {
+
+
     protected CustomApplication customApplication;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
