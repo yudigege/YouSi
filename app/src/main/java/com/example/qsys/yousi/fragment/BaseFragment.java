@@ -12,10 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
+import com.example.qsys.yousi.R;
 import com.example.qsys.yousi.activity.BaseActivity;
-import com.example.qsys.yousi.fragment.initlogin.readylogin.ReadyLoginContract;
-import com.example.qsys.yousi.fragment.initlogin.readylogin.ReadyLoginPresenter;
+import com.example.qsys.yousi.common.util.LogUtils;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
 import butterknife.ButterKnife;
@@ -24,14 +26,14 @@ import butterknife.Unbinder;
 /**
  * Created by hanshaokai on 2017/10/9 15:42
  */
-public abstract class BaseFragment extends RxFragment implements ReadyLoginContract.View {
+public abstract class BaseFragment extends RxFragment {
     /**
      * 基类 定义共公方法
      */
     public BaseActivity baseFragmentActivity;
     protected ProgressDialog progressDialog;
     public Unbinder unbinder;
-    public ReadyLoginContract.Presenter mPresenter;
+
 
     @Override
     public void onAttach(Context activity) {
@@ -61,19 +63,30 @@ public abstract class BaseFragment extends RxFragment implements ReadyLoginContr
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = initView(inflater, container);
-        mPresenter = new ReadyLoginPresenter();
-
-        mPresenter.setPresenterView(this);//绑定view mPresenter 持有弱引用
         unbinder = ButterKnife.bind(this, view);
         if (view != null) {
             doViewLogic(savedInstanceState);
         }
-
+        LogUtils.d("onCreateView");
         return view;
     }
-
-
-
+    public void initToolBar(Toolbar toolbar, boolean isBack, String title, int imageResourseId,
+                            boolean isShow) {
+        baseFragmentActivity.setSupportActionBar(toolbar);
+        ActionBar actionBar = baseFragmentActivity.getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(isBack);
+        ((TextView) toolbar.findViewById(R.id.tv_title_include)).setText(title);
+        if (imageResourseId != -1) {
+            ((ImageButton) toolbar.findViewById(R.id.img_btn_action_include)).setImageResource(imageResourseId);
+            if (isShow) {
+                (toolbar.findViewById(R.id.img_btn_action_include)).setVisibility(View.VISIBLE);
+            } else {
+                (toolbar.findViewById(R.id.img_btn_action_include)).setVisibility(View.INVISIBLE);
+            }
+        }
+        actionBar.setTitle("");
+        LogUtils.d("initToolBar");
+    }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -85,14 +98,6 @@ public abstract class BaseFragment extends RxFragment implements ReadyLoginContr
 
     public abstract void doViewLogic(Bundle savedInstanceState);
 
-    //初始toolbar
-    public void initToolBar(Toolbar toolbar, boolean isBack, String title, int imageResourseId,
-                            boolean isShow) {
-        baseFragmentActivity.setSupportActionBar(toolbar);
-        ActionBar actionBar = baseFragmentActivity.getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(isBack);
-        actionBar.setTitle("");
-    }
 
     //显示加载窗口
     public void showProgressDialog(String msg) {
@@ -144,12 +149,8 @@ public abstract class BaseFragment extends RxFragment implements ReadyLoginContr
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-        //解除持有的弱引用
-        mPresenter.detacheView();
+
     }
 
-    @Override
-    public Boolean isActive() {
-        return isAdded();
-    }
+
 }

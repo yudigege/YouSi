@@ -18,22 +18,19 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
 import com.example.qsys.yousi.MainActivity;
 import com.example.qsys.yousi.R;
-import com.example.qsys.yousi.bean.UserResponse;
+import com.example.qsys.yousi.bean.BaseResponse;
 import com.example.qsys.yousi.common.Constant;
 import com.example.qsys.yousi.common.util.ActivityUtils;
 import com.example.qsys.yousi.common.util.ToastUtils;
 import com.example.qsys.yousi.fragment.BaseFragment;
-
 import butterknife.BindView;
-
 /**
  * Created by hanshaokai on 2017/10/9 17:37
  */
 
-public class ReadyLoginFragment extends BaseFragment {
+public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
     //采用mvp模式
     @BindView(R.id.login_progress)
     ProgressBar loginProgress;
@@ -47,11 +44,13 @@ public class ReadyLoginFragment extends BaseFragment {
     LinearLayout emailLoginForm;
     @BindView(R.id.login_form)
     ScrollView loginForm;
-
+    public ReadyLoginPresenter mPresenter;
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container) {
         View view = inflater.inflate(R.layout.fragment_ready_login
                 , container, false);
+        mPresenter = new ReadyLoginPresenterExtend();
+        mPresenter.setPresenterView(this);//绑定view mPresenter 持有弱引用
         return view;
     }
 
@@ -153,7 +152,7 @@ public class ReadyLoginFragment extends BaseFragment {
     }
 
     @Override
-    public void showUserData(UserResponse user) {
+    public void showResponseData(BaseResponse user) {
         switch (user.getRequstCode()) {
             case Constant.USER_LOGIN_SUCESS:
                 ToastUtils.showShort(getResources().getString(R.string.login_sucess));
@@ -174,5 +173,20 @@ public class ReadyLoginFragment extends BaseFragment {
         ToastUtils.showShort(smg);
     }
 
+    @Override
+    public Boolean isActive() {
+        return isAdded();
+    }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        //解除持有的弱引用
+        mPresenter.detacheView();
+    }
+
+    @Override
+    public void doView() {
+
+    }
 }

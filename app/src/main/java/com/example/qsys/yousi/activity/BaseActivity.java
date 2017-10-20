@@ -4,11 +4,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.qsys.yousi.CustomApplication;
 import com.example.qsys.yousi.R;
@@ -41,6 +45,33 @@ public abstract class BaseActivity extends AppCompatActivity {
             parentView.setFitsSystemWindows(true);
         }
         setContentView(R.layout.activity_fragment_container);
+    }
+
+    /**
+     * 初始化 toolbar
+     *
+     * @param toolbar         toolbar 控件
+     * @param isBack          是否显返回箭头
+     * @param title           标题
+     * @param imageResourseId 图片id
+     * @param isShow          右边是否显示图片
+     */
+
+    public void initToolBar(Toolbar toolbar, boolean isBack, String title, int imageResourseId,
+                            boolean isShow) {
+        this.setSupportActionBar(toolbar);
+        ActionBar actionBar = this.getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(isBack);
+        ((TextView) toolbar.findViewById(R.id.tv_title_include)).setText(title);
+        if (imageResourseId != -1) {
+            ((ImageButton) toolbar.findViewById(R.id.img_btn_action_include)).setImageResource(imageResourseId);
+            if (isShow) {
+                (toolbar.findViewById(R.id.img_btn_action_include)).setVisibility(View.VISIBLE);
+            } else {
+                (toolbar.findViewById(R.id.img_btn_action_include)).setVisibility(View.INVISIBLE);
+            }
+        }
+        actionBar.setTitle("");
     }
     //添加fragment
     public void addFragment(Fragment fragment) {

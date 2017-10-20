@@ -22,4 +22,9 @@
     <string name="login_sucess">登录成功</string>
     <string name="on_login">正在登录</string>
     <string name="error_server_msg">后台错误%1$s</string>
+    <string name="main_page">发现</string>
+    <string name="book_stock">书架</string>
+    <string name="idea">想法</string>
+    <string name="mine">我的</string>
+    <string name="take_passages">摘录</string>
 </resources>
