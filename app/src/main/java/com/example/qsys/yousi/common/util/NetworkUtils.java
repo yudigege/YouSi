@@ -28,12 +28,34 @@ public final  class NetworkUtils {
     private NetworkUtils() {
         throw new UnsupportedOperationException("u can't instantiate me...");
     }
+
+    /**
+     * 网络类型
+     */
     public enum NetworkType {
+        /**
+         * wifi
+         */
         NETWORK_WIFI,
+        /**
+         * 4g
+         */
         NETWORK_4G,
+        /**
+         * 3g
+         */
         NETWORK_3G,
+        /**
+         * 2g
+         */
         NETWORK_2G,
+        /**
+         * 未知
+         */
         NETWORK_UNKNOWN,
+        /**
+         * 没网
+         */
         NETWORK_NO
     }
 
@@ -259,9 +281,9 @@ public final  class NetworkUtils {
                     default:
 
                         String subtypeName = info.getSubtypeName();
-                        if (subtypeName.equalsIgnoreCase("TD-SCDMA")
-                                || subtypeName.equalsIgnoreCase("WCDMA")
-                                || subtypeName.equalsIgnoreCase("CDMA2000")) {
+                        if ("TD-SCDMA".equalsIgnoreCase(subtypeName)
+                                || "WCDMA".equalsIgnoreCase(subtypeName)
+                                || "CDMA2000".equalsIgnoreCase(subtypeName)) {
                             netType = NetworkType.NETWORK_3G;
                         } else {
                             netType = NetworkType.NETWORK_UNKNOWN;
@@ -287,14 +309,18 @@ public final  class NetworkUtils {
             for (Enumeration<NetworkInterface> nis = NetworkInterface.getNetworkInterfaces(); nis.hasMoreElements(); ) {
                 NetworkInterface ni = nis.nextElement();
                 // 防止小米手机返回10.0.2.15
-                if (!ni.isUp()) continue;
+                if (!ni.isUp()) {
+                    continue;
+                }
                 for (Enumeration<InetAddress> addresses = ni.getInetAddresses(); addresses.hasMoreElements(); ) {
                     InetAddress inetAddress = addresses.nextElement();
                     if (!inetAddress.isLoopbackAddress()) {
                         String hostAddress = inetAddress.getHostAddress();
                         boolean isIPv4 = hostAddress.indexOf(':') < 0;
                         if (useIPv4) {
-                            if (isIPv4) return hostAddress;
+                            if (isIPv4) {
+                                return hostAddress;
+                            }
                         } else {
                             if (!isIPv4) {
                                 int index = hostAddress.indexOf('%');

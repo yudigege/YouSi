@@ -59,18 +59,51 @@ public final class LogUtils {
     private static final int JSON = 0x20;
     private static final int XML  = 0x30;
     private static ExecutorService executor;
-    private static String          defaultDir;// log默认存储目录
-    private static String          dir;       // log存储目录
+    /**
+     *     log默认存储目录
+     */
 
-    private static boolean sLogSwitch         = true; // log总开关，默认开
-    private static boolean sLog2ConsoleSwitch = true; // logcat是否打印，默认打印
-    private static String  sGlobalTag         = null; // log标签
-    private static boolean sTagIsSpace        = true; // log标签是否为空白
-    private static boolean sLogHeadSwitch     = true; // log头部开关，默认开
-    private static boolean sLog2FileSwitch    = false;// log写入文件开关，默认关
-    private static boolean sLogBorderSwitch   = true; // log边框开关，默认开
-    private static int     sConsoleFilter     = V;    // log控制台过滤器
-    private static int     sFileFilter        = V;    // log文件过滤器
+    private static String          defaultDir;
+    /**
+     * log存储目录
+     */
+    private static String          dir;
+    /**
+     *  log总开关，默认开
+     */
+    private static boolean sLogSwitch         = true;
+    /**
+     *  logcat是否打印，默认打印
+     */
+    private static boolean sLog2ConsoleSwitch = true;
+    /**
+     * log标签
+     */
+    private static String  sGlobalTag         = null;
+    /**
+     * log标签是否为空白
+     */
+    private static boolean sTagIsSpace        = true;
+    /**
+     * log头部开关，默认开
+     */
+    private static boolean sLogHeadSwitch     = true;
+    /**
+     * log写入文件开关，默认关
+     */
+    private static boolean sLog2FileSwitch    = false;
+    /**
+     * log边框开关，默认开
+     */
+    private static boolean sLogBorderSwitch   = true;
+    /**
+     * log控制台过滤器
+     */
+    private static int     sConsoleFilter     = V;
+    /**
+     * log文件过滤器
+     */
+    private static int     sFileFilter        = V;
 
     private static final String FILE_SEP      = System.getProperty("file.separator");
     private static final String LINE_SEP      = System.getProperty("line.separator");
@@ -90,11 +123,13 @@ public final class LogUtils {
 
     public static class Builder {
         public Builder() {
-            if (defaultDir != null) return;
+            if (defaultDir != null) {
+                return;
+            }
             if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
-                    && Utils.getContext().getExternalCacheDir() != null)
+                    && Utils.getContext().getExternalCacheDir() != null) {
                 defaultDir = Utils.getContext().getExternalCacheDir() + FILE_SEP + "log" + FILE_SEP;
-            else {
+            } else {
                 defaultDir = Utils.getContext().getCacheDir() + FILE_SEP + "log" + FILE_SEP;
             }
         }
@@ -270,16 +305,23 @@ public final class LogUtils {
     }
 
     private static void log(final int type, String tag, final Object... contents) {
-        if (!sLogSwitch || (!sLog2ConsoleSwitch && !sLog2FileSwitch)) return;
+        boolean b = !sLogSwitch || (!sLog2ConsoleSwitch && !sLog2FileSwitch);
+        if (b) {
+            return;
+        }
         int type_low = type & 0x0f, type_high = type & 0xf0;
-        if (type_low < sConsoleFilter && type_low < sFileFilter) return;
+        if (type_low < sConsoleFilter && type_low < sFileFilter) {
+            return;
+        }
         final String[] tagAndHead = processTagAndHead(tag);
         String body = processBody(type_high, contents);
         if (sLog2ConsoleSwitch && type_low >= sConsoleFilter) {
             print2Console(type_low, tagAndHead[0], tagAndHead[1] + body);
         }
         if (sLog2FileSwitch || type_high == FILE) {
-            if (type_low >= sFileFilter) print2File(type_low, tagAndHead[0], tagAndHead[2] + body);
+            if (type_low >= sFileFilter) {
+                print2File(type_low, tagAndHead[0], tagAndHead[2] + body);
+            }
         }
     }
 
@@ -391,7 +433,9 @@ public final class LogUtils {
         } else {
             print(type, tag, msg);
         }
-        if (sLogBorderSwitch) print(type, tag, BOTTOM_BORDER);
+        if (sLogBorderSwitch) {
+            print(type, tag, BOTTOM_BORDER);
+        }
     }
 
     private static void print(final int type, final String tag, String msg) {
@@ -399,7 +443,9 @@ public final class LogUtils {
     }
 
     private static String addLeftBorder(String msg) {
-        if (!sLogBorderSwitch) return msg;
+        if (!sLogBorderSwitch) {
+            return msg;
+        }
         StringBuilder sb = new StringBuilder();
         String[] lines = msg.split(LINE_SEP);
         for (String line : lines) {
@@ -455,8 +501,12 @@ public final class LogUtils {
 
     private static boolean createOrExistsFile(String filePath) {
         File file = new File(filePath);
-        if (file.exists()) return file.isFile();
-        if (!createOrExistsDir(file.getParentFile())) return false;
+        if (file.exists()) {
+            return file.isFile();
+        }
+        if (!createOrExistsDir(file.getParentFile())) {
+            return false;
+        }
         try {
             return file.createNewFile();
         } catch (IOException e) {
@@ -470,7 +520,9 @@ public final class LogUtils {
     }
 
     private static boolean isSpace(String s) {
-        if (s == null) return true;
+        if (s == null) {
+            return true;
+        }
         for (int i = 0, len = s.length(); i < len; ++i) {
             if (!Character.isWhitespace(s.charAt(i))) {
                 return false;
@@ -479,7 +531,7 @@ public final class LogUtils {
         return true;
     }
 
-    public static byte[] compress(byte input[]) {
+    public static byte[] compress(byte[] input) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         Deflater compressor = new Deflater(1);
         try {

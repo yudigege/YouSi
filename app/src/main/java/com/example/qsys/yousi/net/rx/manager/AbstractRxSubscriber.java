@@ -4,11 +4,15 @@ import android.content.Context;
 
 import com.example.qsys.yousi.CustomApplication;
 import com.example.qsys.yousi.R;
+import com.example.qsys.yousi.common.Constant;
 import com.example.qsys.yousi.common.util.LogUtils;
 import com.example.qsys.yousi.common.util.NetworkUtils;
 import com.example.qsys.yousi.common.util.ToastUtils;
 import com.example.qsys.yousi.common.widget.LoadingDialog;
+import com.example.qsys.yousi.fragment.BaseView;
 import com.example.qsys.yousi.net.rx.exception.ServerException;
+
+import java.lang.ref.WeakReference;
 
 import rx.Subscriber;
 
@@ -16,12 +20,21 @@ import rx.Subscriber;
  * Created by hanshaokai on 2017/10/13 10:37
  */
 
-public abstract class RxSubscriber<T> extends Subscriber<T> {
+public abstract class AbstractRxSubscriber<T> extends Subscriber<T> {
 
     private Context mContext;
     private String msg;
     private boolean showDialog = true;
+    private WeakReference<BaseView> mWeakRefView;
 
+
+    public AbstractRxSubscriber(WeakReference<BaseView> weakRefView) {
+        this.mWeakRefView = weakRefView;
+    }
+
+    public BaseView getBindView() {
+        return mWeakRefView.get();
+    }
     /**
      * 是否显示浮动dialog
      */
@@ -33,34 +46,36 @@ public abstract class RxSubscriber<T> extends Subscriber<T> {
         this.showDialog = true;
     }
 
-    public RxSubscriber(Context context, String msg, boolean showDialog) {
+    public AbstractRxSubscriber(Context context, String msg, boolean showDialog) {
         this.mContext = context;
         this.msg = msg;
         this.showDialog = showDialog;
     }
 
-    public RxSubscriber() {
+    public AbstractRxSubscriber() {
         this(null, CustomApplication.getAppContext().getString(R.string.loading), true);
     }
 
-    public RxSubscriber(Context context) {
+    public AbstractRxSubscriber(Context context) {
         this(context, CustomApplication.getAppContext().getString(R.string.loading), true);
     }
 
-    public RxSubscriber(Context context, boolean showDialog) {
+    public AbstractRxSubscriber(Context context, boolean showDialog) {
         this(context, CustomApplication.getAppContext().getString(R.string.loading), showDialog);
     }
 
     @Override
     public void onCompleted() {
-        if (showDialog)
+        if (showDialog) {
             LoadingDialog.cancelDialogForLoading();
+        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        _onStart();
+        getBindView().showProgressView(true);
+        //on_Start();
 //6.0及6.0以上drawable indeterminateDrawable动画不起作用
        /* if (showDialog) {
             LoadingDialog.showDialogForLoading((Activity) mContext, msg, true);
@@ -70,35 +85,62 @@ public abstract class RxSubscriber<T> extends Subscriber<T> {
 
     @Override
     public void onNext(T t) {
-        _onNext(t);
+        on_Next(t);
     }
 
     @Override
     public void onError(Throwable e) {
+        getBindView().showProgressView(false);
+        LogUtils.d("网络错误。。。。。。。。" + e.getCause());
        /* if (showDialog)
             LoadingDialog.cancelDialogForLoading();*/
         e.printStackTrace();
         LogUtils.d(e.toString());
         //网络
         if (!NetworkUtils.isConnected()) {
-            _onError(CustomApplication.getAppContext().getString(R.string.no_net));
+            // on_Error(CustomApplication.getAppContext().getString(R.string.no_net), Constant.NET_UNABLE);
+            getBindView().showEmptyViewByCode(Constant.NET_UNABLE);
+            getBindView().showMessage(CustomApplication.getAppContext().getString(R.string.no_net));
         }
         //服务器
         else if (e instanceof ServerException) {
-            _onError(e.getMessage());
+            // on_Error(e.getMessage(), Constant.SERVER_ERROR);
+            getBindView().showEmptyViewByCode(Constant.SERVER_ERROR);
+            getBindView().showMessage(e.getMessage());
+
             ToastUtils.showShort(CustomApplication.getAppContext().getResources().getString(R.string.error_server_msg, e.getMessage()));
+
+
         }
         //其它
         else {
-            _onError(CustomApplication.getAppContext().getString(R.string.net_error));
+            // on_Error(CustomApplication.getAppContext().getString(R.string.net_error), Constant.UN_RECOGNICTION);
+            getBindView().showEmptyViewByCode(Constant.UN_RECOGNICTION);
+            getBindView().showMessage(CustomApplication.getAppContext().getString(R.string.net_error));
         }
+
+        getBindView().showProgressView(false);
     }
 
-    protected abstract void _onNext(T t);
+    /**
+     * onNext
+     *
+     * @param t
+     */
+    protected abstract void on_Next(T t);
 
-    protected abstract void _onError(String message);
+    /**
+     * onError
+     *
+     * @param message
+     * @param requstCode
+     */
+    // protected abstract void on_Error(String message, int requstCode);
 
-    protected abstract void _onStart();
+    /**
+     * onStart
+     */
+    // protected abstract void on_Start();
 
 }
         

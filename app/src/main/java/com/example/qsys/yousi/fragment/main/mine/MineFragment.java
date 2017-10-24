@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.example.qsys.yousi.R;
 import com.example.qsys.yousi.bean.BaseResponse;
+import com.example.qsys.yousi.common.Constant;
+import com.example.qsys.yousi.common.util.ToastUtils;
 import com.example.qsys.yousi.fragment.BaseFragment;
 
 import butterknife.BindView;
@@ -36,6 +38,35 @@ public class MineFragment extends BaseFragment implements MinePageView {
     }
 
     @Override
+    public void showMessage(String smg) {
+        ToastUtils.showShort(smg);
+    }
+
+    @Override
+    public void showEmptyViewByCode(int code) {
+        switch (code) {
+
+            case Constant.SERVER_ERROR:
+                llRoot.setVisibility(View.VISIBLE);
+                errorTextView.setText(getResources().getString(R.string.error_server_msg));
+                break;
+            case Constant.NET_UNABLE:
+                llRoot.setVisibility(View.VISIBLE);
+                errorTextView.setText(getResources().getString(R.string.net_error));
+                break;
+            case Constant.NO_CONTENT:
+                llRoot.setVisibility(View.VISIBLE);
+                errorTextView.setText(getResources().getString(R.string.no_content));
+                break;
+            default:
+        }
+    }
+    @Override
+    public void showProgressView(Boolean b) {
+
+    }
+
+    @Override
     public View initView(LayoutInflater inflater, ViewGroup container) {
         View view = inflater.inflate(R.layout.fragment_mine_main, null, false);
         return view;
@@ -55,15 +86,6 @@ public class MineFragment extends BaseFragment implements MinePageView {
         mPresenter.detacheView();
     }
 
-    @Override
-    public void showMessage(String smg) {
-
-    }
-
-    @Override
-    public void showProgressView(Boolean b) {
-
-    }
 
     @Override
     public Boolean isActive() {

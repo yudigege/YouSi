@@ -81,6 +81,7 @@ public class SizeUtils {
                 return value * metrics.xdpi;
             case TypedValue.COMPLEX_UNIT_MM:
                 return value * metrics.xdpi * (1.0f / 25.4f);
+            default:
         }
         return 0;
     }
@@ -101,7 +102,7 @@ public class SizeUtils {
      * @param view     视图
      * @param listener 监听器
      */
-    public static void forceGetViewSize(final View view, final onGetSizeListener listener) {
+    public static void forceGetViewSize(final View view, final OnGetSizeListener listener) {
         view.post(new Runnable() {
             @Override
             public void run() {
@@ -112,10 +113,13 @@ public class SizeUtils {
         });
     }
 
-    /**
-     * 获取到View尺寸的监听
-     */
-    public interface onGetSizeListener {
+
+    public interface OnGetSizeListener {
+        /**
+         * 获取到View尺寸的监听
+         *
+         * @param view
+         */
         void onGetSize(View view);
     }
 

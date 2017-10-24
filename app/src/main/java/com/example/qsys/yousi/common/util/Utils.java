@@ -75,7 +75,9 @@ public final class Utils {
      * @return ApplicationContext
      */
     public static Context getContext() {
-        if (context != null) return context;
+        if (context != null) {
+            return context;
+        }
         throw new NullPointerException("u should init first");
     }
 }

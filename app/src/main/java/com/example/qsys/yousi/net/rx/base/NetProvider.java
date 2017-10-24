@@ -7,19 +7,51 @@ import okhttp3.OkHttpClient;
  */
 
 public interface NetProvider {
+    /**
+     * 过滤器参数
+     * @return
+     */
     Interceptor[] configInterceptors();
 
+    /**
+     * 连接参数
+     * @param builder
+     */
     void configHttps(OkHttpClient.Builder builder);
 
+    /**
+     * cookie 参数
+     * @return
+     */
     CookieJar configCookie();
 
+    /**
+     * handler参数
+     * @return
+     */
     RequestHandler configHandler();
 
+    /**
+     * 链接时间
+     * @return
+     */
     long configConnectTimeoutSecs();
 
+    /**
+     * 读取时间
+     * @return
+     */
     long configReadTimeoutSecs();
 
+    /**
+     * 写入时间
+     * @return
+     */
     long configWriteTimeoutSecs();
 
+    /**
+     * 是否log 配置
+     * @return
+     */
     boolean configLogEnable();
 }

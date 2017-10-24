@@ -84,19 +84,29 @@ public class ViewDragHelper {
      * Indicates that a check should occur along all axes
      */
     public static final int DIRECTION_ALL = DIRECTION_HORIZONTAL | DIRECTION_VERTICAL;
+    /**
+     * dp
+     */
+    private static final int EDGE_SIZE = 20;
+    /**
+     * ms
+     */
+    private static final int BASE_SETTLE_DURATION = 256;
+    private static final int MAX_SETTLE_DURATION = 600;
 
-    private static final int EDGE_SIZE = 20; // dp
-
-    private static final int BASE_SETTLE_DURATION = 256; // ms
-    private static final int MAX_SETTLE_DURATION = 600; // ms
-
-    // Current drag state; idle, dragging or settling
+    /**
+     * Current drag state; idle, dragging or settling
+     */
     private int mDragState;
 
-    // Distance to travel before a drag may begin
+    /**
+     * Distance to travel before a drag may begin
+     */
     private int mTouchSlop;
 
-    // Last known position/pointer tracking
+    /**
+     * Last known position/pointer tracking
+     */
     private int mActivePointerId = INVALID_POINTER;
     private float[] mInitialMotionX;
     private float[] mInitialMotionY;
@@ -308,7 +318,7 @@ public class ViewDragHelper {
     /**
      * Interpolator defining the animation curve for mScroller
      */
-    private static final Interpolator sInterpolator = new Interpolator(){
+    private static final Interpolator SINTER_POLATOR = new Interpolator(){
 
     	private float mTension = 1.6f;
     	
@@ -319,6 +329,7 @@ public class ViewDragHelper {
 		}};
 
     private final Runnable mSetIdleRunnable = new Runnable() {
+        @Override
         public void run() {
             setDragState(STATE_IDLE);
         }
@@ -376,7 +387,7 @@ public class ViewDragHelper {
         mTouchSlop = vc.getScaledTouchSlop();
         mMaxVelocity = vc.getScaledMaximumFlingVelocity();
         mMinVelocity = vc.getScaledMinimumFlingVelocity();
-        mScroller = ScrollerCompat.create(context, sInterpolator);
+        mScroller = ScrollerCompat.create(context, SINTER_POLATOR);
     }
 
     /**
@@ -641,8 +652,12 @@ public class ViewDragHelper {
      */
     private int clampMag(int value, int absMin, int absMax) {
         final int absValue = Math.abs(value);
-        if (absValue < absMin) return 0;
-        if (absValue > absMax) return value > 0 ? absMax : -absMax;
+        if (absValue < absMin) {
+            return 0;
+        }
+        if (absValue > absMax) {
+            return value > 0 ? absMax : -absMax;
+        }
         return value;
     }
 
@@ -658,13 +673,18 @@ public class ViewDragHelper {
      */
     private float clampMag(float value, float absMin, float absMax) {
         final float absValue = Math.abs(value);
-        if (absValue < absMin) return 0;
-        if (absValue > absMax) return value > 0 ? absMax : -absMax;
+        if (absValue < absMin) {
+            return 0;
+        }
+        if (absValue > absMax) {
+            return value > 0 ? absMax : -absMax;
+        }
         return value;
     }
 
     private float distanceInfluenceForSnapDuration(float f) {
-        f -= 0.5f; // center the values about 0.
+        // center the values about 0.
+        f -= 0.5f;
         f *= 0.3f * Math.PI / 2.0f;
         return (float) Math.sin(f);
     }
@@ -962,8 +982,9 @@ public class ViewDragHelper {
                     mCallback.onEdgeTouched(edgesTouched & mTrackingEdges, pointerId);
                 }
                 break;
-            }
 
+            }
+            default:
             case MotionEventCompat.ACTION_POINTER_DOWN: {
                 final int pointerId = MotionEventCompat.getPointerId(ev, actionIndex);
                 final float x = MotionEventCompat.getX(ev, actionIndex);
@@ -1069,6 +1090,7 @@ public class ViewDragHelper {
                     mCallback.onEdgeTouched(edgesTouched & mTrackingEdges, pointerId);
                 }
                 break;
+
             }
 
             case MotionEventCompat.ACTION_POINTER_DOWN: {
@@ -1183,6 +1205,7 @@ public class ViewDragHelper {
                 cancel();
                 break;
             }
+            default:
         }
     }
 
@@ -1210,11 +1233,11 @@ public class ViewDragHelper {
     private boolean checkNewEdgeDrag(float delta, float odelta, int pointerId, int edge) {
         final float absDelta = Math.abs(delta);
         final float absODelta = Math.abs(odelta);
-
-        if ((mInitialEdgesTouched[pointerId] & edge) != edge  || (mTrackingEdges & edge) == 0 ||
+        boolean b = (mInitialEdgesTouched[pointerId] & edge) != edge || (mTrackingEdges & edge) == 0 ||
                 (mEdgeDragsLocked[pointerId] & edge) == edge ||
                 (mEdgeDragsInProgress[pointerId] & edge) == edge ||
-                (absDelta <= mTouchSlop && absODelta <= mTouchSlop)) {
+                (absDelta <= mTouchSlop && absODelta <= mTouchSlop);
+        if (b) {
             return false;
         }
         if (absDelta < absODelta * 0.5f && mCallback.onEdgeLock(edge)) {
@@ -1432,10 +1455,18 @@ public class ViewDragHelper {
     private int getEdgesTouched(int x, int y) {
         int result = 0;
 
-        if (x < mParentView.getLeft() + mEdgeSize) result |= EDGE_LEFT;
-        if (y < mParentView.getTop() + mEdgeSize) result |= EDGE_TOP;
-        if (x > mParentView.getRight() - mEdgeSize) result |= EDGE_RIGHT;
-        if (y > mParentView.getBottom() - mEdgeSize) result |= EDGE_BOTTOM;
+        if (x < mParentView.getLeft() + mEdgeSize) {
+            result |= EDGE_LEFT;
+        }
+        if (y < mParentView.getTop() + mEdgeSize) {
+            result |= EDGE_TOP;
+        }
+        if (x > mParentView.getRight() - mEdgeSize) {
+            result |= EDGE_RIGHT;
+        }
+        if (y > mParentView.getBottom() - mEdgeSize) {
+            result |= EDGE_BOTTOM;
+        }
 
         return result;
     }

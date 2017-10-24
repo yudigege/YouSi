@@ -11,6 +11,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.qsys.yousi.LoginActivity">
 
+    <include layout="@layout/you_si_common_error_view2"></include>
     <!-- Login progress -->
     <!--style="?android:attr/progressBarStyleLarge"-->
     <ProgressBar

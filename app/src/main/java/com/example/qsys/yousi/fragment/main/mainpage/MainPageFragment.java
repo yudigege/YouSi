@@ -1,5 +1,4 @@
 package com.example.qsys.yousi.fragment.main.mainpage;
-
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
@@ -10,19 +9,16 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.qsys.yousi.R;
 import com.example.qsys.yousi.bean.BaseResponse;
 import com.example.qsys.yousi.bean.BookResponse;
+import com.example.qsys.yousi.common.Constant;
 import com.example.qsys.yousi.common.util.ToastUtils;
 import com.example.qsys.yousi.common.widget.card.SlideCardPanel;
 import com.example.qsys.yousi.fragment.BaseFragment;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
-
 /**
  * Created by hanshaokai on 2017/10/17 15:19
  */
@@ -37,17 +33,47 @@ public class MainPageFragment extends BaseFragment implements MainPageView {
     @BindView(R.id.appbar_clude)
     AppBarLayout appbarClude;
 
-    List<BookResponse.ResultsBean> bookList = new ArrayList<>();//当前显示卡片的数据
+    /**
+     * 当前显示卡片的数据
+     */
+    List<BookResponse.ResultsBean> bookList = new ArrayList<>();
 
     @BindView(R.id.cardPanel_main_page)
     SlideCardPanel cardPanel;
+
     private MainPagePresenterExtend mPresenter = null;
 
     @Override
     public void showResponseData(BaseResponse response) {
         bookList.clear();
-        bookList.addAll(((BookResponse) response).getResults());
+        List<BookResponse.ResultsBean> results = ((BookResponse) response).getResults();
+        bookList.addAll(results);
         cardPanel.fillData(bookList);
+    }
+
+    @Override
+    public void showMessage(String smg) {
+
+    }
+
+    @Override
+    public void showEmptyViewByCode(int code) {
+        switch (code) {
+
+            case Constant.SERVER_ERROR:
+                llRoot.setVisibility(View.VISIBLE);
+                errorTextView.setText(getResources().getString(R.string.error_server_msg));
+                break;
+            case Constant.NET_UNABLE:
+                llRoot.setVisibility(View.VISIBLE);
+                errorTextView.setText(getResources().getString(R.string.no_net));
+                break;
+            case Constant.NO_CONTENT:
+                llRoot.setVisibility(View.VISIBLE);
+                errorTextView.setText(getResources().getString(R.string.no_content));
+                break;
+            default:
+        }
     }
 
     @Override
@@ -89,23 +115,33 @@ public class MainPageFragment extends BaseFragment implements MainPageView {
                 changedView.findViewById(R.id.card_item_dislike_iv).setAlpha(dy);*/
             }
         };
+        //设置empty监听
+        llRoot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                llRoot.setVisibility(View.GONE);
+                mPresenter.getBookData();
+            }
+        });
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        bookList.clear();
         //解除持有的弱引用
         mPresenter.detacheView();
     }
 
-    @Override
-    public void showMessage(String smg) {
 
-    }
 
     @Override
     public void showProgressView(Boolean b) {
-
+        if (b) {
+            showProgressDialog(getResources().getString(R.string.loading));
+        } else {
+            dismissProgressDialog();
+        }
     }
 
     @Override

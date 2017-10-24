@@ -49,7 +49,10 @@ public class NetManager {
         return getInstance().getRetrofit(baseUrl).create(service);
     }
 
-    //在application中注入 在实现类中 实现了 链接 读写 超时 的时间处理 与请求返回数据的请求头部处理
+    /**
+     * 在application中注入 在实现类中 实现了 链接 读写 超时 的时间处理 与请求返回数据的请求头部处理
+     * @param provider
+     */
     public void registerProvider(NetProvider provider) {
         this.sProvider = provider;
     }
@@ -178,15 +181,16 @@ public class NetManager {
         return clientMap;
     }
 
-    // 得到配置好的retrofit
+    /**
+     *  得到配置好的retrofit
+      */
+
     public static Retrofit retrofitClient() {
         return NetManager.getInstance().getRetrofit(Constant.
-
-
                 BASE_URL);
     }
 
     public static ApiService getApiService() {
-        return NetManager.getInstance().retrofitClient().create(ApiService.class);
+        return NetManager.retrofitClient().create(ApiService.class);
     }
 }

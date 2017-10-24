@@ -18,18 +18,22 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.example.qsys.yousi.CustomApplication;
 import com.example.qsys.yousi.MainActivity;
 import com.example.qsys.yousi.R;
 import com.example.qsys.yousi.bean.BaseResponse;
+import com.example.qsys.yousi.bean.UserResponse;
 import com.example.qsys.yousi.common.Constant;
 import com.example.qsys.yousi.common.util.ActivityUtils;
 import com.example.qsys.yousi.common.util.ToastUtils;
 import com.example.qsys.yousi.fragment.BaseFragment;
 import butterknife.BindView;
-/**
- * Created by hanshaokai on 2017/10/9 17:37
- */
 
+/**
+ * @author hanshaokai
+ * @date 2017/10/9 17:37
+ */
 public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
     //采用mvp模式
     @BindView(R.id.login_progress)
@@ -44,13 +48,14 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
     LinearLayout emailLoginForm;
     @BindView(R.id.login_form)
     ScrollView loginForm;
-    public ReadyLoginPresenter mPresenter;
+    public AbstractReadyLoginPresenter mPresenter;
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container) {
         View view = inflater.inflate(R.layout.fragment_ready_login
                 , container, false);
         mPresenter = new ReadyLoginPresenterExtend();
-        mPresenter.setPresenterView(this);//绑定view mPresenter 持有弱引用
+        //绑定view mPresenter 持有弱引用
+        mPresenter.setPresenterView(this);
         return view;
     }
 
@@ -109,12 +114,22 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
         }
     }
 
-    //校验账户名
+    /**
+     * 组合参数
+     *
+     * @param email
+     * @return
+     */
     private boolean isEmailValid(String email) {
         return true;
     }
 
-    //校验密码
+    /**
+     * 校验密码
+     *
+     * @param password
+     * @return
+     */
     private boolean isPasswordValid(String password) {
         return password.length() > 4;
     }
@@ -156,7 +171,10 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
         switch (user.getRequstCode()) {
             case Constant.USER_LOGIN_SUCESS:
                 ToastUtils.showShort(getResources().getString(R.string.login_sucess));
-                ActivityUtils.startActivity(baseFragmentActivity, MainActivity.class);//跳转到主页
+                //登录成功后存起来登录的信息
+                CustomApplication.userEntity = ((UserResponse) user).getResults();
+                //跳转到主页
+                ActivityUtils.startActivity(baseFragmentActivity, MainActivity.class);
                 break;
             case Constant.USER_NOT_EXIT:
                 ToastUtils.showShort(getResources().getString(R.string.user_not_exit));
@@ -164,6 +182,7 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
             case Constant.USER_PASSWORD_ERRO:
                 ToastUtils.showShort(getResources().getString(R.string.password_errro));
                 break;
+            default:
         }
 
     }
@@ -172,6 +191,14 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
     public void showMessage(String smg) {
         ToastUtils.showShort(smg);
     }
+
+    @Override
+
+    public void showEmptyViewByCode(int code) {
+
+
+    }
+
 
     @Override
     public Boolean isActive() {

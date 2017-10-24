@@ -13,6 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.qsys.yousi.R;
@@ -20,6 +24,7 @@ import com.example.qsys.yousi.activity.BaseActivity;
 import com.example.qsys.yousi.common.util.LogUtils;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -33,22 +38,39 @@ public abstract class BaseFragment extends RxFragment {
     public BaseActivity baseFragmentActivity;
     protected ProgressDialog progressDialog;
     public Unbinder unbinder;
+    @BindView(R.id.errorImageView)
+    protected ImageView errorImageView;
+    @BindView(R.id.progressBar)
+    protected  ProgressBar progressBar;
+    @BindView(R.id.errorTextView)
+    protected  TextView errorTextView;
+    @BindView(R.id.clickLayout)
+    protected RelativeLayout clickLayout;
+    @BindView(R.id.ll_root)
+    protected  LinearLayout llRoot;
 
-
+    /*
+    * 因为基类里有emptyview 控件引用 在所有继承基类的fragment的布局中都加上了 error2 布局控件
+    * */
     @Override
     public void onAttach(Context activity) {
         super.onAttach(activity);
         this.baseFragmentActivity = (BaseActivity) activity;
     }
 
-    //添加fragment
+    /**
+     * 添加fragment
+     * @param fragment
+     */
     protected void addFragment(Fragment fragment) {
         if (null != fragment) {
             baseFragmentActivity.addFragment(fragment);
         }
     }
 
-    //移除fragment
+    /**
+     * 移除fragment
+     */
     protected void removeFragment() {
         baseFragmentActivity.removeFragemt();
     }
@@ -93,13 +115,25 @@ public abstract class BaseFragment extends RxFragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    //定义抽象方法 由继承来实现
+    /**
+     * 定义抽象方法 由继承来实现 初始化view
+     * @param inflater
+     * @param container
+     * @return
+     */
     public abstract View initView(LayoutInflater inflater, ViewGroup container);
 
+    /**
+     * 初始化view 的逻辑
+     * @param savedInstanceState
+     */
     public abstract void doViewLogic(Bundle savedInstanceState);
 
 
-    //显示加载窗口
+    /**
+     * 显示加载窗口
+     * @param msg
+     */
     public void showProgressDialog(String msg) {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
@@ -115,7 +149,9 @@ public abstract class BaseFragment extends RxFragment {
         }
     }
 
-    //加载窗口消失
+    /**
+     * 加载窗口消失
+     */
     public void dismissProgressDialog() {
         if (null != progressDialog && progressDialog.isShowing() == true) {
             progressDialog.dismiss();
@@ -151,6 +187,8 @@ public abstract class BaseFragment extends RxFragment {
         unbinder.unbind();
 
     }
+
+
 
 
 }

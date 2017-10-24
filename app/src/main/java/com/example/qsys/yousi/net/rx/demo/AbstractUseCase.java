@@ -20,25 +20,36 @@ import rx.schedulers.Schedulers;
  *
  * @param <T>
  */
-public abstract class UseCase<T> {
-    //用于分页请求  分页模型
+public abstract class AbstractUseCase<T> {
+    /**
+     * 用于分页请求  分页模型
+     */
     protected PagingReq pagingReq = new PagingReq();
 
 
-    protected T ApiClient() {
+    protected T apiClient() {
         return NetManager.getInstance().getRetrofit(Constant.BASE_URL).create(getType());
     }
 
     //subscribeOn(): 指定subscribe()订阅所发生的线程，即 call() 执行的线程。或者叫做事件产生的线程。
     //observeOn(): 指定Observer/Subscriber所运行在的线程，即onNext()执行的线程。或者叫做事件消费的线程。
-    //指定观察者与被观察者线程
+
+
+    /**
+     * 指定观察者与被观察者线程
+     *
+     * @param <T>
+     * @return
+     */
     protected <T> Observable.Transformer<T, T> normalSchedulers() {
         return new Observable.Transformer<T, T>() {
             @Override
             public Observable<T> call(Observable<T> source) {
                 //onTerminateDetach 防止解除订阅后 内存泄露
-                return source.onTerminateDetach().subscribeOn(Schedulers.io())//指定subscribe()发生在IO线程
-                        .observeOn(AndroidSchedulers.mainThread());// 指定Subscriber的回调发生在UI线程
+                return source.onTerminateDetach().subscribeOn(Schedulers.io())
+                        //指定subscribe()发生在IO线程
+                        // 指定Subscriber的回调发生在UI线程
+                        .observeOn(AndroidSchedulers.mainThread());
                 //   observeOn() 指定的是它之后的操作所在的线程。因此如果有多次切换线程的需求，
                 // 只要在每个想要切换线程的位置调用一次 observeOn() 即可
                 //当使用了多个 subscribeOn() 的时候，只有第一个 subscribeOn() 起作用。

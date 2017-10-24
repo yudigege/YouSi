@@ -6,11 +6,13 @@
     android:orientation="vertical">
 
     <include layout="@layout/head_clude"></include>
+
+
     <!--不加linearLayout 测量toolbar了两次  加了后 自定义控件 测量准确-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+        <include layout="@layout/you_si_common_error_view2"></include>
         <com.example.qsys.yousi.common.widget.card.SlideCardPanel
             android:id="@+id/cardPanel_main_page"
             android:layout_width="match_parent"

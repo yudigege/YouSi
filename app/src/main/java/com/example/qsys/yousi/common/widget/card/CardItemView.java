@@ -27,7 +27,7 @@ public class CardItemView extends LinearLayout {
     public CardItemView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         mContext = context;
-        inflate(mContext, R.layout.layout_card_item, this);
+        inflate(mContext, R.layout.main_page_layout_card_item, this);
         initViews();
     }
     private void initViews() {
@@ -35,7 +35,11 @@ public class CardItemView extends LinearLayout {
         mContent = (TextView) findViewById(R.id.card_item_content);
         detail = (TextView) findViewById(R.id.card_item_book_name_author);
     }
-    //设置阴影
+
+    /**
+     * 设置阴影
+     * @param shaderLayer
+     */
     public void setShadeLayer(int shaderLayer) {
         shadeView.setBackgroundResource(shaderLayer);
     }
