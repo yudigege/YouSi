@@ -7,13 +7,33 @@ import java.util.List;
  */
 
 public interface IPaging<T> {
+    /**
+     * 得到条目
+     * @return
+     */
     List<T> getItems();
 
+    /**
+     * 得到页
+     * @return
+     */
     int getPage();
 
+    /**
+     * 得到页数
+     * @return
+     */
     int getPageSize();
 
+    /**
+     * 得到总数
+     * @return
+     */
     long getTotal();
 
+    /**
+     * 得到页总数
+     * @return
+     */
     int getPageCount();
 }

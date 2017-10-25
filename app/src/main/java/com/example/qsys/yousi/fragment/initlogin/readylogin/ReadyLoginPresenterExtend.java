@@ -1,17 +1,16 @@
 package com.example.qsys.yousi.fragment.initlogin.readylogin;
 
-import com.example.qsys.yousi.CustomApplication;
-import com.example.qsys.yousi.R;
 import com.example.qsys.yousi.bean.UserResponse;
+import com.example.qsys.yousi.net.rx.manager.AbstractRxSubscriber;
 import com.example.qsys.yousi.net.rx.manager.NetManager;
 import com.example.qsys.yousi.net.rx.manager.RxSchedulers;
-import com.example.qsys.yousi.net.rx.manager.RxSubscriber;
+
 
 /**
- * Created by hanshaokai on 2017/10/9 17:39
+ * @author hanshaokai
+ * @date 2017/10/9 17:39
  */
-
-public class ReadyLoginPresenterExtend extends ReadyLoginPresenter {
+public class ReadyLoginPresenterExtend extends AbstractReadyLoginPresenter {
     //相应fragment 对应的的具体presenter
 
     //登录网络请求
@@ -42,27 +41,14 @@ public class ReadyLoginPresenterExtend extends ReadyLoginPresenter {
 
                     }
                 });*/
-        //耗时过程中fragment有可能销毁 耗时完后更改视图要判断是否可用  开启子线程前不用判断
-        NetManager.getInstance().getApiService().toLogin(account, password).compose(RxSchedulers.<UserResponse>io_main())
+        //耗时过程中fragment有可能销毁 耗时完后更改视图要判断是否可用 开启子线程前不用判断
+        NetManager.getApiService().toLogin(account, password).compose(RxSchedulers.<UserResponse>io_main())
                 .compose(getBindView().<UserResponse>bindToLifecycle())
-                .subscribe(new RxSubscriber<UserResponse>() {
+                .subscribe(new AbstractRxSubscriber<UserResponse>(getWeakRefView()) {
                     @Override
-                    protected void _onNext(UserResponse userResponse) {
+                    protected void on_Next(UserResponse userResponse) {
                         getBindView().showProgressView(false);
                         getBindView().showResponseData(userResponse);
-                    }
-
-                    @Override
-                    protected void _onError(String message) {
-                        getBindView().showMessage(message);
-                        getBindView().showProgressView(false);
-                    }
-
-                    @Override
-                    protected void _onStart() {
-                        getBindView().showMessage(CustomApplication.getAppContext().getResources().getString(R.string.on_login));
-                        getBindView().showProgressView(true);
-                        ((ReadyLoginView) getBindView()).doView();
                     }
                 });
 

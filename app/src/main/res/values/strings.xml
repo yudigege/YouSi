@@ -27,4 +27,15 @@
     <string name="idea">想法</string>
     <string name="mine">我的</string>
     <string name="take_passages">摘录</string>
+    <string name="empty_message">啥也没有</string>
+    <string name="loading_message">请稍等...</string>
+    <string name="error_message">发生了一些错误</string>
+
+    <string name="empty_button">重试</string>
+    <string name="loading_button">取消</string>
+    <string name="error_button">重试</string>
+    <string name="c6">点击完成表示同意&lt;font color=\"#ffa42f\">《得到使用协议》&lt;/font></string>
+    <string name="cp">我的学习进度: &lt;font color=#ffa42f>%s%%&lt;/font></string>
+    <string name="error_server">服务器发生故障</string>
+    <string name="no_content">空空如也</string>
 </resources>

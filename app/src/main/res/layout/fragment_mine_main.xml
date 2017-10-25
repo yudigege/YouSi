@@ -5,4 +5,7 @@
     android:orientation="vertical">
 
     <include layout="@layout/head_clude"></include>
+    <include
+        layout="@layout/you_si_common_error_view2"
+        ></include>
 </LinearLayout>

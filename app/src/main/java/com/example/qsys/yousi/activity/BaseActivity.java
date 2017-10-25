@@ -18,14 +18,16 @@ import com.example.qsys.yousi.CustomApplication;
 import com.example.qsys.yousi.R;
 import com.example.qsys.yousi.manager.AppManager;
 
-/**
- * Created by hanshaokai on 2017/9/30 13:42
- */
 
+/**
+ * @author hanshaokai
+ * @date 2017/9/30 13:42
+ */
 public abstract class BaseActivity extends AppCompatActivity {
 
 
     protected CustomApplication customApplication;
+    private final static int VERSION_CODE = 14;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +45,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         ViewGroup contentFrameLayout = (ViewGroup) findViewById(Window.ID_ANDROID_CONTENT);
         View parentView = contentFrameLayout.getChildAt(0);
-        if (parentView != null && Build.VERSION.SDK_INT >= 14) {
+        if (parentView != null && Build.VERSION.SDK_INT >= VERSION_CODE) {
             parentView.setFitsSystemWindows(true);
         }
         setContentView(R.layout.activity_fragment_container);
@@ -75,7 +77,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         actionBar.setTitle("");
     }
-    //添加fragment
+
+    /**
+     * 添加fragment
+     */
+
     public void addFragment(Fragment fragment) {
         if (fragment != null) {
             getSupportFragmentManager().beginTransaction().
@@ -84,7 +90,10 @@ public abstract class BaseActivity extends AppCompatActivity {
                     .commitAllowingStateLoss();
         }
     }
-    // 移除fragment
+
+    /**
+     * 移除fragment
+     */
     public void removeFragemt() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             getSupportFragmentManager().popBackStack();
@@ -92,7 +101,14 @@ public abstract class BaseActivity extends AppCompatActivity {
             finish();
         }
     }
-    //返回键 返回事件
+
+    /**
+     * 返回键 返回事件
+     *
+     * @param keyCode
+     * @param event
+     * @return
+     */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (KeyEvent.KEYCODE_BACK == keyCode) {

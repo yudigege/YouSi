@@ -76,7 +76,7 @@ public class AppManager {
             // 为与系统Activity栈保持一致，且考虑到手机设置项里的"不保留活动"选项引起的Activity生命周期调用onDestroy()方法所带来的问题,此处需要作出如下修正
             if (activity.isFinishing()) {
                 activityStack.remove(activity);
-                //activity.finish();
+
                 activity = null;
             }
         }
@@ -121,7 +121,7 @@ public class AppManager {
     /**
      * 应用程序退出
      */
-    public void AppExit(Context context) {
+    public void appExit(Context context) {
         try {
             finishAllActivity();
             ActivityManager activityMgr = (ActivityManager) context

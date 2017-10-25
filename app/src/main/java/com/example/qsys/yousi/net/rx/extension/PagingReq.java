@@ -13,16 +13,19 @@ public class PagingReq {
     public int page = 0;
     public int pageSize = 15;
     public boolean desc = true;
-    public String sort_key;
+    public String sortKey;
 
 
-    //组合参数
+    /**
+     * 组合参数
+     * @return
+     */
     public Map<String, String> generatePagingParameter() {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>(3);
         map.put("page", String.valueOf(page));
         map.put("page_size", String.valueOf(pageSize));
-        if (!TextUtils.isEmpty(sort_key)) {
-            map.put("sort_key", sort_key);
+        if (!TextUtils.isEmpty(sortKey)) {
+            map.put("sortKey", sortKey);
         }
         map.put("desc", String.valueOf(desc));
         return map;

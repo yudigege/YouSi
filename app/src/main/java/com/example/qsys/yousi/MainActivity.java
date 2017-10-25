@@ -38,17 +38,22 @@ public class MainActivity extends BaseActivity implements BottomNavigationBar.On
         bottomNavigationBarMain.addItem(new BottomNavigationItem(R.mipmap.ic_bottomtabbar_discover, R.string.main_page).setActiveColorResource(R.color.burlywood).setInActiveColorResource(R.color.lightgrey))
                 .addItem(new BottomNavigationItem(R.mipmap.ic_bottomtabbar_more, R.string.book_stock).setActiveColorResource(R.color.burlywood).setInActiveColorResource(R.color.lightgrey))
                 .addItem(new BottomNavigationItem(R.mipmap.ic_bottomtabbar_db, R.string.idea).setActiveColorResource(R.color.burlywood).setInActiveColorResource(R.color.lightgrey))
-                .addItem(new BottomNavigationItem(R.mipmap.ic_bottomtabbar_feed, R.string.mine).setActiveColorResource(R.color.burlywood).setInActiveColorResource(R.color.lightgrey))//依次添加item,分别icon和名称
-                .setFirstSelectedPosition(0)//设置默认选择item
-                .initialise();//初始化
+                //依次添加item,分别icon和名称
+                .addItem(new BottomNavigationItem(R.mipmap.ic_bottomtabbar_feed, R.string.mine).setActiveColorResource(R.color.burlywood).setInActiveColorResource(R.color.lightgrey))
+                //设置默认选择item
+                .setFirstSelectedPosition(0)
+                //初始化
+                .initialise();
         bottomNavigationBarMain.setTabSelectedListener(this);
         setDefaultFragment();
 
     }
 
     private void setDefaultFragment() {
-        FragmentManager fragmentManager = getSupportFragmentManager();  //获取FragmentManager
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();//开启一个事务
+        //获取FragmentManager
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        //开启一个事务
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.frl_frag_container_main, MainPageFragment.newInstance());
         fragmentTransaction.commit();
     }
@@ -82,7 +87,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationBar.On
                 }
                 fragmentTransaction.replace(R.id.frl_frag_container_main, mineFragment);
                 break;
-
+default:
         }
         fragmentTransaction.commit();
     }

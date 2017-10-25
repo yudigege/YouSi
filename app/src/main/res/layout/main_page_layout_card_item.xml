@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="8dp"
+    android:layout_margin="@dimen/cardItem_padding"
     android:clickable="true"
-    android:elevation="6dp"
+    android:elevation="@dimen/cardItem_elevation"
     android:foreground="?android:attr/selectableItemBackground"
-    app:cardCornerRadius="5dp">
+    app:cardCornerRadius="@dimen/cardItem_radius">
 
     <View
         android:id="@+id/card_item_shade"

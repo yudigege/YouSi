@@ -1,8 +1,5 @@
 package com.example.qsys.yousi.common.util;
 
-/**
- * Created by hanshaokai on 2017/10/14 15:46
- */
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -19,6 +16,10 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+/**
+ * Created by HANSHAOKAI on 2017/10/14 15:46
+ */
 public class ActivityUtils {
     private ActivityUtils() {
         throw new UnsupportedOperationException("u can't instantiate me...");
@@ -156,7 +157,7 @@ public class ActivityUtils {
 
     private static void startActivity(Context context, Bundle extras, String pkg, String cls, Bundle options) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        if (extras != null) intent.putExtras(extras);
+        if (extras != null) {intent.putExtras(extras);}
         intent.setComponent(new ComponentName(pkg, cls));
         if (!(context instanceof Activity)) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -11,17 +11,29 @@ import static android.support.v4.util.Preconditions.checkNotNull;
  */
 
 public abstract class BasePresenter<T extends BaseView> {
-    //定义弱引用
+    /**
+     * 定义弱引用
+     */
     WeakReference<BaseView> weakRefView = null;
-    //初始的一些逻辑
+
+    /**
+     * 初始的一些逻辑
+     */
     public abstract void start();
-    //绑定view
+
+    /**
+     * 绑定view
+     */
     public void detacheView() {
         weakRefView.clear();
         weakRefView = null;
     }
 
-    //持有fragment引用 执行回调
+    /**
+     * 持有fragment引用 执行回调
+     *
+     * @param tasksView
+     */
     public void setPresenterView(@NonNull BaseView tasksView) {
         //这里view不能为空 不在判断是否为空
         weakRefView = new WeakReference(checkNotNull(tasksView, "tasksView cannot be null!"));
@@ -29,6 +41,9 @@ public abstract class BasePresenter<T extends BaseView> {
 
     public BaseView getBindView() {
         return weakRefView.get();
+    }
 
+    public WeakReference<BaseView> getWeakRefView() {
+        return weakRefView;
     }
 }

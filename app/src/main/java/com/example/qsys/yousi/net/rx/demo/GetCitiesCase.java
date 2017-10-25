@@ -9,16 +9,22 @@ import rx.Observable;
  * Created by hanshaokai on 2017/10/11 18:16
  */
 
-public class GetCitiesCase extends UseCase<GetCitiesCase.Api> {
+public class GetCitiesCase extends AbstractUseCase<GetCitiesCase.Api> {
+
     interface Api {
         @GET("api/china/")
+        /**
+         * 得到数据
+         */
         Observable<List<City>> getCitiesCase();
     }
 
-    //ApiClient 得到上一级的
-    //compose 对自身对象处理
+    /**
+     * compose 对自身对象处理
+     * @return
+     */
     public Observable<List<City>> getCities() {
-        return ApiClient().getCitiesCase()
+        return apiClient().getCitiesCase()
                 .compose(this.<List<City>>normalSchedulers());
     }
 

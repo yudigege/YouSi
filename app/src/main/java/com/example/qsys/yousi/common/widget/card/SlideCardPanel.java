@@ -24,35 +24,87 @@ import java.util.List;
 public class SlideCardPanel extends ViewGroup {
     private static final int X_VEL_THRESHOLD = 900;
     private static final int X_DISTANCE_THRESHOLD = 300;
-    private static final int MAX_SLIDE_DISTANCE_LINKAGE = 400; // 卡片左右滑动距离临界值 水平距离+垂直距离
-    private static final int AUTO_SLIDE_SPEED = 150;//控制拖拽过程中松手后，自动滑行的速度
-
-    //卡片层叠阴影
-    private static final int[] layerDrawables = new int[]{R.drawable.shape_rect_solid_trans,
+    /**
+     * 卡片左右滑动距离临界值 水平距离+垂直距离
+     */
+    private static final int MAX_SLIDE_DISTANCE_LINKAGE = 400;
+    /**
+     * 控制拖拽过程中松手后，自动滑行的速度
+     */
+    private static final int AUTO_SLIDE_SPEED = 150;
+    /**
+     * 卡片层叠阴影
+     */
+    private static final int[] LAYER_DRAWABLES = new int[]{R.drawable.shape_rect_solid_trans,
             R.drawable.shape_rect_solid_gray1_t0, R.drawable.shape_rect_solid_gray2_t0};
+    /**
+     * 卡片叠加缩放的步长
+     */
+    private static float SCALE_STEP = 0.001f;
+    /**
+     * 卡片与顶部的距离
+     */
+    private int  itemPaddingTop = SizeUtils.dp2px(0);
+    /**
+     * view叠加垂直偏移量的步长
+     */
+    private int yOffsetStep =SizeUtils.dp2px(-5);
 
-    private static float SCALE_STEP = 0.001f; //卡片叠加缩放的步长
-    private int  itemPaddingTop = SizeUtils.dp2px(0);//卡片与顶部的距离
-    private int yOffsetStep =SizeUtils.dp2px(-5); // view叠加垂直偏移量的步长
 
-
-    private CardSwitchListener cardSwitchListener; // 回调接口
+    /**
+     *  回调接口
+     */
+    private CardSwitchListener cardSwitchListener;
     private GestureDetectorCompat moveDetector;
-    private ViewDragHelper mDragHelper; //相比原生的ViewDragHelper，仅仅只是修改了Interpolator
-    private int initCenterViewX = 0, initCenterViewY = 0; //初始状态中间View的x位置,y位置
-    private int allWidth = 0; // 面板的宽度
-    private int allHeight = 0; // 面板的高度
-    private int childWith = 0; // 每一个子View对应的宽度
-
-    public static final int VANISH_TYPE_LEFT = 0;//左划
-    public static final int VANISH_TYPE_RIGHT = 1;//右划
-
-    private boolean slideLock = false;// 滑动锁
+    /**
+     * 相比原生的ViewDragHelper，仅仅只是修改了Interpolator
+     */
+    private ViewDragHelper mDragHelper;
+    /**
+     * 初始状态中间View的x位置,y位置
+     */
+    private int initCenterViewX = 0, initCenterViewY = 0;
+    /**
+     * 面板的宽度
+     */
+    private int allWidth = 0;
+    /**
+     * 面板的高度
+     */
+    private int allHeight = 0;
+    /**
+     * 每一个子View对应的宽度
+     */
+    private int childWith = 0;
+    /**
+     * 左划
+     */
+    public static final int VANISH_TYPE_LEFT = 0;
+    /**
+     * 右划
+     */
+    public static final int VANISH_TYPE_RIGHT = 1;
+    /**
+     * 滑动锁
+     */
+    private boolean slideLock = false;
     private Object syncLock = new Object();
-    private int isShowItem = 0; // 当前正在显示的项
-    private List<BookResponse.ResultsBean> dataList; // 存储的数据链表
-    private List<CardItemView> viewList = new ArrayList<>(); // 存放的是每一层的view，从顶到底
-    private List<View> releasedViewList = new ArrayList<>(); // 手指松开后存放的view列表
+    /**
+     * 当前正在显示的项
+     */
+    private int isShowItem = 0;
+    /**
+     * 存储的数据链表
+     */
+    private List<BookResponse.ResultsBean> dataList;
+    /**
+     * 存放的是每一层的view，从顶到底
+     */
+    private List<CardItemView> viewList = new ArrayList<>();
+    /**
+     * 手指松开后存放的view列表
+     */
+    private List<View> releasedViewList = new ArrayList<>();
 
     public SlideCardPanel(Context context) {
         this(context, null);
@@ -142,6 +194,7 @@ public class SlideCardPanel extends ViewGroup {
             case MeasureSpec.EXACTLY:
                 result = specSize;
                 break;
+            default:
         }
         return result | (childMeasuredState & MEASURED_STATE_MASK);
     }
@@ -398,7 +451,12 @@ public class SlideCardPanel extends ViewGroup {
         }
     }
 
-    // 由index对应view变成index-1对应的view
+    /**
+     * 由index对应view变成index-1对应的view
+     * @param changedView
+     * @param rate
+     * @param index
+     */
     private void ajustLinkageViewItem(View changedView, float rate, int index) {
         int changeIndex = viewList.indexOf(changedView);
         int initPosY = yOffsetStep * index;
@@ -419,29 +477,33 @@ public class SlideCardPanel extends ViewGroup {
         ajustView.setScaleY(scale);
     }
 
-    //初始化绘制卡片阴影
+    /**
+     * 初始化绘制卡片阴影
+     */
     private void drawShaderLayer() {
         int i = 0;
         for (CardItemView view : viewList) {
-            if (i < layerDrawables.length) {
-                view.setShadeLayer(layerDrawables[i++]);
+            if (i < LAYER_DRAWABLES.length) {
+                view.setShadeLayer(LAYER_DRAWABLES[i++]);
             } else {
-                view.setShadeLayer(layerDrawables[layerDrawables.length - 1]);
+                view.setShadeLayer(LAYER_DRAWABLES[LAYER_DRAWABLES.length - 1]);
             }
         }
     }
 
-    //更新并绘制卡片阴影
+    /**
+     * 更新并绘制卡片阴影
+     */
     private void updateShaderLayer() {
         int i = 0;
         for (CardItemView view : viewList) {
             if (i == 0) {
-                view.setShadeLayer(layerDrawables[0]);
+                view.setShadeLayer(LAYER_DRAWABLES[0]);
             } else {
-                if ((i - 1) < layerDrawables.length) {
-                    view.setShadeLayer(layerDrawables[i - 1]);
+                if ((i - 1) < LAYER_DRAWABLES.length) {
+                    view.setShadeLayer(LAYER_DRAWABLES[i - 1]);
                 } else {
-                    view.setShadeLayer(layerDrawables[layerDrawables.length - 1]);
+                    view.setShadeLayer(LAYER_DRAWABLES[LAYER_DRAWABLES.length - 1]);
                 }
             }
             ++i;
@@ -531,16 +593,19 @@ public class SlideCardPanel extends ViewGroup {
          * 新卡片显示回调
          *
          * @param index 最顶层显示的卡片的index
+         * @param animateView
+         * @param index
          */
-        public void onShow(View animateView, int index);
+         void onShow(View animateView, int index);
 
         /**
          * 卡片飞向两侧回调
          *
          * @param index 飞向两侧的卡片数据index
-         * @param type  飞向哪一侧{@link #VANISH_TYPE_LEFT}或{@link #VANISH_TYPE_RIGHT}
+         * @param animateView
+         * @param type 飞向哪一侧{@link #VANISH_TYPE_LEFT}或{@link #VANISH_TYPE_RIGHT}
          */
-        public void onCardVanish(View animateView, int index, int type);
+         void onCardVanish(View animateView, int index, int type);
 
         /**
          * 卡片点击事件
@@ -548,10 +613,16 @@ public class SlideCardPanel extends ViewGroup {
          * @param cardImageView 卡片上的图片view
          * @param index         点击到的index
          */
-        public void onItemClick(View cardImageView, int index);
+         void onItemClick(View cardImageView, int index);
 
 
-        public void onViewPosition(View changedView, float dx, float dy);
+        /**
+         * 对应的view
+         * @param changedView
+         * @param dx
+         * @param dy
+         */
+         void onViewPosition(View changedView, float dx, float dy);
     }
 
     class MoveDetector extends GestureDetector.SimpleOnGestureListener {
