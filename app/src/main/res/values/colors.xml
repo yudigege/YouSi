@@ -4,6 +4,7 @@
     <color name="colorPrimary">#303F9F</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="point_grey">#E7E5E7</color>
     <color name="black">#000000</color><!--黑色 -->
     <color name="white">#FFFFFF</color><!--白色-->
     <color name="snow">#fffafa</color><!--雪白色 -->

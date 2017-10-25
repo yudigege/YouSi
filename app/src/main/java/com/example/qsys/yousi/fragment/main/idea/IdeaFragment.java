@@ -16,6 +16,9 @@ import com.example.qsys.yousi.adapter.idea.IdeaAdapter;
 import com.example.qsys.yousi.bean.BaseResponse;
 import com.example.qsys.yousi.bean.DaysResportResponse;
 import com.example.qsys.yousi.common.Constant;
+import com.example.qsys.yousi.common.util.SizeUtils;
+import com.example.qsys.yousi.common.util.ToastUtils;
+import com.example.qsys.yousi.common.widget.recyclerview.SpacesItemDecoration;
 import com.example.qsys.yousi.fragment.BaseFragment;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
@@ -44,17 +47,32 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
     public IdeaAdapter ideaAdapter;
     public List<DaysResportResponse.ResultsBean> mDaysReportList = new ArrayList<>();
 
+    private int dailyNum = 0;
+    private int readPressionNum = 0;
+    public TextView head;
+
     @Override
     public void showResponseData(BaseResponse response) {
         mDaysReportList.clear();
+        readPressionNum = 0;
+        dailyNum = 0;
         List<DaysResportResponse.ResultsBean> results = ((DaysResportResponse) response).getResults();
         mDaysReportList.addAll(results);
-
+        for (DaysResportResponse.ResultsBean resultsBean : mDaysReportList) {
+            if (resultsBean.getType() == Constant.DAYLIE) {
+                ++dailyNum;
+            }
+            else if (resultsBean.getType() == Constant.READPRESSION) {
+                ++readPressionNum;
+            }
+        }
+        ideaAdapter.notifyDataSetChanged();
+        head.setText(getResources().getString(R.string.daily_after_read_pression, dailyNum, readPressionNum));
     }
 
     @Override
     public void showMessage(String smg) {
-
+        ToastUtils.showShort(smg);
     }
 
     @Override
@@ -105,7 +123,11 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
     private void initAdapter() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(baseFragmentActivity);
         rlvIdeaMain.setLayoutManager(layoutManager);
+        rlvIdeaMain.addItemDecoration(new SpacesItemDecoration(SizeUtils.dp2px(5)));
         ideaAdapter = new IdeaAdapter(baseFragmentActivity, mDaysReportList);
+        View view = LayoutInflater.from(baseFragmentActivity).inflate(R.layout.adpter_idea_head, null, false);
+        head = (TextView) view.findViewById(R.id.idea_num_head);
+        rlvIdeaMain.addHeaderView(view);
         rlvIdeaMain.setAdapter(ideaAdapter);
     }
 
@@ -120,6 +142,11 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
 
     @Override
     public void showProgressView(Boolean b) {
+        if (b) {
+            showProgressDialog(getResources().getString(R.string.loading));
+        } else {
+            dismissProgressDialog();
+        }
 
     }
 

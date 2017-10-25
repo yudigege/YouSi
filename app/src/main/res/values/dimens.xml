@@ -13,4 +13,10 @@
     <dimen name="tv_author_size">10sp</dimen>
     <dimen name="card_width">120dp</dimen>
     <dimen name="card_height">200dp</dimen>
+    <dimen name="line_width">2dip</dimen>
+    <dimen name="circle_point_to_left">25dip</dimen>
+    <dimen name="idea_card_padding">8dip</dimen>
+    <dimen name="content_title_size">13sp</dimen>
+    <dimen name="content_size">11sp</dimen>
+    <dimen name="text_size_mini">10sp</dimen>
 </resources>
