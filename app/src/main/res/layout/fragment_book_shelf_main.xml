@@ -9,6 +9,7 @@
 
     <com.jcodecraeer.xrecyclerview.XRecyclerView
         android:id="@+id/rlv_book_shelf_main"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

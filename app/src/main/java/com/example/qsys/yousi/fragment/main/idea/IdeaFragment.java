@@ -67,6 +67,7 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
             }
         }
         ideaAdapter.notifyDataSetChanged();
+        rlvIdeaMain.setVisibility(View.VISIBLE);
         head.setText(getResources().getString(R.string.daily_after_read_pression, dailyNum, readPressionNum));
     }
 
@@ -77,6 +78,7 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
 
     @Override
     public void showEmptyViewByCode(int code) {
+        rlvIdeaMain.setVisibility(View.GONE);
         switch (code) {
             case Constant.SERVER_ERROR:
                 llRoot.setVisibility(View.VISIBLE);
