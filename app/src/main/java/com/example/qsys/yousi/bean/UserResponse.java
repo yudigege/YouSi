@@ -50,8 +50,8 @@ public class UserResponse extends BaseResponse{
         private String blog;
         private String github;
         private String nickName;
-        private Object createTime;
-        private Object updateTime;
+        private Long createTime;
+        private Long updateTime;
         private String realName;
 
         public int getId() {
@@ -142,19 +142,19 @@ public class UserResponse extends BaseResponse{
             this.nickName = nickName;
         }
 
-        public Object getCreateTime() {
+        public Long getCreateTime() {
             return createTime;
         }
 
-        public void setCreateTime(Object createTime) {
+        public void setCreateTime(Long createTime) {
             this.createTime = createTime;
         }
 
-        public Object getUpdateTime() {
+        public Long getUpdateTime() {
             return updateTime;
         }
 
-        public void setUpdateTime(Object updateTime) {
+        public void setUpdateTime(Long updateTime) {
             this.updateTime = updateTime;
         }
 

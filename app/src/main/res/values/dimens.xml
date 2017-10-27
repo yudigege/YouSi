@@ -19,4 +19,5 @@
     <dimen name="content_title_size">13sp</dimen>
     <dimen name="content_size">11sp</dimen>
     <dimen name="text_size_mini">10sp</dimen>
+    <dimen name="alert_to_left">40dp</dimen>
 </resources>

@@ -5,6 +5,9 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="point_grey">#E7E5E7</color>
+    <color name="screen_bg">#FBF9FB</color>
+    <color name="window_statusBar_Color">#C0BEC0</color>
+
     <color name="black">#000000</color><!--黑色 -->
     <color name="white">#FFFFFF</color><!--白色-->
     <color name="snow">#fffafa</color><!--雪白色 -->
@@ -112,6 +115,7 @@
     <color name="indigo">#4b0082</color><!--靛青色 -->
     <color name="blue">#0000ff</color><!--蓝色 -->
     <color name="darkblue">#00008b</color><!--暗蓝色 -->
+    <color name="fabblue">#349fff</color><!--暗蓝色 -->
     <color name="mediumblue">#0000cd</color><!--中兰色 -->
     <color name="midnightblue">#191970</color><!--中灰兰色 -->
     <color name="navy">#000080</color><!--海军色 -->

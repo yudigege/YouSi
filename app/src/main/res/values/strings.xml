@@ -46,4 +46,9 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="write_daily">写日志</string>
+    <string name="write_read_pression">写读后感</string>
+    <string name="what_to_write">选择写什么</string>
+    <string name="title">标题</string>
+    <string name="content">内容</string>
 </resources>

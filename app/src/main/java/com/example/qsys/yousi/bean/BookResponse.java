@@ -49,8 +49,8 @@ public class BookResponse extends BaseResponse {
         private String uuid;
         private String keywords;
         private String bookname;
-        private Object updatetime;
-        private Object createtime;
+        private Long updatetime;
+        private Long createtime;
         private String lifecourse;
         private String deathtime;
         private String birthtime;
@@ -119,19 +119,19 @@ public class BookResponse extends BaseResponse {
             this.bookname = bookname;
         }
 
-        public Object getUpdatetime() {
+        public Long getUpdatetime() {
             return updatetime;
         }
 
-        public void setUpdatetime(Object updatetime) {
+        public void setUpdatetime(Long updatetime) {
             this.updatetime = updatetime;
         }
 
-        public Object getCreatetime() {
+        public Long getCreatetime() {
             return createtime;
         }
 
-        public void setCreatetime(Object createtime) {
+        public void setCreatetime(Long createtime) {
             this.createtime = createtime;
         }
 

@@ -2,7 +2,10 @@ package com.example.qsys.yousi.fragment.main.idea;
 
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -18,6 +21,7 @@ import com.example.qsys.yousi.bean.DaysResportResponse;
 import com.example.qsys.yousi.common.Constant;
 import com.example.qsys.yousi.common.util.SizeUtils;
 import com.example.qsys.yousi.common.util.ToastUtils;
+import com.example.qsys.yousi.common.widget.dialog.IdeaSelectDialog;
 import com.example.qsys.yousi.common.widget.recyclerview.SpacesItemDecoration;
 import com.example.qsys.yousi.fragment.BaseFragment;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
@@ -43,6 +47,8 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
     AppBarLayout appbarClude;
     @BindView(R.id.rlv_idea_main)
     XRecyclerView rlvIdeaMain;
+    @BindView(R.id.fab_add_idea)
+    FloatingActionButton fabAddIdea;
     private IdeaPresenterExtend mPresenter = null;
     public IdeaAdapter ideaAdapter;
     public List<DaysResportResponse.ResultsBean> mDaysReportList = new ArrayList<>();
@@ -50,6 +56,7 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
     private int dailyNum = 0;
     private int readPressionNum = 0;
     public TextView head;
+    public DialogFragment dialogFragment;
 
     @Override
     public void showResponseData(BaseResponse response) {
@@ -103,14 +110,28 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
     }
 
     private void initListener() {
-        llRoot.setOnClickListener(new View.OnClickListener() {
+        errorTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 llRoot.setVisibility(View.GONE);
                 mPresenter.getDasyReportData();
             }
         });
-
+        fabAddIdea.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (dialogFragment == null) {
+                    dialogFragment = IdeaSelectDialog.newInstance();
+                }
+                FragmentTransaction transaction = getFragmentManager()
+                        .beginTransaction();
+                //过渡动画
+                transaction
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                dialogFragment.show(transaction, "IdeaSelectDialog");
+               // dialogFragment.show(getChildFragmentManager(), "DialogFragment");
+            }
+        });
     }
     @Override
     public void doViewLogic(Bundle savedInstanceState) {
