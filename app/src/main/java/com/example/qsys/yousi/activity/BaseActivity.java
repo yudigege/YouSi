@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -33,20 +35,23 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         AppManager.getAppManager().addActivity(this);
         customApplication = (CustomApplication) getApplicationContext();
-      /*  //透明状态栏效果
-        if (Build.VERSION.SDK_INT >= 21) {
+ //透明状态栏效果
+       /* if (Build.VERSION.SDK_INT >= 21) {
             View decorView = getWindow().getDecorView();
             int systemUiFlagFullscreen = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
             decorView.setSystemUiVisibility(systemUiFlagFullscreen);//全屏设置 flag表示让应用的主题内容占用系统状态栏的空间
             getWindow().setStatusBarColor(Color.TRANSPARENT);//将状态栏设置成透明色
-        }
+        }*/
         ActionBar supportActionBar = getSupportActionBar();
-        supportActionBar.hide(); //隐藏状态栏和anctionBar4.1以下不兼容*/
-        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+        //supportActionBar.hide(); //隐藏状态栏和anctionBar4.1以下不兼容
+        //supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+
+
+
         ViewGroup contentFrameLayout = (ViewGroup) findViewById(Window.ID_ANDROID_CONTENT);
         View parentView = contentFrameLayout.getChildAt(0);
         if (parentView != null && Build.VERSION.SDK_INT >= VERSION_CODE) {
-            parentView.setFitsSystemWindows(true);
+            parentView.setFitsSystemWindows(false);
         }
         setContentView(R.layout.activity_fragment_container);
     }

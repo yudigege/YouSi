@@ -47,14 +47,14 @@ public class DaysResportResponse extends BaseResponse {
         private int type;
         private String content;
         private String title;
-        private Object uuid;
-        private Object createtime;
-        private Object updatetime;
+        private String uuid;
+        private Long createtime;
+        private Long updatetime;
         private String bookname;
         private String keywords;
         private int userid;
         private String bgcolor;
-        private Object bgimgUrl;
+        private String bgimgUrl;
         private int txtsize;
 
         public int getId() {
@@ -89,27 +89,27 @@ public class DaysResportResponse extends BaseResponse {
             this.title = title;
         }
 
-        public Object getUuid() {
+        public String getUuid() {
             return uuid;
         }
 
-        public void setUuid(Object uuid) {
+        public void setUuid(String uuid) {
             this.uuid = uuid;
         }
 
-        public Object getCreatetime() {
+        public Long getCreatetime() {
             return createtime;
         }
 
-        public void setCreatetime(Object createtime) {
+        public void setCreatetime(Long createtime) {
             this.createtime = createtime;
         }
 
-        public Object getUpdatetime() {
+        public Long getUpdatetime() {
             return updatetime;
         }
 
-        public void setUpdatetime(Object updatetime) {
+        public void setUpdatetime(Long updatetime) {
             this.updatetime = updatetime;
         }
 
@@ -149,7 +149,7 @@ public class DaysResportResponse extends BaseResponse {
             return bgimgUrl;
         }
 
-        public void setBgimgUrl(Object bgimgUrl) {
+        public void setBgimgUrl(String bgimgUrl) {
             this.bgimgUrl = bgimgUrl;
         }
 

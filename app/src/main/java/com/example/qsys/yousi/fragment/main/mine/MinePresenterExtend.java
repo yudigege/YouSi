@@ -11,4 +11,8 @@ public class MinePresenterExtend extends AbstractMinePresenter {
     }
 
 
+    @Override
+    void getUserData() {
+        getBindView().showResponseData(null);
+    }
 }

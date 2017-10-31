@@ -1,12 +1,17 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+
+    <!--    <item name="colorPrimary">@color/colorPrimary</item>-->
+        <item name="colorPrimary">@color/screen_bg</item>
+      <!--  <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+       <item name="colorPrimaryDark">@color/window_statusBar_Color</item>
+        <item name="colorAccent">@color/fabblue</item>
     </style>
+    <!--writeDaily toobar-->
+
     <!--普通dialog-->
     <style name="CustomProgressDialog" parent="@style/CustomDialog">
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -18,5 +23,14 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
         <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+    </style>
+    <!--mine 界面 style-->
+    <style name="min_tv_item_style">
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:drawablePadding">20dp</item>
+        <item name="android:background">@drawable/ripple_bg</item>
     </style>
 </resources>

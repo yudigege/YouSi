@@ -38,4 +38,17 @@
     <string name="cp">我的学习进度: &lt;font color=#ffa42f>%s%%&lt;/font></string>
     <string name="error_server">服务器发生故障</string>
     <string name="no_content">空空如也</string>
+    <string name="check_detail">查看详情</string>
+    <string name="daily_after_read_pression">读后感·%1$d篇，日志·%2$d篇</string>
+    <string name="daily_mine">我的日志</string>
+    <string name="read_pression_mine">我的读后感</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="write_daily">写日志</string>
+    <string name="write_read_pression">写读后感</string>
+    <string name="what_to_write">选择写什么</string>
+    <string name="title">标题</string>
+    <string name="content">内容</string>
 </resources>

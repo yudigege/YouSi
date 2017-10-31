@@ -3,6 +3,7 @@ package com.example.qsys.yousi.fragment.main.mine;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.qsys.yousi.CustomApplication;
 import com.example.qsys.yousi.R;
 import com.example.qsys.yousi.bean.BaseResponse;
 import com.example.qsys.yousi.common.Constant;
@@ -31,7 +33,16 @@ public class MineFragment extends BaseFragment implements MinePageView {
     Toolbar toolbarInclude;
     @BindView(R.id.appbar_clude)
     AppBarLayout appbarClude;
+    @BindView(R.id.tv_nick_name_mine)
+    TextView tvNickNameMine;
+    @BindView(R.id.tv_nick_name_mine2)
+    TextView tvNickNameMine2;
+    @BindView(R.id.tv_mine_daily)
+    TextView tvMineDaily;
+    @BindView(R.id.tv_mine_read_pression)
+    TextView tvMineReadPression;
     private MinePresenterExtend mPresenter = null;
+
     @Override
     public void showResponseData(BaseResponse response) {
 
@@ -61,6 +72,7 @@ public class MineFragment extends BaseFragment implements MinePageView {
             default:
         }
     }
+
     @Override
     public void showProgressView(Boolean b) {
 
@@ -77,7 +89,49 @@ public class MineFragment extends BaseFragment implements MinePageView {
         mPresenter = new MinePresenterExtend();
         mPresenter.setPresenterView(this);
         initToolBar(toolbarInclude, false, getResources().getString(R.string.mine), -1, false);
+        initListener();
+        mPresenter.getUserData();
+        showViewByData();
     }
+
+    private void showViewByData() {
+        try{
+        tvNickNameMine2.setText(CustomApplication.userEntity.getNickName());
+        tvNickNameMine.setText(CustomApplication.userEntity.getNickName());}
+        catch (NullPointerException e){
+            tvNickNameMine2.setText("天龙八部");
+            tvNickNameMine.setText("天龙八部");
+
+        }
+
+    }
+
+    private void initListener() {
+        appbarClude.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                int visibility = tvNickNameMine2.getVisibility();
+                tvNickNameMine.setVisibility(visibility == View.INVISIBLE ? View.VISIBLE : View.GONE);
+                if (verticalOffset == 0) {
+                    //展开时
+                    tvNickNameMine.setVisibility(View.GONE);
+                    tvTitleInclude.setTextColor(ContextCompat.getColor(baseFragmentActivity, R.color.black));
+                } else if (Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange()) {
+                    //收缩完时
+                    tvTitleInclude.setTextColor(ContextCompat.getColor(baseFragmentActivity, R.color.white));
+                    tvNickNameMine.setVisibility(View.VISIBLE);
+                } else if (Math.abs(verticalOffset) > appBarLayout.getTotalScrollRange() / 2) {
+                    //滚动中间状态
+                    /*返回值为0，visible；返回值为4，invisible；返回值为8，gone。*/
+                    tvNickNameMine.setVisibility(View.VISIBLE);
+                } else {
+                    tvNickNameMine.setVisibility(View.GONE);
+
+                }
+            }
+        });
+    }
+
 
     @Override
     public void onDestroyView() {
@@ -97,4 +151,6 @@ public class MineFragment extends BaseFragment implements MinePageView {
         MineFragment mineFragment = new MineFragment();
         return mineFragment;
     }
+
+
 }

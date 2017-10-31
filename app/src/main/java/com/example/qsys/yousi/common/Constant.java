@@ -5,6 +5,12 @@ package com.example.qsys.yousi.common;
  */
 
 public class Constant {
+    /**
+     * 日志和读后感
+     */
+    public static final int DAYLIE = 0;
+    public static final int READPRESSION = 1;
+    public static final String IDEA_STYPE = "idea";
     public static String accessToken = "";
     /**
      * 本地ippublic static final String BASE_URL = "http://116.196.109.167:8080/education/";

@@ -8,7 +8,7 @@ import com.example.qsys.yousi.fragment.BasePresenter;
 
 public abstract class AbstractMinePresenter extends BasePresenter{
 
-
+abstract  void getUserData();
 
 
 }
