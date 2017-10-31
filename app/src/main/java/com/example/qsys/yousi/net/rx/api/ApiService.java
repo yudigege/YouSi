@@ -2,6 +2,7 @@ package com.example.qsys.yousi.net.rx.api;
 
 import com.example.qsys.yousi.bean.BookResponse;
 import com.example.qsys.yousi.bean.DaysResportResponse;
+import com.example.qsys.yousi.bean.SuccessResponse;
 import com.example.qsys.yousi.bean.UserResponse;
 
 import retrofit2.http.GET;
@@ -42,9 +43,21 @@ public interface ApiService {
 
     /**
      * 得到登录人的所有日志和读后感
+     * @param userId
+     * @return
      */
     @GET("report/{userId}")
     Observable<DaysResportResponse> getAllDaysReport(@Path("userId") int userId);
 
+    /**
+     * 上传日志 或读后感
+     *
+     * @param title
+     * @param content
+     * @param userId
+     * @return
+     */
+    @POST("report/construct")
+    Observable<SuccessResponse> constructReport(@Query("title") String title, @Query("content") String content, @Query("userId") int userId, @Query("type") int type);
 
 }

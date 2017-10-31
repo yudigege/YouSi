@@ -4,7 +4,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,7 +11,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -46,8 +44,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         //supportActionBar.hide(); //隐藏状态栏和anctionBar4.1以下不兼容
         //supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
 
-
-
+//弹窗导致先白色后转黑色不是直接黑色
+        //   StatusBarUtil.StatusBarLightMode(this, true);
         ViewGroup contentFrameLayout = (ViewGroup) findViewById(Window.ID_ANDROID_CONTENT);
         View parentView = contentFrameLayout.getChildAt(0);
         if (parentView != null && Build.VERSION.SDK_INT >= VERSION_CODE) {

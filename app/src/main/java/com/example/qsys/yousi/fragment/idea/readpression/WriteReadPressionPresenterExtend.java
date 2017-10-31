@@ -1,4 +1,4 @@
-package com.example.qsys.yousi.fragment.idea.daily;
+package com.example.qsys.yousi.fragment.idea.readpression;
 
 import com.example.qsys.yousi.R;
 import com.example.qsys.yousi.bean.SuccessResponse;
@@ -9,11 +9,11 @@ import com.example.qsys.yousi.net.rx.manager.RxSchedulers;
 
 /**
  * @author hanshaokai
- * @date 2017/10/27 16:30
+ * @date 2017/10/31 14:00
  */
 
 
-public class WriteDailyPresenterExtend extends AbstractWriteDailyPresenter {
+public class WriteReadPressionPresenterExtend extends AbstractWriteReadPressionPresenter {
     @Override
     public void start() {
 
@@ -24,16 +24,16 @@ public class WriteDailyPresenterExtend extends AbstractWriteDailyPresenter {
     public void postData(String title, String content) {
 
         if (title.trim().equals("")) {
-            getBindView().showMessage(((WriteDailyFragment) getBindView()).baseFragmentActivity.getResources().getString(R.string.write_title));
+            getBindView().showMessage(((WriteReadPressionFragment) getBindView()).baseFragmentActivity.getResources().getString(R.string.write_title));
             return;
         }
 
         if (content.trim().equals("")) {
-            getBindView().showMessage(((WriteDailyFragment) getBindView()).baseFragmentActivity.getResources().getString(R.string.write_content));
+            getBindView().showMessage(((WriteReadPressionFragment) getBindView()).baseFragmentActivity.getResources().getString(R.string.write_content));
             return;
         }
 
-        NetManager.getApiService().constructReport(title, content, 11, Constant.DAYLIE).compose(RxSchedulers.<SuccessResponse>io_main())
+        NetManager.getApiService().constructReport(title, content, 11, Constant.READPRESSION).compose(RxSchedulers.<SuccessResponse>io_main())
                 .compose(getBindView().<SuccessResponse>bindToLifecycle())
                 .subscribe(new AbstractRxSubscriber<SuccessResponse>(getWeakRefView()) {
                     @Override
@@ -44,10 +44,11 @@ public class WriteDailyPresenterExtend extends AbstractWriteDailyPresenter {
                         getBindView().showProgressView(false);
                         getBindView().showResponseData(successResponse);
                         if (successResponse.getCode() == Constant.SCUCESS_COED) {
-                            ((WriteDailyFragment) getBindView()).clearEtData();
+                            ((WriteReadPressionFragment) getBindView()).clearEtData();
                         }
                     }
                 });
 
     }
+
 }

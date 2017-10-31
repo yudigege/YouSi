@@ -51,4 +51,11 @@
     <string name="what_to_write">选择写什么</string>
     <string name="title">标题</string>
     <string name="content">内容</string>
+    <string name="write_title">需要添加标题</string>
+    <string name="write_content">请填写内容</string>
+    <string name="book_name">书名</string>
+    <string name="is_quit_edit">退出此次编辑？</string>
+    <string name="content_wont_store">想法内容将不会被保存</string>
+    <string name="quit">退出</string>
+    <string name="continue_quit">继续编辑</string>
 </resources>

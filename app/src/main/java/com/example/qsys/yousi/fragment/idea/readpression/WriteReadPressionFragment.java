@@ -1,7 +1,9 @@
-package com.example.qsys.yousi.fragment.idea.daily;
+package com.example.qsys.yousi.fragment.idea.readpression;
 
+import android.app.Dialog;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -24,82 +26,60 @@ import com.example.qsys.yousi.common.widget.dialog.AppStyleDialog;
 import com.example.qsys.yousi.fragment.BaseFragment;
 
 import butterknife.BindView;
-import butterknife.Unbinder;
 
 /**
  * @author hanshaokai
- * @date 2017/10/27 16:23
+ * @date 2017/10/31 13:55
  */
 
 
-public class WriteDailyFragment extends BaseFragment implements WriteDailyView {
+public class WriteReadPressionFragment extends BaseFragment implements WriteReadPressionView {
 
+    public AbstractWriteReadPressionPresenter mPresnter;
+    @BindView(R.id.img_btn_action_include)
+    ImageView imgBtnActionInclude;
     @BindView(R.id.toolbar_include)
     Toolbar toolbarInclude;
-    @BindView(R.id.et_write_title_daily)
-    EditText etWriteTitleDaily;
-    @BindView(R.id.et_write_content_daily)
-    EditText etWriteContentDaily;
-    @BindView(R.id.img_btn_action_include)
-    ImageView img_btn_action_include;
-    Unbinder unbinder;
-    public WriteDailyPresenterExtend mPresenter;
-    public AppStyleDialog dialog;
+    @BindView(R.id.appbar_clude)
+    AppBarLayout appbarClude;
+    @BindView(R.id.et_write_title_read)
+    EditText etWriteTitleRead;
+    @BindView(R.id.et_write_content_read)
+    EditText etWriteContentRead;
 
-    @Override
-    public void showResponseData(BaseResponse response) {
-        showMessage(response.getMessage());
-    }
-
-    @Override
-    public void showMessage(String smg) {
-        ToastUtils.showShort(smg);
-    }
-
-    @Override
-    public void showEmptyViewByCode(int code) {
-
-    }
-
-    @Override
-    public void showProgressView(Boolean b) {
-        if (b) {
-            showProgressDialog("正在上传");
-        } else {
-            dismissProgressDialog();
-        }
-    }
-
-    @Override
-    public Boolean isActive() {
-        return isAdded();
-    }
-
-    @Override
-    public void clearEtData() {
-        etWriteContentDaily.setText("");
-        etWriteTitleDaily.setText("");
-    }
+    @BindView(R.id.coordinator)
+    CoordinatorLayout coordinator;
+    public Dialog dialog;
 
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container) {
-        View inflate = inflater.inflate(R.layout.fragment_write_daily_idea, container,false);
+        View inflate = inflater.inflate(R.layout.fragment_write_read_pression_idea, container, false);
         return inflate;
     }
 
     @Override
     public void doViewLogic(Bundle savedInstanceState) {
 
-        mPresenter = new WriteDailyPresenterExtend();
-        mPresenter.setPresenterView(this);
-        initToolBarThis();
+        mPresnter = new WriteReadPressionPresenterExtend();
+        mPresnter.setPresenterView(this);
+        initToolBar();
         initListener();
+    }
+
+    private void initToolBar() {
+        //不设置 图标不显示
+        setHasOptionsMenu(true);
+        baseFragmentActivity.setSupportActionBar(toolbarInclude);
+        ActionBar actionBar = baseFragmentActivity.getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        toolbarInclude.setNavigationIcon(R.mipmap.ic_notification_hide);
+        actionBar.setTitle(getResources().getString(R.string.write_read_pression));
+        imgBtnActionInclude.setImageDrawable(ContextCompat.getDrawable(baseFragmentActivity, R.mipmap.ic_send_default));
 
     }
 
     private void initListener() {
-
-        etWriteContentDaily.addTextChangedListener(new TextWatcher() {
+        etWriteContentRead.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -111,20 +91,17 @@ public class WriteDailyFragment extends BaseFragment implements WriteDailyView {
             @Override
             public void afterTextChanged(Editable s) {
                 //在指定位置之前插入
-                if (s.length() == 0 && etWriteTitleDaily.getText().toString().length() == 0) {
-                    img_btn_action_include.setImageDrawable(ContextCompat.getDrawable(baseFragmentActivity, R.mipmap.ic_send_default));
-                    img_btn_action_include.setEnabled(false);
+                if (s.length() == 0 && etWriteTitleRead.getText().toString().length() == 0) {
+                    imgBtnActionInclude.setImageDrawable(ContextCompat.getDrawable(baseFragmentActivity, R.mipmap.ic_send_default));
+                    imgBtnActionInclude.setEnabled(false);
                 } else {
-                    img_btn_action_include.setImageDrawable(ContextCompat.getDrawable(baseFragmentActivity, R.mipmap.ic_send_light));
-                    /*if (!s.toString().equals(" ") && s.length() == 1) {
-                        s.insert(0, "   ");
-                    }*/
-                    img_btn_action_include.setEnabled(true);
+                    imgBtnActionInclude.setImageDrawable(ContextCompat.getDrawable(baseFragmentActivity, R.mipmap.ic_send_light));
+                    imgBtnActionInclude.setEnabled(true);
                 }
                 LogUtils.d("find", "afterTextChangedlength==" + s.length());
             }
         });
-        etWriteTitleDaily.addTextChangedListener(new TextWatcher() {
+        etWriteTitleRead.addTextChangedListener(new TextWatcher() {
             /**
              * @param s
              * @param start 代表开始变化的位置
@@ -158,38 +135,52 @@ public class WriteDailyFragment extends BaseFragment implements WriteDailyView {
             public void afterTextChanged(Editable s) {
                 //在指定位置之前插入
 
-                if (s.length() == 0 && etWriteContentDaily.getText().toString().length() == 0) {
-                    img_btn_action_include.setImageDrawable(ContextCompat.getDrawable(baseFragmentActivity, R.mipmap.ic_send_default));
-                    img_btn_action_include.setEnabled(false);
+                if (s.length() == 0 && etWriteContentRead.getText().toString().length() == 0) {
+                    imgBtnActionInclude.setImageDrawable(ContextCompat.getDrawable(baseFragmentActivity, R.mipmap.ic_send_default));
+                    imgBtnActionInclude.setEnabled(false);
                 } else {
-                    img_btn_action_include.setImageDrawable(ContextCompat.getDrawable(baseFragmentActivity, R.mipmap.ic_send_light));
-                    img_btn_action_include.setEnabled(true);
-                 /*   if (!s.toString().equals(" ") && s.length() == 1) {
-                        s.insert(0, "   ");
-                    }*/
+                    imgBtnActionInclude.setImageDrawable(ContextCompat.getDrawable(baseFragmentActivity, R.mipmap.ic_send_light));
+                    imgBtnActionInclude.setEnabled(true);
+
                 }
                 LogUtils.d("find", "afterTextChangedlength==" + s.length());
             }
         });
-        img_btn_action_include.setOnClickListener(new View.OnClickListener() {
+        imgBtnActionInclude.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.postData(etWriteTitleDaily.getText().toString(), etWriteContentDaily.getText().toString());
+                mPresnter.postData(etWriteTitleRead.getText().toString(), etWriteContentRead.getText().toString());
             }
         });
     }
 
-    private void initToolBarThis() {
-        //不设置 图标不显示
-        setHasOptionsMenu(true);
-        baseFragmentActivity.setSupportActionBar(toolbarInclude);
-        ActionBar actionBar = baseFragmentActivity.getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        toolbarInclude.setNavigationIcon(R.mipmap.ic_notification_hide);
-        //设置溢出图标
-        //toolbarInclude.setOverflowIcon(ContextCompat.getDrawable(baseFragmentActivity, R.mipmap.ic_launcher));
-        actionBar.setTitle(getResources().getString(R.string.write_daily));
-        img_btn_action_include.setImageDrawable(ContextCompat.getDrawable(baseFragmentActivity, R.mipmap.ic_send_default));
+    @Override
+    public void showResponseData(BaseResponse response) {
+
+    }
+
+    @Override
+    public void showMessage(String smg) {
+        ToastUtils.showShort(smg);
+    }
+
+    @Override
+    public void showEmptyViewByCode(int code) {
+
+    }
+
+    @Override
+    public void showProgressView(Boolean b) {
+        if (b) {
+            showProgressDialog("正在上传");
+        } else {
+            dismissProgressDialog();
+        }
+    }
+
+    @Override
+    public Boolean isActive() {
+        return isAdded();
     }
 
     @Override
@@ -198,8 +189,8 @@ public class WriteDailyFragment extends BaseFragment implements WriteDailyView {
         switch (item.getItemId()) {
             case android.R.id.home:
                 if (
-                        !etWriteContentDaily.getText().toString().trim().equals("") ||
-                                !etWriteTitleDaily.getText().toString().trim().equals("")
+                        !etWriteContentRead.getText().toString().trim().equals("") ||
+                                !etWriteTitleRead.getText().toString().trim().equals("")
                         ) {
                     if (dialog == null) {
                         dialog = new AppStyleDialog(baseFragmentActivity, -1, baseFragmentActivity.getResources().getString(R.string.is_quit_edit)
@@ -237,11 +228,16 @@ public class WriteDailyFragment extends BaseFragment implements WriteDailyView {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mPresenter.detacheView();
+        mPresnter.detacheView();
     }
 
-    public static Fragment newInstance() {
+    public static WriteReadPressionFragment newInstance() {
+        return new WriteReadPressionFragment();
+    }
 
-        return new WriteDailyFragment();
+    @Override
+    public void clearEtData() {
+        etWriteTitleRead.setText("");
+        etWriteContentRead.setText("");
     }
 }

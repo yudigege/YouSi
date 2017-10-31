@@ -35,7 +35,7 @@ public class IdeaSelectDialog extends DialogFragment {
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
                 bundle.putInt(Constant.IDEA_STYPE, Constant.DAYLIE);
-                ActivityUtils.startActivity(getActivity(), IdeaActivity.class, bundle);
+                ActivityUtils.startActivity(bundle, getActivity(), IdeaActivity.class);
                 dismiss();
             }
         });
@@ -43,9 +43,11 @@ public class IdeaSelectDialog extends DialogFragment {
         read.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
+                Bundle bundle = new Bundle();
+                bundle.putInt(Constant.IDEA_STYPE, Constant.READPRESSION);
+                ActivityUtils.startActivity(bundle, getActivity(), IdeaActivity.class);
                 dismiss();
+
             }
         });
         android.support.v7.app.AlertDialog alertDialog = new android.support.v7.app.AlertDialog.Builder(getActivity()).setView

@@ -20,4 +20,8 @@
     <dimen name="content_size">11sp</dimen>
     <dimen name="text_size_mini">10sp</dimen>
     <dimen name="alert_to_left">40dp</dimen>
+    <dimen name="dialog_radius">3dip</dimen>
+    <dimen name="dialog_pading">20dip</dimen>
+    <dimen name="dialog_title_size">16sp</dimen>
+    <dimen name="dialog_content_size">13sp</dimen>
 </resources>

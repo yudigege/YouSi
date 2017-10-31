@@ -116,7 +116,8 @@ public abstract class AbstractRxSubscriber<T> extends Subscriber<T> {
         else {
             // on_Error(CustomApplication.getAppContext().getString(R.string.net_error), Constant.UN_RECOGNICTION);
             getBindView().showEmptyViewByCode(Constant.UN_RECOGNICTION);
-            getBindView().showMessage(CustomApplication.getAppContext().getString(R.string.net_error));
+            //  getBindView().showMessage(CustomApplication.getAppContext().getString(R.string.net_error));
+            getBindView().showMessage(e.getMessage());
         }
 
         getBindView().showProgressView(false);

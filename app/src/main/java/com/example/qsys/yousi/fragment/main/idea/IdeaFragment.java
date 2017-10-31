@@ -127,7 +127,7 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
                         .beginTransaction();
                 //过渡动画
                 transaction
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                        .setTransition(FragmentTransaction.TRANSIT_ENTER_MASK);
                 dialogFragment.show(transaction, "IdeaSelectDialog");
                // dialogFragment.show(getChildFragmentManager(), "DialogFragment");
             }
