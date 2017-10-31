@@ -47,4 +47,7 @@ public interface BaseView {
      * @return
      */
     Boolean isActive();
+
+
+
 }

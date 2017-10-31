@@ -31,7 +31,8 @@
         <activity
             android:name=".MainActivity2"
             android:label="@string/title_activity_main2" />
-        <activity android:name=".activity.IdeaActivity"></activity>
+        <activity android:name=".activity.IdeaActivity" />
+        <activity android:name=".activity.MineActivity"></activity>
     </application>
 
 </manifest>

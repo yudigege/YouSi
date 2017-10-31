@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.example.qsys.yousi.R;
 import com.example.qsys.yousi.bean.DaysResportResponse;
 import com.example.qsys.yousi.common.Constant;
+import com.example.qsys.yousi.common.util.TimeUtils;
 
 import java.util.List;
 
@@ -56,7 +57,7 @@ public class IdeaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ideaViewHolderContent.type.setText(mDaysReportList.get(position / 2).getType() == Constant.DAYLIE ? "日志" : "读后感");
         } else if (holder instanceof IdeaViewHolderTime) {
             IdeaViewHolderTime ideaViewHolderTime = (IdeaViewHolderTime) holder;
-            ideaViewHolderTime.time.setText(mDaysReportList.get(position / 2).getCreatetime() + "");
+            ideaViewHolderTime.time.setText(TimeUtils.millis2String(mDaysReportList.get(position / 2).getCreatetime()));
 
         }
 

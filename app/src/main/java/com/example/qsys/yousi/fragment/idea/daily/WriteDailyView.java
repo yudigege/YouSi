@@ -9,4 +9,8 @@ import com.example.qsys.yousi.fragment.BaseView;
 
 
 public interface WriteDailyView extends BaseView {
+    /**
+     * 清除et上数据
+     */
+    void clearEtData();
 }
