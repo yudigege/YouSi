@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.qsys.yousi.CustomApplication;
 import com.example.qsys.yousi.R;
+import com.example.qsys.yousi.bean.BaseResponse;
 import com.example.qsys.yousi.common.Constant;
 import com.example.qsys.yousi.common.util.LogUtils;
 import com.example.qsys.yousi.common.util.NetworkUtils;
@@ -82,9 +83,15 @@ public abstract class AbstractRxSubscriber<T> extends Subscriber<T> {
         }*/
     }
 
-
     @Override
     public void onNext(T t) {
+        if (t instanceof BaseResponse) {
+            if (((BaseResponse) t).getErrors() != null) {
+                ToastUtils.showLong((String) ((BaseResponse) t).getErrors());
+                getBindView().showProgressView(false);
+                return;
+            }
+        }
         on_Next(t);
     }
 
@@ -118,8 +125,8 @@ public abstract class AbstractRxSubscriber<T> extends Subscriber<T> {
             getBindView().showEmptyViewByCode(Constant.UN_RECOGNICTION);
             //  getBindView().showMessage(CustomApplication.getAppContext().getString(R.string.net_error));
             getBindView().showMessage(e.getMessage());
+            ToastUtils.showLong(CustomApplication.getAppContext().getResources().getString(R.string.error_server_msg, e.getMessage()));
         }
-
         getBindView().showProgressView(false);
     }
 

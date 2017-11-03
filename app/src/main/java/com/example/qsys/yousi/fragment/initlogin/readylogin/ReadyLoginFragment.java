@@ -27,7 +27,9 @@ import com.example.qsys.yousi.bean.UserResponse;
 import com.example.qsys.yousi.common.Constant;
 import com.example.qsys.yousi.common.util.ActivityUtils;
 import com.example.qsys.yousi.common.util.ToastUtils;
+import com.example.qsys.yousi.common.widget.dialog.AppStyleDialog;
 import com.example.qsys.yousi.fragment.BaseFragment;
+
 import butterknife.BindView;
 
 /**
@@ -49,6 +51,9 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
     @BindView(R.id.login_form)
     ScrollView loginForm;
     public AbstractReadyLoginPresenter mPresenter;
+    public String account;
+    public AppStyleDialog appStyleDialog;
+
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container) {
         View view = inflater.inflate(R.layout.fragment_ready_login
@@ -77,17 +82,17 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
                 attemptLogin();
             }
         });
+       /* atvAccount.setText("12345678");
+        etPassword.setText("12345678");*/
     }
-
     /**
      * 登录
      */
     private void attemptLogin() {
-
         // 初始
         atvAccount.setError(null);
         etPassword.setError(null);
-        String account = atvAccount.getText().toString();
+        account = atvAccount.getText().toString();
         String password = etPassword.getText().toString();
         boolean cancel = false;
         View focusView = null;
@@ -178,6 +183,14 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
                 break;
             case Constant.USER_NOT_EXIT:
                 ToastUtils.showShort(getResources().getString(R.string.user_not_exit));
+                    appStyleDialog = new AppStyleDialog(baseFragmentActivity, -1, account) {
+                        @Override
+                        public void doConfirm() {
+                            super.doConfirm();
+                            mPresenter.toRegister(account);
+                        }
+                    };
+                    appStyleDialog.show();
                 break;
             case Constant.USER_PASSWORD_ERRO:
                 ToastUtils.showShort(getResources().getString(R.string.password_errro));
@@ -216,4 +229,6 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
     public void doView() {
 
     }
+
+
 }

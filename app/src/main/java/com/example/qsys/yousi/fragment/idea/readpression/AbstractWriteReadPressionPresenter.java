@@ -9,5 +9,5 @@ import com.example.qsys.yousi.fragment.BasePresenter;
 
 
 public abstract class AbstractWriteReadPressionPresenter extends BasePresenter {
-    public abstract void postData(String title, String content);
+    public abstract void postData(String bookName, String content);
 }

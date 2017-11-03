@@ -1,15 +1,18 @@
 package com.example.qsys.yousi.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
 
-import com.example.qsys.yousi.R;
+import com.example.qsys.yousi.fragment.mine.minedetail.MineDetailFragment;
 
-public class MineActivity extends AppCompatActivity {
+/**
+ * @author hanshaokai
+ */
+public class MineActivity extends BaseActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mine);
+        addFragment(MineDetailFragment.newInstance());
     }
 }

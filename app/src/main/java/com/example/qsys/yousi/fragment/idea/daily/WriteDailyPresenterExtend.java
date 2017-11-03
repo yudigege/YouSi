@@ -1,5 +1,6 @@
 package com.example.qsys.yousi.fragment.idea.daily;
 
+import com.example.qsys.yousi.CustomApplication;
 import com.example.qsys.yousi.R;
 import com.example.qsys.yousi.bean.SuccessResponse;
 import com.example.qsys.yousi.common.Constant;
@@ -33,7 +34,7 @@ public class WriteDailyPresenterExtend extends AbstractWriteDailyPresenter {
             return;
         }
 
-        NetManager.getApiService().constructReport(title, content, 11, Constant.DAYLIE).compose(RxSchedulers.<SuccessResponse>io_main())
+        NetManager.getApiService().constructReport(null,title, content, CustomApplication.userEntity.getId(), Constant.DAYLIE).compose(RxSchedulers.<SuccessResponse>io_main())
                 .compose(getBindView().<SuccessResponse>bindToLifecycle())
                 .subscribe(new AbstractRxSubscriber<SuccessResponse>(getWeakRefView()) {
                     @Override
@@ -48,6 +49,5 @@ public class WriteDailyPresenterExtend extends AbstractWriteDailyPresenter {
                         }
                     }
                 });
-
     }
 }

@@ -1,5 +1,6 @@
 package com.example.qsys.yousi.fragment.main.idea;
 
+import com.example.qsys.yousi.CustomApplication;
 import com.example.qsys.yousi.bean.BaseResponse;
 import com.example.qsys.yousi.bean.DaysResportResponse;
 import com.example.qsys.yousi.common.Constant;
@@ -24,7 +25,7 @@ public class IdeaPresenterExtend extends AbstractIdeaPresenter {
 
     @Override
     void getDasyReportData() {
-        NetManager.getApiService().getAllDaysReport(11).compose(RxSchedulers.<BaseResponse>io_main())
+        NetManager.getApiService().getAllDaysReport(CustomApplication.userEntity.getId()).compose(RxSchedulers.<BaseResponse>io_main())
                 .compose(getBindView().<BaseResponse>bindToLifecycle())
                 .subscribe(new AbstractRxSubscriber<BaseResponse>(getWeakRefView()) {
                     @Override

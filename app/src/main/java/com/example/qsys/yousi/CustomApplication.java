@@ -25,7 +25,7 @@ public class CustomApplication extends Application {
      */
     public static List<Activity> unDestroyActivities = new ArrayList<Activity>();
     public static CustomApplication customApplication;
-    public static UserResponse.ResultsBean userEntity;
+    public static UserResponse.ResultsBean userEntity = new UserResponse.ResultsBean();
 
     @Override
     public void onCreate() {

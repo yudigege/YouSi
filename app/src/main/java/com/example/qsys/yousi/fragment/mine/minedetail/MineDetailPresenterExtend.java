@@ -1,4 +1,4 @@
-package com.example.qsys.yousi.fragment.idea.readpression;
+package com.example.qsys.yousi.fragment.mine.minedetail;
 
 import com.example.qsys.yousi.CustomApplication;
 import com.example.qsys.yousi.R;
@@ -8,33 +8,23 @@ import com.example.qsys.yousi.net.rx.manager.AbstractRxSubscriber;
 import com.example.qsys.yousi.net.rx.manager.NetManager;
 import com.example.qsys.yousi.net.rx.manager.RxSchedulers;
 
+import java.util.Map;
+
 /**
  * @author hanshaokai
- * @date 2017/10/31 14:00
+ * @date 2017/10/31 18:06
  */
 
 
-public class WriteReadPressionPresenterExtend extends AbstractWriteReadPressionPresenter {
+public class MineDetailPresenterExtend extends AbstractMineDetailPresenter {
     @Override
     public void start() {
-
     }
 
-
     @Override
-    public void postData(String bookName, String content) {
+    public void updateUserInfor(Map<String, String> map) {
 
-        if (bookName.trim().equals("")) {
-            getBindView().showMessage(((WriteReadPressionFragment) getBindView()).baseFragmentActivity.getResources().getString(R.string.write_title));
-            return;
-        }
-
-        if (content.trim().equals("")) {
-            getBindView().showMessage(((WriteReadPressionFragment) getBindView()).baseFragmentActivity.getResources().getString(R.string.write_content));
-            return;
-        }
-
-        NetManager.getApiService().constructReport(bookName,null, content, CustomApplication.userEntity.getId(), Constant.READPRESSION).compose(RxSchedulers.<SuccessResponse>io_main())
+        NetManager.getApiService().updateUser(CustomApplication.userEntity.getId(), map).compose(RxSchedulers.<SuccessResponse>io_main())
                 .compose(getBindView().<SuccessResponse>bindToLifecycle())
                 .subscribe(new AbstractRxSubscriber<SuccessResponse>(getWeakRefView()) {
                     @Override
@@ -44,12 +34,16 @@ public class WriteReadPressionPresenterExtend extends AbstractWriteReadPressionP
                         }
                         getBindView().showProgressView(false);
                         getBindView().showResponseData(successResponse);
-                        if (successResponse.getCode() == Constant.SCUCESS_COED) {
-                            ((WriteReadPressionFragment) getBindView()).clearEtData();
+                        if (successResponse.getCode() != Constant.SCUCESS_COED) {
+                            getBindView().showMessage(((MineDetailFragment) getBindView()).getString(R.string.edit_sucess));
+                        } else {
+                            ((MineDetailFragment) getBindView()).setUserInfor(Constant.EDITE_NICK);
+
                         }
                     }
                 });
 
     }
+
 
 }

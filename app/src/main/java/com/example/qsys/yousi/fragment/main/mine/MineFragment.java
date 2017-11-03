@@ -13,8 +13,10 @@ import android.widget.TextView;
 
 import com.example.qsys.yousi.CustomApplication;
 import com.example.qsys.yousi.R;
+import com.example.qsys.yousi.activity.MineActivity;
 import com.example.qsys.yousi.bean.BaseResponse;
 import com.example.qsys.yousi.common.Constant;
+import com.example.qsys.yousi.common.util.ActivityUtils;
 import com.example.qsys.yousi.common.util.ToastUtils;
 import com.example.qsys.yousi.fragment.BaseFragment;
 
@@ -80,7 +82,7 @@ public class MineFragment extends BaseFragment implements MinePageView {
 
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container) {
-        View view = inflater.inflate(R.layout.fragment_mine_main, null, false);
+        View view = inflater.inflate(R.layout.fragment_mine_main, container, false);
         return view;
     }
 
@@ -95,15 +97,8 @@ public class MineFragment extends BaseFragment implements MinePageView {
     }
 
     private void showViewByData() {
-        try{
-        tvNickNameMine2.setText(CustomApplication.userEntity.getNickName());
-        tvNickNameMine.setText(CustomApplication.userEntity.getNickName());}
-        catch (NullPointerException e){
-            tvNickNameMine2.setText("天龙八部");
-            tvNickNameMine.setText("天龙八部");
-
-        }
-
+        tvNickNameMine2.setText(CustomApplication.userEntity.getNick_name());
+        tvNickNameMine.setText(CustomApplication.userEntity.getNick_name());
     }
 
     private void initListener() {
@@ -128,6 +123,12 @@ public class MineFragment extends BaseFragment implements MinePageView {
                     tvNickNameMine.setVisibility(View.GONE);
 
                 }
+            }
+        });
+        tvNickNameMine2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityUtils.startActivity(null, baseFragmentActivity, MineActivity.class);
             }
         });
     }

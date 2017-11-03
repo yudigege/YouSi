@@ -5,10 +5,14 @@ import com.example.qsys.yousi.bean.DaysResportResponse;
 import com.example.qsys.yousi.bean.SuccessResponse;
 import com.example.qsys.yousi.bean.UserResponse;
 
+import java.util.Map;
+
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 import rx.Observable;
 
 /**
@@ -35,6 +39,23 @@ public interface ApiService {
     Observable<UserResponse> toLogin(@Query("account") String account, @Query("password") String password);
 
     /**
+     * 通过账号注册
+     *
+     * @param account
+     * @return
+     */
+    @POST("users/register")
+    Observable<SuccessResponse> toRegister(@Query("mobile")String account);
+
+    /**
+     * 更新user
+     *
+     * @param map
+     * @return
+     */
+    @PUT("users/{userId}")
+    Observable<SuccessResponse> updateUser(@Path("userId") int userId, @QueryMap Map<String, String> map);
+    /**
      * 得到所有的书籍数据
      * @return
      */
@@ -58,6 +79,7 @@ public interface ApiService {
      * @return
      */
     @POST("report/construct")
-    Observable<SuccessResponse> constructReport(@Query("title") String title, @Query("content") String content, @Query("userId") int userId, @Query("type") int type);
+    Observable<SuccessResponse> constructReport(@Query("book_name") String book_name, @Query("title") String title, @Query("content") String content, @Query("userId") int userId, @Query("type") int type);
+
 
 }
