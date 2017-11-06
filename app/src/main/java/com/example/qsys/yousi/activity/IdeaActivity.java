@@ -3,8 +3,10 @@ package com.example.qsys.yousi.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.example.qsys.yousi.bean.DaysResportResponse;
 import com.example.qsys.yousi.common.Constant;
 import com.example.qsys.yousi.fragment.idea.daily.WriteDailyFragment;
+import com.example.qsys.yousi.fragment.idea.detailshow.IdeaDetailShowFragment;
 import com.example.qsys.yousi.fragment.idea.readpression.WriteReadPressionFragment;
 
 public class IdeaActivity extends BaseActivity {
@@ -26,7 +28,10 @@ public class IdeaActivity extends BaseActivity {
             case Constant.READPRESSION:
                 addFragment(WriteReadPressionFragment.newInstance());
                 break;
-
+            case Constant.READPRESSION_DETAIL:
+                DaysResportResponse.ResultsBean parcelable = extras.getParcelable(Constant.READPRESSION_OBJECT);
+                IdeaDetailShowFragment ideaDetailShowFragment = IdeaDetailShowFragment.newInstance(parcelable);
+                addFragment(ideaDetailShowFragment);
             default:
         }
 

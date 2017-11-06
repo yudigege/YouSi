@@ -1,5 +1,8 @@
 package com.example.qsys.yousi.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
@@ -26,7 +29,7 @@ public class DaysResportResponse extends BaseResponse {
         this.results = results;
     }
 
-    public static class ResultsBean {
+    public static class ResultsBean implements Parcelable {
         /**
          * id : 16
          * type : 1
@@ -160,5 +163,58 @@ public class DaysResportResponse extends BaseResponse {
         public void setTxtsize(int txtsize) {
             this.txtsize = txtsize;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(this.id);
+            dest.writeInt(this.type);
+            dest.writeString(this.content);
+            dest.writeString(this.title);
+            dest.writeString(this.uuid);
+            dest.writeValue(this.createtime);
+            dest.writeValue(this.updatetime);
+            dest.writeString(this.bookname);
+            dest.writeString(this.keywords);
+            dest.writeInt(this.userid);
+            dest.writeString(this.bgcolor);
+            dest.writeString(this.bgimgUrl);
+            dest.writeInt(this.txtsize);
+        }
+
+        public ResultsBean() {
+        }
+
+        protected ResultsBean(Parcel in) {
+            this.id = in.readInt();
+            this.type = in.readInt();
+            this.content = in.readString();
+            this.title = in.readString();
+            this.uuid = in.readString();
+            this.createtime = (Long) in.readValue(Long.class.getClassLoader());
+            this.updatetime = (Long) in.readValue(Long.class.getClassLoader());
+            this.bookname = in.readString();
+            this.keywords = in.readString();
+            this.userid = in.readInt();
+            this.bgcolor = in.readString();
+            this.bgimgUrl = in.readString();
+            this.txtsize = in.readInt();
+        }
+
+        public static final Parcelable.Creator<ResultsBean> CREATOR = new Parcelable.Creator<ResultsBean>() {
+            @Override
+            public ResultsBean createFromParcel(Parcel source) {
+                return new ResultsBean(source);
+            }
+
+            @Override
+            public ResultsBean[] newArray(int size) {
+                return new ResultsBean[size];
+            }
+        };
     }
 }

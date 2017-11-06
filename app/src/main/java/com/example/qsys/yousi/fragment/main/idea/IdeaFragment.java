@@ -15,13 +15,16 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.qsys.yousi.R;
+import com.example.qsys.yousi.activity.IdeaActivity;
 import com.example.qsys.yousi.adapter.idea.IdeaAdapter;
 import com.example.qsys.yousi.bean.BaseResponse;
 import com.example.qsys.yousi.bean.DaysResportResponse;
 import com.example.qsys.yousi.common.Constant;
+import com.example.qsys.yousi.common.util.ActivityUtils;
 import com.example.qsys.yousi.common.util.SizeUtils;
 import com.example.qsys.yousi.common.util.ToastUtils;
 import com.example.qsys.yousi.common.widget.dialog.IdeaSelectDialog;
+import com.example.qsys.yousi.common.widget.recyclerview.OnItemViewClickLisener;
 import com.example.qsys.yousi.common.widget.recyclerview.SpacesItemDecoration;
 import com.example.qsys.yousi.fragment.BaseFragment;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
@@ -152,6 +155,24 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
         head = (TextView) view.findViewById(R.id.idea_num_head);
         rlvIdeaMain.addHeaderView(view);
         rlvIdeaMain.setAdapter(ideaAdapter);
+        ideaAdapter.setOnItemViewClicLisener(new OnItemViewClickLisener() {
+                                                 @Override
+                                                 public void itemViewClick(int position, int type) {
+
+
+                                                     if (type == Constant.READPRESSION) {
+
+                                                     }
+                                                     if (type == Constant.DAYLIE) {
+                                                         Bundle bundle = new Bundle();
+                                                         bundle.putInt(Constant.IDEA_STYPE, Constant.READPRESSION_DETAIL);
+                                                         bundle.putParcelable(Constant.READPRESSION_OBJECT,mDaysReportList.get(position));
+                                                         ActivityUtils.startActivity(bundle, baseFragmentActivity, IdeaActivity.class);
+
+                                                     }
+                                                 }
+                                             }
+        );
     }
 
     @Override
