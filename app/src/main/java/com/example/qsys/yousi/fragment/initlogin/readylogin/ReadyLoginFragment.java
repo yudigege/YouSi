@@ -26,6 +26,7 @@ import com.example.qsys.yousi.bean.BaseResponse;
 import com.example.qsys.yousi.bean.UserResponse;
 import com.example.qsys.yousi.common.Constant;
 import com.example.qsys.yousi.common.util.ActivityUtils;
+import com.example.qsys.yousi.common.util.SPUtils;
 import com.example.qsys.yousi.common.util.ToastUtils;
 import com.example.qsys.yousi.common.widget.dialog.AppStyleDialog;
 import com.example.qsys.yousi.fragment.BaseFragment;
@@ -53,6 +54,7 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
     public AbstractReadyLoginPresenter mPresenter;
     public String account;
     public AppStyleDialog appStyleDialog;
+    public String password;
 
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container) {
@@ -66,6 +68,23 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
 
     @Override
     public void doViewLogic(Bundle savedInstanceState) {
+        setListener();
+        checKLoginState();
+
+    }
+
+    private void checKLoginState() {
+        //如果已登录过 直接登录
+        SPUtils spUtils = SPUtils.getInstance(Constant.LOGIN_DETAIL);
+        boolean isLogin = spUtils.getBoolean(Constant.LOGIN_IS_OR_NOT, false);
+        if (isLogin) {
+            password = spUtils.getString(Constant.PASSWORD);
+            account = spUtils.getString(Constant.ACCOUNT);
+            mPresenter.toLogin(account, password);
+        }
+    }
+
+    private void setListener() {
         etPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -82,9 +101,8 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
                 attemptLogin();
             }
         });
-       /* atvAccount.setText("12345678");
-        etPassword.setText("12345678");*/
     }
+
     /**
      * 登录
      */
@@ -93,7 +111,7 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
         atvAccount.setError(null);
         etPassword.setError(null);
         account = atvAccount.getText().toString();
-        String password = etPassword.getText().toString();
+        password = etPassword.getText().toString();
         boolean cancel = false;
         View focusView = null;
         // 检查有效性
@@ -178,8 +196,14 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
                 ToastUtils.showShort(getResources().getString(R.string.login_sucess));
                 //登录成功后存起来登录的信息
                 CustomApplication.userEntity = ((UserResponse) user).getResults();
+                //将账号密码保存到缓存
+                SPUtils spUtils = SPUtils.getInstance(Constant.LOGIN_DETAIL);
+                spUtils.put(Constant.PASSWORD, password);
+                spUtils.put(Constant.ACCOUNT, account);
+                spUtils.put(Constant.LOGIN_IS_OR_NOT, true);
                 //跳转到主页
                 ActivityUtils.startActivity(baseFragmentActivity, MainActivity.class);
+                baseFragmentActivity.finish();
                 break;
             case Constant.USER_NOT_EXIT:
                 ToastUtils.showShort(getResources().getString(R.string.user_not_exit));

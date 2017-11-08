@@ -8,11 +8,8 @@ import com.example.qsys.yousi.fragment.BasePresenter;
  */
 
 
-public class AbstractIdeaDetaiShowPresenter extends BasePresenter {
-    @Override
-    public void start() {
+public abstract class AbstractIdeaDetaiShowPresenter extends BasePresenter {
 
-    }
 
 
 }

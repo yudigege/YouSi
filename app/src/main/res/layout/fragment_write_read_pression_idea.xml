@@ -44,8 +44,7 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:hint="@string/book_name"
-                android:minLines="1"
-                android:maxLines="2"
+                android:maxLines="1"
                 android:textColor="@color/black"
                 android:textSize="@dimen/content_title_size"
                 android:textStyle="bold" />
@@ -55,7 +54,7 @@
                 android:layout_height="1dp"
                 android:layout_marginBottom="@dimen/cardItem_padding"
                 android:layout_marginTop="@dimen/cardItem_padding"
-                android:background="@color/grey"></View>
+                android:background="@color/grey"/>
 
             <EditText
                 android:id="@+id/et_write_content_read"

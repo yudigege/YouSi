@@ -71,6 +71,16 @@ public interface ApiService {
     Observable<DaysResportResponse> getAllDaysReport(@Path("userId") int userId);
 
     /**
+     * 分页请求
+     * @param userId
+     * @param page
+     * @param pageSize
+     * @return
+     */
+    @GET("report/{userId}/{page}/{pageSize}")
+    Observable<DaysResportResponse>  getReportByPage(@Path("userId") int userId,@Path("page") int page,@Path("pageSize") int pageSize);
+
+    /**
      * 上传日志 或读后感
      *
      * @param title

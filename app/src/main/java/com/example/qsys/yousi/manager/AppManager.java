@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 
+import com.example.qsys.yousi.CustomApplication;
 import com.example.qsys.yousi.activity.BaseActivity;
 
 import java.util.Stack;
@@ -110,6 +111,11 @@ public class AppManager {
      * 结束所有Activity
      */
     public void finishAllActivity() {
+
+        for (Activity activity : CustomApplication.unDestroyActivities) {
+            activity.finish();
+        }
+        CustomApplication.unDestroyActivities.clear();
         for (int i = 0, size = activityStack.size(); i < size; i++) {
             if (null != activityStack.get(i)) {
                 activityStack.get(i).finish();

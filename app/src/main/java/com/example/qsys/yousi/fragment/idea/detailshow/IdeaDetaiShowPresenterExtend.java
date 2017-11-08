@@ -9,8 +9,8 @@ package com.example.qsys.yousi.fragment.idea.detailshow;
 public class IdeaDetaiShowPresenterExtend extends AbstractIdeaDetaiShowPresenter {
 
 
+    @Override
+    public void start() {
 
-
-
-
+    }
 }

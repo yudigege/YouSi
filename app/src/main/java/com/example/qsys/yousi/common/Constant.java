@@ -15,6 +15,10 @@ public class Constant {
      */
     public static final int READPRESSION_DETAIL = 3;
     /**
+     * 读后感详情
+     */
+    public static final int READPRESSION_READ = 4;
+    /**
      * 日志传递对象
      */
     public static final String READPRESSION_OBJECT = "object";
@@ -34,6 +38,9 @@ public class Constant {
      * 性别男
      */
     public static final int MAN = 1;
+    public static final String PASSWORD = "密码";
+    public static final String ACCOUNT = "账号";
+    public static final String LOGIN_IS_OR_NOT = "是否登录";
     public static String accessToken = "";
     /**
      * static final String BASE_URL = "http://116.196.109.167:8080/education/";
@@ -68,4 +75,8 @@ public class Constant {
      * 网络不可用标记 待改
      */
     public static final int UN_RECOGNICTION = 2;
+    /**
+     * 登录情况 相关信息
+     */
+    public static String LOGIN_DETAIL = "login_detail";
 }

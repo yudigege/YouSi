@@ -68,17 +68,17 @@
 
         <include layout="@layout/you_si_common_error_view2"></include>
         <com.jcodecraeer.xrecyclerview.XRecyclerView
-        android:id="@+id/rlv_idea_main"
+            android:id="@+id/rlv_idea_main"
             android:layout_marginTop="@dimen/cardItem_padding"
-        android:layout_width="match_parent"
+            android:layout_width="match_parent"
             android:layout_height="match_parent">
 
     </com.jcodecraeer.xrecyclerview.XRecyclerView>
     </LinearLayout>
-
+    <!--滑动被拦截 behavior上滑不起作用-->
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add_idea"
-
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"

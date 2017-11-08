@@ -49,4 +49,5 @@ public interface BaseView {
     Boolean isActive();
 
 
+
 }

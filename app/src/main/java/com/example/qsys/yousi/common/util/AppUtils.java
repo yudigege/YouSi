@@ -5,4 +5,6 @@ package com.example.qsys.yousi.common.util;
  */
 
 public class AppUtils {
+
+
 }

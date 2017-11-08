@@ -1,9 +1,12 @@
 package com.example.qsys.yousi.fragment.main.mine;
 
+import android.content.ComponentName;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +20,10 @@ import com.example.qsys.yousi.activity.MineActivity;
 import com.example.qsys.yousi.bean.BaseResponse;
 import com.example.qsys.yousi.common.Constant;
 import com.example.qsys.yousi.common.util.ActivityUtils;
+import com.example.qsys.yousi.common.util.SPUtils;
 import com.example.qsys.yousi.common.util.ToastUtils;
 import com.example.qsys.yousi.fragment.BaseFragment;
+import com.example.qsys.yousi.manager.AppManager;
 
 import butterknife.BindView;
 
@@ -43,6 +48,8 @@ public class MineFragment extends BaseFragment implements MinePageView {
     TextView tvMineDaily;
     @BindView(R.id.tv_mine_read_pression)
     TextView tvMineReadPression;
+    @BindView(R.id.btn_quit)
+    AppCompatButton btnQuit;
     private MinePresenterExtend mPresenter = null;
 
     @Override
@@ -129,6 +136,22 @@ public class MineFragment extends BaseFragment implements MinePageView {
             @Override
             public void onClick(View v) {
                 ActivityUtils.startActivity(null, baseFragmentActivity, MineActivity.class);
+            }
+        });
+        btnQuit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //退出app 清除缓存信息
+                SPUtils.getInstance(Constant.LOGIN_DETAIL).clear();
+              //  AppManager.getAppManager().appExit(baseFragmentActivity);
+              AppManager.getAppManager().finishAllActivity();
+//重新启动
+                Intent intentapp = new Intent(Intent.ACTION_MAIN);
+                intentapp.addCategory(Intent.CATEGORY_LAUNCHER);
+                ComponentName cn = new ComponentName("com.example.qsys.yousi", "com.example.qsys.yousi.LoginActivity");
+                intentapp.setComponent(cn);
+                intentapp.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                CustomApplication.customApplication.startActivity(intentapp);
             }
         });
     }

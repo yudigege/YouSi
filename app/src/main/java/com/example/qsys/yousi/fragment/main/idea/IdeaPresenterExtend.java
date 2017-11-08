@@ -24,8 +24,8 @@ public class IdeaPresenterExtend extends AbstractIdeaPresenter {
 
 
     @Override
-    void getDasyReportData() {
-        NetManager.getApiService().getAllDaysReport(CustomApplication.userEntity.getId()).compose(RxSchedulers.<BaseResponse>io_main())
+    void getDasyReportData(int page, int pageSize) {
+        NetManager.getApiService().getReportByPage(CustomApplication.userEntity.getId(), page, pageSize).compose(RxSchedulers.<BaseResponse>io_main())
                 .compose(getBindView().<BaseResponse>bindToLifecycle())
                 .subscribe(new AbstractRxSubscriber<BaseResponse>(getWeakRefView()) {
                     @Override
@@ -42,7 +42,21 @@ public class IdeaPresenterExtend extends AbstractIdeaPresenter {
 
     }
 
+    @Override
+    public void getDasyReportMoreData(int page, int pageSize) {
 
+        NetManager.getApiService().getReportByPage(CustomApplication.userEntity.getId(), page, pageSize).compose(RxSchedulers.<BaseResponse>io_main())
+                .compose(getBindView().<BaseResponse>bindToLifecycle())
+                .subscribe(new AbstractRxSubscriber<BaseResponse>(getWeakRefView()) {
+                    @Override
+                    public void on_Next(BaseResponse dateReport) {
+                        getBindView().showProgressView(false);
+                        ((IdeaView) getBindView()).showResponseMoreData(dateReport);
+                    }
+                });
+
+
+    }
 
 
 }

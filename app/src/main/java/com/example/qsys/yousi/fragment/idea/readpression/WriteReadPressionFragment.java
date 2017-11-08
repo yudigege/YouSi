@@ -156,7 +156,7 @@ public class WriteReadPressionFragment extends BaseFragment implements WriteRead
 
     @Override
     public void showResponseData(BaseResponse response) {
-
+        showMessage(response.getMessage());
     }
 
     @Override

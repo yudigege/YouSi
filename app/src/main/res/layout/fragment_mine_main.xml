@@ -4,6 +4,7 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coor"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -85,6 +86,7 @@
 
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nest_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -148,6 +150,7 @@
 
             </LinearLayout>
 
+
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
@@ -162,4 +165,15 @@
         android:textColor="@color/white"
         app:layout_anchor="@id/appbar_clude"
         app:layout_anchorGravity="top" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_quit"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/text_bg_shape"
+        android:text="@string/quit"
+        android:textColor="@color/grey"
+        android:textSize="@dimen/dialog_title_size"
+        app:layout_anchor="@id/nest_scroll"
+        app:layout_anchorGravity="bottom" />
 </android.support.design.widget.CoordinatorLayout>

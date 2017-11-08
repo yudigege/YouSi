@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">YouSi</string>
+    <string name="app_name" translatable="false">有思</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email" translatable="false">邮箱</string>
@@ -72,6 +72,7 @@
     <string name="man">男</string>
     <string name="femal">女</string>
     <string name="agree">是</string>
+    <string name="search">搜索</string>
 
 
 </resources>

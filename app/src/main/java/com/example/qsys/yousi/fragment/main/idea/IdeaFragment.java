@@ -6,9 +6,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -27,6 +31,7 @@ import com.example.qsys.yousi.common.widget.dialog.IdeaSelectDialog;
 import com.example.qsys.yousi.common.widget.recyclerview.OnItemViewClickLisener;
 import com.example.qsys.yousi.common.widget.recyclerview.SpacesItemDecoration;
 import com.example.qsys.yousi.fragment.BaseFragment;
+import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.util.ArrayList;
@@ -61,8 +66,13 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
     public TextView head;
     public DialogFragment dialogFragment;
 
+    public int page = 1;
+    public int pageFresh = 1;
+    public int pageSize = 6;
     @Override
     public void showResponseData(BaseResponse response) {
+        page++;
+        rlvIdeaMain.refreshComplete();
         mDaysReportList.clear();
         readPressionNum = 0;
         dailyNum = 0;
@@ -81,6 +91,34 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
         head.setText(getResources().getString(R.string.daily_after_read_pression, dailyNum, readPressionNum));
     }
 
+    /**
+     * 加载更多 直接添加
+     *
+     * @param dateReport
+     */
+    @Override
+    public void showResponseMoreData(BaseResponse dateReport) {
+
+        rlvIdeaMain.loadMoreComplete();
+        readPressionNum = 0;
+        dailyNum = 0;
+        List<DaysResportResponse.ResultsBean> results = ((DaysResportResponse) dateReport).getResults();
+        if (results.size() == 0) {
+            ToastUtils.showShort("没有更多了");
+        } else {
+            page++;
+        }
+        mDaysReportList.addAll(results);
+        for (DaysResportResponse.ResultsBean resultsBean : mDaysReportList) {
+            if (resultsBean.getType() == Constant.DAYLIE) {
+                ++dailyNum;
+            } else if (resultsBean.getType() == Constant.READPRESSION) {
+                ++readPressionNum;
+            }
+        }
+        ideaAdapter.notifyDataSetChanged();
+        head.setText(getResources().getString(R.string.daily_after_read_pression, dailyNum, readPressionNum));
+    }
     @Override
     public void showMessage(String smg) {
         ToastUtils.showShort(smg);
@@ -109,6 +147,9 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container) {
         View view = inflater.inflate(R.layout.fragment_idea_main, container, false);
+        page = 1;
+        pageFresh = 1;
+        pageSize = 6;
         return view;
     }
 
@@ -117,7 +158,7 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
             @Override
             public void onClick(View view) {
                 llRoot.setVisibility(View.GONE);
-                mPresenter.getDasyReportData();
+                mPresenter.getDasyReportData(page, pageSize);
             }
         });
         fabAddIdea.setOnClickListener(new View.OnClickListener() {
@@ -132,7 +173,40 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
                 transaction
                         .setTransition(FragmentTransaction.TRANSIT_ENTER_MASK);
                 dialogFragment.show(transaction, "IdeaSelectDialog");
-               // dialogFragment.show(getChildFragmentManager(), "DialogFragment");
+                // dialogFragment.show(getChildFragmentManager(), "DialogFragment");
+            }
+        });
+        ideaAdapter.setOnItemViewClicLisener(new OnItemViewClickLisener() {
+                                                 @Override
+                                                 public void itemViewClick(int position, int type) {
+
+
+                                                     if (type == Constant.READPRESSION) {
+                                                         Bundle bundle = new Bundle();
+                                                         bundle.putInt(Constant.IDEA_STYPE, Constant.READPRESSION_READ);
+                                                         bundle.putParcelable(Constant.READPRESSION_OBJECT, mDaysReportList.get(position));
+                                                         ActivityUtils.startActivity(bundle, baseFragmentActivity, IdeaActivity.class);
+                                                     }
+                                                     if (type == Constant.DAYLIE) {
+                                                         Bundle bundle = new Bundle();
+                                                         bundle.putInt(Constant.IDEA_STYPE, Constant.READPRESSION_DETAIL);
+                                                         bundle.putParcelable(Constant.READPRESSION_OBJECT, mDaysReportList.get(position));
+                                                         ActivityUtils.startActivity(bundle, baseFragmentActivity, IdeaActivity.class);
+
+                                                     }
+                                                 }
+                                             }
+        );
+        rlvIdeaMain.setLoadingListener(new XRecyclerView.LoadingListener() {
+            @Override
+            public void onRefresh() {
+                page = pageFresh;
+                mPresenter.getDasyReportData(pageFresh, pageSize);
+            }
+
+            @Override
+            public void onLoadMore() {
+                mPresenter.getDasyReportMoreData(page, pageSize);
             }
         });
     }
@@ -140,12 +214,48 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
     public void doViewLogic(Bundle savedInstanceState) {
         mPresenter = new IdeaPresenterExtend();
         mPresenter.setPresenterView(this);
-        initToolBar(toolbarInclude, false, getResources().getString(R.string.idea), -1, false);
+        initToolBar();
         initAdapter();
         initListener();
-        mPresenter.getDasyReportData();
+        mPresenter.getDasyReportData(page, pageSize);
     }
 
+    private void initToolBar() {
+
+        //不设置 图标不显示
+        setHasOptionsMenu(true);
+        tvTitleInclude.setText(getResources().getString(R.string.idea));
+        baseFragmentActivity.setSupportActionBar(toolbarInclude);
+        ActionBar actionBar = baseFragmentActivity.getSupportActionBar();
+        actionBar.setTitle("");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.write_daily:
+                Bundle bundle = new Bundle();
+                bundle.putInt(Constant.IDEA_STYPE, Constant.DAYLIE);
+                ActivityUtils.startActivity(bundle, getActivity(), IdeaActivity.class);
+                break;
+            case R.id.write_read_pression:
+                Bundle bundle2 = new Bundle();
+                bundle2.putInt(Constant.IDEA_STYPE, Constant.READPRESSION);
+                ActivityUtils.startActivity(bundle2, getActivity(), IdeaActivity.class);
+                break;
+            case R.id.search_daily:
+                ToastUtils.showShort(" 搜索");
+            default:
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.write_daily_actions, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
     private void initAdapter() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(baseFragmentActivity);
         rlvIdeaMain.setLayoutManager(layoutManager);
@@ -155,24 +265,8 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
         head = (TextView) view.findViewById(R.id.idea_num_head);
         rlvIdeaMain.addHeaderView(view);
         rlvIdeaMain.setAdapter(ideaAdapter);
-        ideaAdapter.setOnItemViewClicLisener(new OnItemViewClickLisener() {
-                                                 @Override
-                                                 public void itemViewClick(int position, int type) {
+        rlvIdeaMain.setRefreshProgressStyle(ProgressStyle.BallGridBeat);
 
-
-                                                     if (type == Constant.READPRESSION) {
-
-                                                     }
-                                                     if (type == Constant.DAYLIE) {
-                                                         Bundle bundle = new Bundle();
-                                                         bundle.putInt(Constant.IDEA_STYPE, Constant.READPRESSION_DETAIL);
-                                                         bundle.putParcelable(Constant.READPRESSION_OBJECT,mDaysReportList.get(position));
-                                                         ActivityUtils.startActivity(bundle, baseFragmentActivity, IdeaActivity.class);
-
-                                                     }
-                                                 }
-                                             }
-        );
     }
 
     @Override
@@ -205,4 +299,6 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
 
         return ideaFragment;
     }
+
+
 }
