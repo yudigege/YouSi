@@ -231,7 +231,7 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
 
     @Override
 
-    public void showEmptyViewByCode(int code) {
+    public void showEmptyViewByCode(int code, String smg) {
 
 
     }

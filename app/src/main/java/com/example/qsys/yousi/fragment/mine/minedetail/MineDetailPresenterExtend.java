@@ -32,13 +32,11 @@ public class MineDetailPresenterExtend extends AbstractMineDetailPresenter {
                         if (!getBindView().isActive()) {
                             return;
                         }
-                        getBindView().showProgressView(false);
                         getBindView().showResponseData(successResponse);
                         if (successResponse.getCode() != Constant.SCUCESS_COED) {
                             getBindView().showMessage(((MineDetailFragment) getBindView()).getString(R.string.edit_sucess));
                         } else {
                             ((MineDetailFragment) getBindView()).setUserInfor(Constant.EDITE_NICK);
-
                         }
                     }
                 });

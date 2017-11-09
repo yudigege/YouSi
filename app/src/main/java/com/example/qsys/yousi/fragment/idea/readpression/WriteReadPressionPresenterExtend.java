@@ -42,7 +42,6 @@ public class WriteReadPressionPresenterExtend extends AbstractWriteReadPressionP
                         if (!getBindView().isActive()) {
                             return;
                         }
-                        getBindView().showProgressView(false);
                         getBindView().showResponseData(successResponse);
                         if (successResponse.getCode() == Constant.SCUCESS_COED) {
                             ((WriteReadPressionFragment) getBindView()).clearEtData();

@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.example.qsys.yousi.activity.BaseActivity;
-import com.example.qsys.yousi.common.util.LogUtils;
 import com.example.qsys.yousi.fragment.main.bookshelf.BookShelfFragment;
 import com.example.qsys.yousi.fragment.main.idea.IdeaFragment;
 import com.example.qsys.yousi.fragment.main.mainpage.MainPageFragment;
@@ -27,6 +26,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationBar.On
     public Fragment bookShelfFragment;
     public Fragment ideaFragment;
     public Fragment mineFragment;
+    public FragmentTransaction fragmentTransaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,43 +54,82 @@ public class MainActivity extends BaseActivity implements BottomNavigationBar.On
         FragmentManager fragmentManager = getSupportFragmentManager();
         //开启一个事务
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.frl_frag_container_main, MainPageFragment.newInstance());
+        mainPageFragment = MainPageFragment.newInstance();
+        fragmentTransaction.add(R.id.frl_frag_container_main, mainPageFragment, "MainPageFragment");
         fragmentTransaction.commit();
     }
 
     @Override
     public void onTabSelected(int position) {
-        LogUtils.d(position);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        hideFragment();
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
         switch (position) {
             case 0:
                 if (mainPageFragment == null) {
                     mainPageFragment = MainPageFragment.newInstance();
+                    fragmentTransaction.add(R.id.frl_frag_container_main, mainPageFragment, "MainPageFragment");
+                } else {
+                    fragmentTransaction.show(getSupportFragmentManager().findFragmentByTag("MainPageFragment"));
                 }
-                fragmentTransaction.replace(R.id.frl_frag_container_main, mainPageFragment);
                 break;
             case 1:
                 if (bookShelfFragment == null) {
                     bookShelfFragment = BookShelfFragment.newInstance();
+                    fragmentTransaction.add(R.id.frl_frag_container_main, bookShelfFragment, "BookShelfFragment");
+                } else {
+                    fragmentTransaction.show(getSupportFragmentManager().findFragmentByTag("BookShelfFragment"));
                 }
-                fragmentTransaction.replace(R.id.frl_frag_container_main,bookShelfFragment);
                 break;
             case 2:
                 if (ideaFragment == null) {
                     ideaFragment = IdeaFragment.newInstance();
+                    fragmentTransaction.add(R.id.frl_frag_container_main, ideaFragment, "IdeaFragment");
+                } else {
+                    fragmentTransaction.show(getSupportFragmentManager().findFragmentByTag("IdeaFragment"));
                 }
-                fragmentTransaction.replace(R.id.frl_frag_container_main, ideaFragment);
+
                 break;
             case 3:
                 if (mineFragment == null) {
                     mineFragment = MineFragment.newInstance();
+                    fragmentTransaction.add(R.id.frl_frag_container_main, mineFragment, "MineFragment");
+                } else {
+                    fragmentTransaction.show(getSupportFragmentManager().findFragmentByTag("MineFragment"));
                 }
-                fragmentTransaction.replace(R.id.frl_frag_container_main, mineFragment);
                 break;
-default:
+            default:
+        }
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    /**
+     * 隐藏已添加的fragment
+     */
+    private void hideFragment() {
+        //获取FragmentManager
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        //开启一个事务
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        Fragment mainPageFragment = getSupportFragmentManager().findFragmentByTag("MainPageFragment");
+        if (mainPageFragment != null) {
+            fragmentTransaction.hide(mainPageFragment);
+        }
+        Fragment bookShelfFragment = getSupportFragmentManager().findFragmentByTag("BookShelfFragment");
+        if (bookShelfFragment != null) {
+            fragmentTransaction.hide(bookShelfFragment);
+        }
+        Fragment ideaFragment = getSupportFragmentManager().findFragmentByTag("IdeaFragment");
+        if (ideaFragment != null) {
+            fragmentTransaction.hide(ideaFragment);
+        }
+        Fragment mineFragment = getSupportFragmentManager().findFragmentByTag("MineFragment");
+        if (mineFragment != null) {
+            fragmentTransaction.hide(mineFragment);
         }
         fragmentTransaction.commit();
+
     }
+
 
     @Override
     public void onTabUnselected(int position) {

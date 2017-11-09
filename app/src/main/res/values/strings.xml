@@ -73,6 +73,7 @@
     <string name="femal">女</string>
     <string name="agree">是</string>
     <string name="search">搜索</string>
+    <string name="url">"http://116.196.109.167:8080/education/"</string>
 
 
 </resources>

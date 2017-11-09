@@ -25,6 +25,7 @@ import com.example.qsys.yousi.bean.BaseResponse;
 import com.example.qsys.yousi.bean.DaysResportResponse;
 import com.example.qsys.yousi.common.Constant;
 import com.example.qsys.yousi.common.util.ActivityUtils;
+import com.example.qsys.yousi.common.util.LogUtils;
 import com.example.qsys.yousi.common.util.SizeUtils;
 import com.example.qsys.yousi.common.util.ToastUtils;
 import com.example.qsys.yousi.common.widget.dialog.IdeaSelectDialog;
@@ -69,6 +70,8 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
     public int page = 1;
     public int pageFresh = 1;
     public int pageSize = 6;
+    public int lastPage;
+
     @Override
     public void showResponseData(BaseResponse response) {
         page++;
@@ -105,7 +108,9 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
         List<DaysResportResponse.ResultsBean> results = ((DaysResportResponse) dateReport).getResults();
         if (results.size() == 0) {
             ToastUtils.showShort("没有更多了");
+            lastPage = page;
         } else {
+            lastPage = page;
             page++;
         }
         mDaysReportList.addAll(results);
@@ -125,20 +130,39 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
     }
 
     @Override
-    public void showEmptyViewByCode(int code) {
+    public void showEmptyViewByCode(int code, String msg) {
         rlvIdeaMain.setVisibility(View.GONE);
         switch (code) {
             case Constant.SERVER_ERROR:
                 llRoot.setVisibility(View.VISIBLE);
-                errorTextView.setText(getResources().getString(R.string.error_server_msg));
+                errorTextView.setText(getResources().getString(R.string.error_server_msg, msg));
+                rlvIdeaMain.refreshComplete();
+                rlvIdeaMain.loadMoreComplete();
+                break;
+            case Constant.SERVER_UNREACH:
+                llRoot.setVisibility(View.VISIBLE);
+                errorTextView.setText(getResources().getString(R.string.error_server_msg2));
+                rlvIdeaMain.refreshComplete();
+                rlvIdeaMain.loadMoreComplete();
                 break;
             case Constant.NET_UNABLE:
                 llRoot.setVisibility(View.VISIBLE);
-                errorTextView.setText(getResources().getString(R.string.net_error));
+                errorTextView.setText(getResources().getString(R.string.no_net));
+                rlvIdeaMain.refreshComplete();
+                rlvIdeaMain.loadMoreComplete();
                 break;
             case Constant.NO_CONTENT:
+                //加载更多时不显示 空界面
+                if (mDaysReportList.size() != 0) {
+                    rlvIdeaMain.setVisibility(View.VISIBLE);
+                    rlvIdeaMain.refreshComplete();
+                    rlvIdeaMain.loadMoreComplete();
+                    break;
+                }
                 llRoot.setVisibility(View.VISIBLE);
                 errorTextView.setText(getResources().getString(R.string.no_content));
+                rlvIdeaMain.refreshComplete();
+                rlvIdeaMain.loadMoreComplete();
                 break;
             default:
         }
@@ -179,8 +203,6 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
         ideaAdapter.setOnItemViewClicLisener(new OnItemViewClickLisener() {
                                                  @Override
                                                  public void itemViewClick(int position, int type) {
-
-
                                                      if (type == Constant.READPRESSION) {
                                                          Bundle bundle = new Bundle();
                                                          bundle.putInt(Constant.IDEA_STYPE, Constant.READPRESSION_READ);
@@ -197,6 +219,7 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
                                                  }
                                              }
         );
+        rlvIdeaMain.setLoadingMoreProgressStyle(ProgressStyle.BallPulseRise);
         rlvIdeaMain.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
@@ -206,7 +229,14 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
 
             @Override
             public void onLoadMore() {
-                mPresenter.getDasyReportMoreData(page, pageSize);
+                LogUtils.d("加载更多");
+                /**
+                 * XrecyclerView 没到底部就触发了 加载更多 这里自己判断 有新数据就 触发 没新数据就只走一遍加载更多
+                 */
+                if (lastPage != page) {
+                    mPresenter.getDasyReportMoreData(page, pageSize);
+                }
+                rlvIdeaMain.loadMoreComplete();
             }
         });
     }
@@ -266,7 +296,6 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
         rlvIdeaMain.addHeaderView(view);
         rlvIdeaMain.setAdapter(ideaAdapter);
         rlvIdeaMain.setRefreshProgressStyle(ProgressStyle.BallGridBeat);
-
     }
 
     @Override

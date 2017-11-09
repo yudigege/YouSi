@@ -42,7 +42,6 @@ public class WriteDailyPresenterExtend extends AbstractWriteDailyPresenter {
                         if (!getBindView().isActive()) {
                             return;
                         }
-                        getBindView().showProgressView(false);
                         getBindView().showResponseData(successResponse);
                         if (successResponse.getCode() == Constant.SCUCESS_COED) {
                             ((WriteDailyFragment) getBindView()).clearEtData();

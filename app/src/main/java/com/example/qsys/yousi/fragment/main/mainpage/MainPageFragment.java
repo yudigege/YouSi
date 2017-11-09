@@ -57,12 +57,15 @@ public class MainPageFragment extends BaseFragment implements MainPageView {
     }
 
     @Override
-    public void showEmptyViewByCode(int code) {
+    public void showEmptyViewByCode(int code, String msg) {
         switch (code) {
-
             case Constant.SERVER_ERROR:
                 llRoot.setVisibility(View.VISIBLE);
-                errorTextView.setText(getResources().getString(R.string.error_server_msg));
+                errorTextView.setText(getResources().getString(R.string.error_server_msg, msg));
+                break;
+            case Constant.SERVER_UNREACH:
+                llRoot.setVisibility(View.VISIBLE);
+                errorTextView.setText(getResources().getString(R.string.error_server_msg2));
                 break;
             case Constant.NET_UNABLE:
                 llRoot.setVisibility(View.VISIBLE);

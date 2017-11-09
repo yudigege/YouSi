@@ -9,6 +9,10 @@ public abstract class BaseResponse {
     private String message;
     private Object errors;
     private int requstCode;
+    /**
+     * 返回的内容是否为空
+     */
+    private int resultsNotNull;
 
     public int getRequstCode() {
         return requstCode;
@@ -42,12 +46,22 @@ public abstract class BaseResponse {
         this.errors = errors;
     }
 
+    public int getResultsNotNull() {
+        return resultsNotNull;
+    }
+
+    public void setResultsNotNull(int resultsNotNull) {
+        this.resultsNotNull = resultsNotNull;
+    }
+
     @Override
     public String toString() {
         return "BaseResponse{" +
                 "code=" + code +
                 ", message='" + message + '\'' +
                 ", errors=" + errors +
+                ", requstCode=" + requstCode +
+                ", resultsNotNull=" + resultsNotNull +
                 '}';
     }
 }

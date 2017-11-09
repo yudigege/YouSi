@@ -34,7 +34,7 @@ public interface BaseView {
      * 展示码
      * @param code
      */
-    void showEmptyViewByCode(int code);
+    void showEmptyViewByCode(int code, String msg);
 
     /**
      * 展示是否显示动画

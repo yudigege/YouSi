@@ -1,13 +1,9 @@
 package com.example.qsys.yousi.fragment.main.bookshelf;
 
 import com.example.qsys.yousi.bean.BaseResponse;
-import com.example.qsys.yousi.bean.BookResponse;
-import com.example.qsys.yousi.common.Constant;
 import com.example.qsys.yousi.net.rx.manager.AbstractRxSubscriber;
 import com.example.qsys.yousi.net.rx.manager.NetManager;
 import com.example.qsys.yousi.net.rx.manager.RxSchedulers;
-
-import java.util.List;
 
 
 /**
@@ -28,12 +24,7 @@ public class BookShelfPresenterExtend extends AbstractBookShelfPresenter {
                 .subscribe(new AbstractRxSubscriber<BaseResponse>(getWeakRefView()) {
                     @Override
                     public void on_Next(BaseResponse bookResponse) {
-                        getBindView().showProgressView(false);
                         (getBindView()).showResponseData(bookResponse);
-                        List<BookResponse.ResultsBean> results = ((BookResponse) bookResponse).getResults();
-                        if (results.size() == 0) {
-                            getBindView().showEmptyViewByCode(Constant.NO_CONTENT);
-                        }
                     }
 
                 });

@@ -48,7 +48,6 @@ public class ReadyLoginPresenterExtend extends AbstractReadyLoginPresenter {
                 .subscribe(new AbstractRxSubscriber<UserResponse>(getWeakRefView()) {
                     @Override
                     protected void on_Next(UserResponse userResponse) {
-                        getBindView().showProgressView(false);
                         getBindView().showResponseData(userResponse);
                     }
                 });
@@ -66,7 +65,6 @@ public class ReadyLoginPresenterExtend extends AbstractReadyLoginPresenter {
                 .subscribe(new AbstractRxSubscriber<SuccessResponse>(getWeakRefView()) {
                     @Override
                     protected void on_Next(SuccessResponse successResponse) {
-                        getBindView().showProgressView(false);
                         if (successResponse.getCode() != 1) {
                             getBindView().showMessage("注册失败");
                         } else {

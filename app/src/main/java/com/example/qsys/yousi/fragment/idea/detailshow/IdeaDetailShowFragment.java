@@ -48,7 +48,7 @@ public class IdeaDetailShowFragment extends BaseFragment implements IdeaDetailSh
     }
 
     @Override
-    public void showEmptyViewByCode(int code) {
+    public void showEmptyViewByCode(int code, String smg) {
 
     }
 

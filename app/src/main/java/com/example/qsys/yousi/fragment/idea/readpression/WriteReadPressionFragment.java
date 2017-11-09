@@ -165,7 +165,7 @@ public class WriteReadPressionFragment extends BaseFragment implements WriteRead
     }
 
     @Override
-    public void showEmptyViewByCode(int code) {
+    public void showEmptyViewByCode(int code, String smg) {
 
     }
 

@@ -5,7 +5,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion '26.0.2'
     defaultConfig {
-        applicationId "com.example.qsys.yousi"
+        //  applicationId "com.example.qsys.yousi"
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
@@ -18,13 +18,50 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            applicationIdSuffix ".debug"
+        }
     }
+    signingConfigs {
+
+
+    }
+
+    /*  productFlavors {
+          //每个环境包名不同
+       *//*   aa {
+              applicationId "com.example.qsys.yousi.aa"
+          }
+          bb {
+              applicationId "com.example.qsys.yousi.bb"
+          }*//*
+      }*/
     configurations.all {
         //指定gradle 编译版本
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:2.0.1'
     }
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                if (variant.buildType.name.equals('release')) {
+                    def releaseApkName = "yousi_release_" +
+                            "v${defaultConfig.versionName}_${releaseTime()}.apk"
+                    outputFileName = releaseApkName
+
+                } else {
+                    def releaseApkName = "yousi_debug_" +
+                            "v${defaultConfig.versionName}_${releaseTime()}.apk"
+                    outputFileName = releaseApkName
+                }
+            }
+        }
+    }
 }
 
+def static releaseTime() {
+    return new Date().format("yyyy_MMdd_HH", TimeZone.getTimeZone("GMT+8"))
+}
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {

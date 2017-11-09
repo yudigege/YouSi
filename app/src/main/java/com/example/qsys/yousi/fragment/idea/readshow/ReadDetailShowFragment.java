@@ -86,7 +86,7 @@ public class ReadDetailShowFragment extends BaseFragment implements ReadDetaiSho
     }
 
     @Override
-    public void showEmptyViewByCode(int code) {
+    public void showEmptyViewByCode(int code, String smg) {
 
     }
 

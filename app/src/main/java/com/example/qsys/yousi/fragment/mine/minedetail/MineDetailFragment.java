@@ -173,7 +173,7 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
     }
 
     @Override
-    public void showEmptyViewByCode(int code) {
+    public void showEmptyViewByCode(int code, String smg) {
 
     }
 

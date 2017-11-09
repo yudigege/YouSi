@@ -2,13 +2,9 @@ package com.example.qsys.yousi.fragment.main.idea;
 
 import com.example.qsys.yousi.CustomApplication;
 import com.example.qsys.yousi.bean.BaseResponse;
-import com.example.qsys.yousi.bean.DaysResportResponse;
-import com.example.qsys.yousi.common.Constant;
 import com.example.qsys.yousi.net.rx.manager.AbstractRxSubscriber;
 import com.example.qsys.yousi.net.rx.manager.NetManager;
 import com.example.qsys.yousi.net.rx.manager.RxSchedulers;
-
-import java.util.List;
 
 
 /**
@@ -30,12 +26,7 @@ public class IdeaPresenterExtend extends AbstractIdeaPresenter {
                 .subscribe(new AbstractRxSubscriber<BaseResponse>(getWeakRefView()) {
                     @Override
                     public void on_Next(BaseResponse dateReport) {
-                        getBindView().showProgressView(false);
                         (getBindView()).showResponseData(dateReport);
-                        List<DaysResportResponse.ResultsBean> results = ((DaysResportResponse) dateReport).getResults();
-                        if (results.size() == 0) {
-                            getBindView().showEmptyViewByCode(Constant.NO_CONTENT);
-                        }
                     }
                 });
 
@@ -50,7 +41,6 @@ public class IdeaPresenterExtend extends AbstractIdeaPresenter {
                 .subscribe(new AbstractRxSubscriber<BaseResponse>(getWeakRefView()) {
                     @Override
                     public void on_Next(BaseResponse dateReport) {
-                        getBindView().showProgressView(false);
                         ((IdeaView) getBindView()).showResponseMoreData(dateReport);
                     }
                 });
