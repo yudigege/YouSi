@@ -231,7 +231,7 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
             public void onLoadMore() {
                 LogUtils.d("加载更多");
                 /**
-                 * XrecyclerView 没到底部就触发了 加载更多 这里自己判断 有新数据就 触发 没新数据就只走一遍加载更多
+                 * XrecyclerView 没到底部就触发了 加载更多 这里自己判断 有新数据就 触发 没新数据就只走一遍加载更多 待修改
                  */
                 if (lastPage != page) {
                     mPresenter.getDasyReportMoreData(page, pageSize);

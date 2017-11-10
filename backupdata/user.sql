@@ -1,0 +1,20 @@
+user	CREATE TABLE `user` (
+   `id` int(11) NOT NULL AUTO_INCREMENT,
+   `gender` int(11) DEFAULT '0' COMMENT '0：未知；1：男；2：女',
+   `mobile` varchar(45) COLLATE utf8_bin NOT NULL COMMENT '手机号',
+   `email` varchar(45) COLLATE utf8_bin DEFAULT NULL COMMENT '邮箱',
+   `real_name` varchar(45) COLLATE utf8_bin DEFAULT NULL COMMENT '真实姓名',
+   `nick_name` varchar(45) COLLATE utf8_bin DEFAULT NULL COMMENT '昵称',
+   `avatar` varchar(128) COLLATE utf8_bin DEFAULT NULL COMMENT '头像',
+   `job` varchar(128) COLLATE utf8_bin DEFAULT NULL COMMENT '职位',
+   `company` varchar(128) COLLATE utf8_bin DEFAULT NULL COMMENT '公司',
+   `bio` varchar(128) COLLATE utf8_bin DEFAULT NULL COMMENT '个人简介',
+   `blog` varchar(128) COLLATE utf8_bin DEFAULT NULL COMMENT '博客',
+   `github` varchar(128) COLLATE utf8_bin DEFAULT NULL COMMENT 'github',
+   `uuid` varchar(128) COLLATE utf8_bin DEFAULT NULL COMMENT 'uuid',
+   `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+   `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+   PRIMARY KEY (`id`),
+   UNIQUE KEY `mobile_UNIQUE` (`mobile`),
+   UNIQUE KEY `uuid_UNIQUE` (`uuid`)
+ ) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='用户表'
