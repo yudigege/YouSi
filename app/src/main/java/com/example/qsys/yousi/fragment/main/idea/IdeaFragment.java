@@ -224,6 +224,7 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
             @Override
             public void onRefresh() {
                 page = pageFresh;
+                rlvIdeaMain.setNoMore(false);
                 mPresenter.getDasyReportData(pageFresh, pageSize);
             }
 
@@ -231,12 +232,13 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
             public void onLoadMore() {
                 LogUtils.d("加载更多");
                 /**
-                 * XrecyclerView 没到底部就触发了 加载更多 这里自己判断 有新数据就 触发 没新数据就只走一遍加载更多 待修改
+                 * XrecyclerView 没到底部就触发了 加载更多  框架bug
                  */
                 if (lastPage != page) {
                     mPresenter.getDasyReportMoreData(page, pageSize);
+                } else {
+                    rlvIdeaMain.setNoMore(true);
                 }
-                rlvIdeaMain.loadMoreComplete();
             }
         });
     }

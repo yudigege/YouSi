@@ -66,7 +66,7 @@ public class IdeaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             });
         } else if (holder instanceof IdeaViewHolderTime) {
             IdeaViewHolderTime ideaViewHolderTime = (IdeaViewHolderTime) holder;
-            ideaViewHolderTime.time.setText(TimeUtils.millis2String(mDaysReportList.get(position / 2).getCreatetime()));
+            ideaViewHolderTime.time.setText(TimeUtils.getFriendlyTimeSpanByNow(mDaysReportList.get(position / 2).getCreatetime()));
         }
     }
 
