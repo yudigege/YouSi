@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:padding="@dimen/cardItem_padding">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/search_bg_shape">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="10dp"
+                    android:src="@mipmap/search" />
+
+                <EditText
+                    android:id="@+id/et_search_key_words"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:hint="@string/write_keys_words" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_cancel_daily"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/cardItem_padding"
+                android:text="@string/cancel" />
+        </LinearLayout>
+
+
+        <include layout="@layout/you_si_common_error_view2"></include>
+
+
+        <LinearLayout
+            android:id="@+id/ll_search_cache_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/cardItem_padding"
+            android:text="@string/search_record" />
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/flexbox_layout_record_frequently"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.flexbox.FlexboxLayout>
+
+
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>

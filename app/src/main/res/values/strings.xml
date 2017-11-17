@@ -74,6 +74,8 @@
     <string name="agree">是</string>
     <string name="search">搜索</string>
     <string name="url">"http://116.196.109.167:8080/education/"</string>
+    <string name="write_keys_words">输入关键词</string>
+    <string name="search_record">搜索记录</string>
 
 
 </resources>
