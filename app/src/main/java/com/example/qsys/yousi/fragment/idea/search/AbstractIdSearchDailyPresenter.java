@@ -10,4 +10,6 @@ import com.example.qsys.yousi.fragment.BasePresenter;
 
 public abstract class AbstractIdSearchDailyPresenter extends BasePresenter {
     public abstract void getSearchItemMostFrequently();
+
+    public abstract void getContainKeyWordsDaily(String keyWords);
 }

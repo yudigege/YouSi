@@ -278,6 +278,9 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
                 break;
             case R.id.search_daily:
                 ToastUtils.showShort(" 搜索");
+                Bundle bundle3 = new Bundle();
+                bundle3.putInt(Constant.IDEA_STYPE, Constant.SEARCH_DAILY);
+                ActivityUtils.startActivity(bundle3, getActivity(), IdeaActivity.class);
             default:
         }
         return super.onOptionsItemSelected(item);

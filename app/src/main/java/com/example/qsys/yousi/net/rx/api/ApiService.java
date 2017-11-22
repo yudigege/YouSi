@@ -2,6 +2,7 @@ package com.example.qsys.yousi.net.rx.api;
 
 import com.example.qsys.yousi.bean.BookResponse;
 import com.example.qsys.yousi.bean.DaysResportResponse;
+import com.example.qsys.yousi.bean.SearchKeyWordsItemResponse;
 import com.example.qsys.yousi.bean.SuccessResponse;
 import com.example.qsys.yousi.bean.UserResponse;
 
@@ -71,6 +72,16 @@ public interface ApiService {
     Observable<DaysResportResponse> getAllDaysReport(@Path("userId") int userId);
 
     /**
+     * 根据关键词搜索所属登录人的日志
+     *
+     * @param userId
+     * @param keyWords
+     * @return
+     */
+    @GET("report/{userId}/{keyWords}")
+    Observable<DaysResportResponse> getAllDaysReport(@Path("userId") int userId, @Path("keyWords") String keyWords);
+
+    /**
      * 分页请求
      * @param userId
      * @param page
@@ -91,5 +102,9 @@ public interface ApiService {
     @POST("report/construct")
     Observable<SuccessResponse> constructReport(@Query("book_name") String book_name, @Query("title") String title, @Query("content") String content, @Query("userId") int userId, @Query("type") int type);
 
-
+    /**
+     * 获得搜索频率在前十位的关键词
+     */
+    @GET("searchrecord/search")
+    Observable<SearchKeyWordsItemResponse> getLimitToIndexSearchItem();
 }

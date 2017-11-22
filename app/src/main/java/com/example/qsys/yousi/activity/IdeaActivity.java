@@ -9,6 +9,7 @@ import com.example.qsys.yousi.fragment.idea.daily.WriteDailyFragment;
 import com.example.qsys.yousi.fragment.idea.detailshow.IdeaDetailShowFragment;
 import com.example.qsys.yousi.fragment.idea.readpression.WriteReadPressionFragment;
 import com.example.qsys.yousi.fragment.idea.readshow.ReadDetailShowFragment;
+import com.example.qsys.yousi.fragment.idea.search.SearchDailyFragment;
 
 public class IdeaActivity extends BaseActivity {
 
@@ -42,6 +43,10 @@ public class IdeaActivity extends BaseActivity {
                 DaysResportResponse.ResultsBean parcelable2 = extras.getParcelable(Constant.READPRESSION_OBJECT);
                 ReadDetailShowFragment readDetailShowFragment = ReadDetailShowFragment.newInstance(parcelable2);
                 addFragment(readDetailShowFragment);
+                break;
+            case Constant.SEARCH_DAILY:
+                addFragment(SearchDailyFragment.newInstance());
+                break;
             default:
         }
 

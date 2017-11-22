@@ -22,6 +22,10 @@ public class Constant {
      */
     public static final int READPRESSION_READ = 4;
     /**
+     * 搜索日志界面
+     */
+    public static final int SEARCH_DAILY = 5;
+    /**
      * 日志传递对象
      */
     public static final String READPRESSION_OBJECT = "object";
@@ -45,6 +49,7 @@ public class Constant {
     public static final String ACCOUNT = "账号";
     public static final String LOGIN_IS_OR_NOT = "是否登录";
     public static final int NOT_NULL = 1;
+
     public static String accessToken = "";
 
     public static final String BASE_URL = CustomApplication.getAppContext().getResources().getString(R.string.url);

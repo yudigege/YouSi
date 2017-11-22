@@ -1,5 +1,6 @@
 package com.example.qsys.yousi.fragment.idea.search;
 
+import com.example.qsys.yousi.bean.BaseResponse;
 import com.example.qsys.yousi.fragment.BaseView;
 
 /**
@@ -10,4 +11,5 @@ import com.example.qsys.yousi.fragment.BaseView;
 
 public interface SearchDailyView extends BaseView {
 
+    void showLimitToIndexSearchItem(BaseResponse searchItem);
 }
