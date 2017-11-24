@@ -107,6 +107,9 @@ public class BookShelfFragment extends BaseFragment implements BookShelfView {
         initListener();
         initToolBar(toolbarInclude, false, getResources().getString(R.string.book_stock), -1, false);
         initAdapter();
+        imgBtnActionInclude.setVisibility(View.GONE);
+        //防止图书页面也显示图标
+        setHasOptionsMenu(false);
         mPresenter.getBookData();
     }
 

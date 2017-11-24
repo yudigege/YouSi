@@ -71,10 +71,11 @@
     <string name="not_null">不能为空</string>
     <string name="edit_sucess">修改失败</string>
     <string name="man">男</string>
-    <string name="femal">女</string>
+    <string name="female">女</string>
     <string name="agree">是</string>
     <string name="search">搜索</string>
     <string name="url">"http://192.168.1.133:8080/"</string>
-
-
+    <string name="gender">性别</string>
+    <string name="personal_bio">个人简介</string>
+    <string name="personal_blog">我的主页链接</string>
 </resources>

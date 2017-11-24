@@ -1,5 +1,4 @@
 package com.example.qsys.yousi.common.widget.dialog;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -12,6 +11,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,21 +20,28 @@ import com.example.qsys.yousi.R;
 import com.example.qsys.yousi.activity.BaseActivity;
 import com.example.qsys.yousi.common.Constant;
 import com.example.qsys.yousi.common.util.ToastUtils;
-
 /**
  * @author hanshaokai
  * @date 2017/10/31 15:14
  */
-
-
 public class AppStyleDialog extends Dialog {
+    public int gender;
     private static int dialogStyle = R.style.AlertDialogStyle;
     private Context context;
-
     public AppStyleDialog(@NonNull Context context) {
         super(context);
     }
 
+    /**
+     * 选择日志和读后感
+     *
+     * @param context
+     * @param style
+     * @param title
+     * @param contentStr
+     * @param confirmStr
+     * @param cancleStr
+     */
     public AppStyleDialog(Context context, int style, String title, String contentStr, String confirmStr, String cancleStr) {
         super(context, style == -1 ? dialogStyle : style);
         this.context = context;
@@ -66,10 +74,18 @@ public class AppStyleDialog extends Dialog {
         this.getWindow().setLayout(getWidth() / 5 * 4, RelativeLayout.LayoutParams.WRAP_CONTENT);
     }
 
+    /**
+     * 编辑名字 性别
+     *
+     * @param context
+     * @param style
+     * @param type_edit
+     */
     public AppStyleDialog(final BaseActivity context, int style, int type_edit) {
         super(context, style == -1 ? dialogStyle : style);
         this.context = context;
         switch (type_edit) {
+            //编辑昵称
             case Constant.EDITE_NICK:
                 View view = LayoutInflater.from(context).inflate(R.layout.dialog_nick_name_edit, null, false);
                 setContentView(view);
@@ -94,17 +110,104 @@ public class AppStyleDialog extends Dialog {
                         }
                     }
                 });
-
                 Window window = getWindow();
                 WindowManager.LayoutParams params = window.getAttributes();
                 params.gravity = Gravity.CENTER;
                 window.setAttributes(params);
                 this.getWindow().setLayout(getWidth() / 5 * 4, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 break;
+
+            case Constant.EDITE_SEX:
+                //编辑性别
+                View view2 = LayoutInflater.from(context).inflate(R.layout.dialog_mine_gender_edit, null, false);
+                setContentView(view2);
+                RadioButton rbt_man = view2.findViewById(R.id.rbt_man);
+                RadioButton rbt_female = view2.findViewById(R.id.rbt_female);
+                TextView tv_positive = view2.findViewById(R.id.tv_positive);
+                tv_positive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        doGetGender(gender);
+                        doCancle();
+                    }
+                });
+                RadioGroup rgp_gender = view2.findViewById(R.id.rgp_gender);
+                rgp_gender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+                    @Override
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                        switch (checkedId) {
+                            case R.id.rbt_female:
+                                gender = Constant.FEAMALE;
+                                break;
+                            case R.id.rbt_man:
+                                gender = Constant.MAN;
+                                break;
+                            default:
+                        }
+
+                    }
+                });
+
+                Window window2 = getWindow();
+                WindowManager.LayoutParams params2 = window2.getAttributes();
+                params2.gravity = Gravity.CENTER;
+                window2.setAttributes(params2);
+                this.getWindow().setLayout(getWidth() / 5 * 4, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                break;
             default:
+
+            case Constant.EDITE_BIO:
+                View view3 = LayoutInflater.from(context).inflate(R.layout.dialog_mine_bio_edit, null, false);
+                final EditText et_bio_detail = view3.findViewById(R.id.et_bio_detail);
+                TextView tv_positive_bio = view3.findViewById(R.id.tv_positive);
+                tv_positive_bio.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String bio = et_bio_detail.getText().toString();
+                        doGetBioDetail(bio);
+                        dismiss();
+                    }
+                });
+                setContentView(view3);
+                Window window3 = getWindow();
+                WindowManager.LayoutParams params3 = window3.getAttributes();
+                params3.gravity = Gravity.CENTER;
+                window3.setAttributes(params3);
+                this.getWindow().setLayout(getWidth() / 5 * 4, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                break;
+
+            case Constant.EDITE_BLOG_URL:
+                View view4 = LayoutInflater.from(context).inflate(R.layout.dialog_mine_blog_edit, null, false);
+                final EditText et_blog_detail = view4.findViewById(R.id.et_blog_detail);
+                TextView tv_positive_blog = view4.findViewById(R.id.tv_positive);
+                tv_positive_blog.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String blog = et_blog_detail.getText().toString();
+                        doGetBlogDetail(blog);
+                        dismiss();
+                    }
+                });
+                setContentView(view4);
+                Window window4 = getWindow();
+                WindowManager.LayoutParams params4 = window4.getAttributes();
+                params4.gravity = Gravity.CENTER;
+                window4.setAttributes(params4);
+                this.getWindow().setLayout(getWidth() / 5 * 4, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                break;
+
         }
     }
 
+    /**
+     * 注册账户
+     *
+     * @param baseFragmentActivity
+     * @param style
+     * @param account
+     */
     public AppStyleDialog(BaseActivity baseFragmentActivity, int style, String account) {
         super(baseFragmentActivity, style == -1 ? dialogStyle : style);
         this.context = baseFragmentActivity;
@@ -115,7 +218,7 @@ public class AppStyleDialog extends Dialog {
         iv_close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              doCancle();
+                doCancle();
             }
         });
         TextView agree = view.findViewById(R.id.agree);
@@ -131,12 +234,22 @@ public class AppStyleDialog extends Dialog {
         params.gravity = Gravity.CENTER;
         window.setAttributes(params);
         this.getWindow().setLayout(getWidth() / 5 * 4, RelativeLayout.LayoutParams.WRAP_CONTENT);
-
     }
 
     public void doGetdata(String nick) {
 
         dismiss();
+    }
+
+    public void doGetGender(int gender) {
+
+    }
+
+    public void doGetBioDetail(String bio) {
+
+    }
+    public void doGetBlogDetail(String blog) {
+
     }
 
     public int getWidth() {

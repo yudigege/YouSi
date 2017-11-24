@@ -3,39 +3,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/cardItem_padding">
+        android:orientation="vertical"
+        android:padding="6dp">
 
-        <ImageView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@mipmap/record_ic" />
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@mipmap/record_ic" />
+
+            <TextView
+                android:id="@+id/tv_record_words"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:maxLines="1"
+                android:layout_gravity="center_vertical"
+                android:padding="5dp"
+                android:textColor="@color/black"
+                tools:text="玩玩玩玩啊我那我那我那我那五年" />
+
+            <ImageView
+                android:id="@+id/iv_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@mipmap/result_delete" />
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_record_words"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:maxLines="1"
-            android:padding="5dp"
-            android:textColor="@color/black"
-            tools:text="玩玩玩玩啊我那我那我那我那五年" />
-
-        <ImageView
-            android:id="@+id/iv_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@mipmap/result_delete" />
-
-
+            android:layout_width="match_parent"
+            android:layout_height="0.3dp"
+            android:background="@color/lightgrey" />
     </LinearLayout>
-
-
 </android.support.constraint.ConstraintLayout>

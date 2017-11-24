@@ -11,6 +11,6 @@ import java.util.Map;
 
 
 public abstract class AbstractMineDetailPresenter extends BasePresenter {
-    public abstract void updateUserInfor(Map<String, String> map);
+    public abstract void updateUserInfor(Map<String, String> map,int editType);
 
 }

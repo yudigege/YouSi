@@ -22,7 +22,7 @@ public class MineDetailPresenterExtend extends AbstractMineDetailPresenter {
     }
 
     @Override
-    public void updateUserInfor(Map<String, String> map) {
+    public void updateUserInfor(Map<String, String> map, final int editType) {
 
         NetManager.getApiService().updateUser(CustomApplication.userEntity.getId(), map).compose(RxSchedulers.<SuccessResponse>io_main())
                 .compose(getBindView().<SuccessResponse>bindToLifecycle())
@@ -36,7 +36,7 @@ public class MineDetailPresenterExtend extends AbstractMineDetailPresenter {
                         if (successResponse.getCode() != Constant.SCUCESS_COED) {
                             getBindView().showMessage(((MineDetailFragment) getBindView()).getString(R.string.edit_sucess));
                         } else {
-                            ((MineDetailFragment) getBindView()).setUserInfor(Constant.EDITE_NICK);
+                            ((MineDetailFragment) getBindView()).setUserInfor(editType);
                         }
                     }
                 });

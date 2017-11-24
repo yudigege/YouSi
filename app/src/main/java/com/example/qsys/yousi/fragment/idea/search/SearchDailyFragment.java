@@ -21,9 +21,13 @@ import com.example.qsys.yousi.bean.BaseResponse;
 import com.example.qsys.yousi.bean.DaysResportResponse;
 import com.example.qsys.yousi.bean.SearchKeyWordsItemResponse;
 import com.example.qsys.yousi.bean.db.SearchRecordBean;
+import com.example.qsys.yousi.common.Constant;
 import com.example.qsys.yousi.common.util.TimeUtils;
+import com.example.qsys.yousi.common.widget.recyclerview.OnRecyclerItemClickListener;
 import com.example.qsys.yousi.db.GreenDaoManager;
 import com.example.qsys.yousi.fragment.BaseFragment;
+import com.example.qsys.yousi.fragment.idea.detailshow.IdeaDetailShowFragment;
+import com.example.qsys.yousi.fragment.idea.readshow.ReadDetailShowFragment;
 import com.google.android.flexbox.FlexboxLayout;
 
 import java.util.ArrayList;
@@ -51,8 +55,8 @@ public class SearchDailyFragment extends BaseFragment implements SearchDailyView
     @BindView(R.id.flexbox_layout_record_frequently)
     FlexboxLayout flexbox_layout_record_frequently;
     public DailySearchRsultItemAdapter dailySearchRsultItemAdapter;
-    public List searchResultItemList = new ArrayList();
-
+    public List<DaysResportResponse.ResultsBean> searchResultItemList = new ArrayList();
+    public String keyWords;
 
 
     @Override
@@ -63,6 +67,16 @@ public class SearchDailyFragment extends BaseFragment implements SearchDailyView
         recycler_result_item.setVisibility(View.VISIBLE);
         recycler_result_item.setLayoutManager(new LinearLayoutManager(baseFragmentActivity));
         dailySearchRsultItemAdapter.notifyDataSetChanged();
+// 返回搜索结果 不为空
+        if (results.size() > 0) {
+            SearchRecordBean searchRecordBean1 = GreenDaoManager.getInstance().getSession().getSearchRecordBeanDao().queryBuilder().
+                    where(SearchRecordBeanDao.Properties.KeyWords.eq(keyWords)).build().unique();
+            if (searchRecordBean1 == null) {
+                SearchRecordBean searchRecordBean = new SearchRecordBean(null, keyWords, TimeUtils.getNowString());
+                GreenDaoManager.getInstance().getSession().getSearchRecordBeanDao().insert(searchRecordBean);
+
+            }
+        }
     }
 
     @Override
@@ -112,6 +126,7 @@ public class SearchDailyFragment extends BaseFragment implements SearchDailyView
         View inflate = inflater.inflate(R.layout.fragment_daily_search, container, false);
         return inflate;
     }
+
     @Override
     public void doViewLogic(Bundle savedInstanceState) {
         searchDailyPresenterExtend = new SearchDailyPresenterExtend();
@@ -134,9 +149,15 @@ public class SearchDailyFragment extends BaseFragment implements SearchDailyView
             textView.setBackground(ContextCompat.getDrawable(baseFragmentActivity, R.drawable.search_bg_shape));
             textView.setGravity(Gravity.CENTER);
             textView.setPadding(30, 20, 30, 20);
+            textView.setTag(resultsBean.getKey_words());
             flexbox_layout_record_frequently.addView(textView);
             //通过FlexboxLayout.LayoutParams 设置子元素支持的属性
-
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    etSearchKeyWords.setText((String) v.getTag());
+                }
+            });
             ViewGroup.LayoutParams params = textView.getLayoutParams();
 
             if (params instanceof FlexboxLayout.LayoutParams) {
@@ -151,6 +172,24 @@ public class SearchDailyFragment extends BaseFragment implements SearchDailyView
         recycler_result_item.setAdapter(dailySearchRsultItemAdapter);
     }
     private void initListener() {
+        recycler_result_item.addOnItemTouchListener(new OnRecyclerItemClickListener(recycler_result_item, baseFragmentActivity) {
+            @Override
+            public void onItemClick(RecyclerView.ViewHolder vh) {
+                DaysResportResponse.ResultsBean resultsBean = searchResultItemList.get(vh.getLayoutPosition());
+                if (resultsBean.getType() == Constant.READPRESSION_DETAIL) {
+                    ReadDetailShowFragment readDetailShowFragment = ReadDetailShowFragment.newInstance(resultsBean);
+                    addFragment(readDetailShowFragment);
+                } else {
+                    IdeaDetailShowFragment ideaDetailShowFragment = IdeaDetailShowFragment.newInstance(resultsBean);
+                    addFragment(ideaDetailShowFragment);
+                }
+            }
+
+            @Override
+            public void onLongClick(RecyclerView.ViewHolder vh) {
+
+            }
+        });
         tvCancelDaily.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -169,32 +208,19 @@ public class SearchDailyFragment extends BaseFragment implements SearchDailyView
         etSearchKeyWords.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
-
             @Override
             public void afterTextChanged(Editable s) {
                 iv_search_delete_key_words.setVisibility(View.GONE);
                 recycler_result_item.setVisibility(View.GONE);
-                String keyWords = s.toString();
+                keyWords = s.toString();
                 if (!keyWords.trim().equals("")) {
                     iv_search_delete_key_words.setVisibility(View.VISIBLE);
                     //获得相关的日志
                     searchDailyPresenterExtend.getContainKeyWordsDaily(keyWords);
-                    SearchRecordBean searchRecordBean1 = GreenDaoManager.getInstance().getSession().getSearchRecordBeanDao().queryBuilder().
-                            where(SearchRecordBeanDao.Properties.KeyWords.eq(keyWords)).build().unique();
-
-                    if (searchRecordBean1 == null) {
-
-                        SearchRecordBean searchRecordBean = new SearchRecordBean(null, keyWords, TimeUtils.getNowString());
-                        GreenDaoManager.getInstance().getSession().getSearchRecordBeanDao().insert(searchRecordBean);
-
-                    }
                 }
             }
         });

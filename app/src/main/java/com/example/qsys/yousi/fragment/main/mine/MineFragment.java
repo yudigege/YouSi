@@ -22,6 +22,7 @@ import com.example.qsys.yousi.common.Constant;
 import com.example.qsys.yousi.common.util.ActivityUtils;
 import com.example.qsys.yousi.common.util.SPUtils;
 import com.example.qsys.yousi.common.util.ToastUtils;
+import com.example.qsys.yousi.common.widget.updatelisenner.UpdateMIneDetailObserver;
 import com.example.qsys.yousi.fragment.BaseFragment;
 import com.example.qsys.yousi.manager.AppManager;
 
@@ -31,7 +32,7 @@ import butterknife.BindView;
  * Created by hanshaokai on 2017/10/17 15:19
  */
 
-public class MineFragment extends BaseFragment implements MinePageView {
+public class MineFragment extends BaseFragment implements MinePageView ,UpdateMIneDetailObserver.UpdateMineDetailLisener{
     @BindView(R.id.tv_title_include)
     TextView tvTitleInclude;
     @BindView(R.id.img_btn_action_include)
@@ -99,6 +100,7 @@ public class MineFragment extends BaseFragment implements MinePageView {
 
     @Override
     public void doViewLogic(Bundle savedInstanceState) {
+        UpdateMIneDetailObserver.setListener(this);
         mPresenter = new MinePresenterExtend();
         mPresenter.setPresenterView(this);
         initToolBar(toolbarInclude, false, getResources().getString(R.string.mine), -1, false);
@@ -181,4 +183,10 @@ public class MineFragment extends BaseFragment implements MinePageView {
     }
 
 
+    @Override
+    public void updateMineDetail(String nickName) {
+
+        tvNickNameMine2.setText(nickName);
+        tvNickNameMine.setText(nickName);
+    }
 }

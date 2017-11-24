@@ -38,17 +38,25 @@ public class Constant {
      */
     public static final int SCUCESS_COED = 1;
     /**
-     * 我的界面编辑 类型 编辑昵称
+     * 我的界面编辑 类型 编辑昵称 性别 博客
      */
     public static final int EDITE_NICK = 1;
+    public static final int EDITE_SEX = 2;
+    public static final int EDITE_BIO = 3;
+    public static final int EDITE_BLOG_URL = 4;
     /**
      * 性别男
      */
     public static final int MAN = 1;
+    /**
+     * 性别女
+     */
+    public static final int FEAMALE = 2;
     public static final String PASSWORD = "密码";
     public static final String ACCOUNT = "账号";
     public static final String LOGIN_IS_OR_NOT = "是否登录";
     public static final int NOT_NULL = 1;
+
 
     public static String accessToken = "";
 
