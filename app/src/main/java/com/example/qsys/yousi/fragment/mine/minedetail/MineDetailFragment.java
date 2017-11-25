@@ -1,14 +1,19 @@
 package com.example.qsys.yousi.fragment.mine.minedetail;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StatFs;
 import android.provider.MediaStore;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.qsys.yousi.BuildConfig;
 import com.example.qsys.yousi.CustomApplication;
 import com.example.qsys.yousi.R;
 import com.example.qsys.yousi.bean.BaseResponse;
@@ -27,11 +33,14 @@ import com.example.qsys.yousi.common.widget.dialog.AppStyleDialog;
 import com.example.qsys.yousi.common.widget.updatelisenner.UpdateMIneDetailObserver;
 import com.example.qsys.yousi.fragment.BaseFragment;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.BindView;
+
+import static android.support.v4.content.ContextCompat.checkSelfPermission;
 
 /**
  * @author hanshaokai
@@ -72,7 +81,11 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
     @BindView(R.id.avatar_arrow5)
     ImageView blogArrow5;
     public UserResponse.ResultsBean user;
-    public AppStyleDialog appStyleDialogNick;
+    public AppStyleDialog appStyleDialogNick2;
+    public AppStyleDialog appStyleDialogNick3;
+    public AppStyleDialog appStyleDialogNick4;
+    public AppStyleDialog appStyleDialogNick5;
+    public String path;
 
 
     @Override
@@ -104,8 +117,8 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
         bioArrow4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (appStyleDialogNick == null) {
-                    appStyleDialogNick = new AppStyleDialog(baseFragmentActivity, -1, Constant.EDITE_BIO) {
+                if (appStyleDialogNick4 == null) {
+                    appStyleDialogNick4 = new AppStyleDialog(baseFragmentActivity, -1, Constant.EDITE_BIO) {
                         @Override
                         public void doGetBioDetail(String bio) {
                             super.doGetBioDetail(bio);
@@ -114,22 +127,21 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
                             map.put("bio", bio);
                             user.setBio(bio);
                             mPresnter.updateUserInfor(map, Constant.EDITE_BIO);
-                            appStyleDialogNick = null;
+
                         }
                     };
-                    appStyleDialogNick.show();
+                    appStyleDialogNick4.show();
                 } else {
-                    appStyleDialogNick.show();
+                    appStyleDialogNick4.show();
                 }
             }
         });
-
         tvDetailBlogMine.setText(CustomApplication.userEntity.getBlog());
         blogArrow5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (appStyleDialogNick == null) {
-                    appStyleDialogNick = new AppStyleDialog(baseFragmentActivity, -1, Constant.EDITE_BLOG_URL) {
+                if (appStyleDialogNick5 == null) {
+                    appStyleDialogNick5 = new AppStyleDialog(baseFragmentActivity, -1, Constant.EDITE_BLOG_URL) {
                         @Override
                         public void doGetBlogDetail(String blog) {
                             super.doGetBlogDetail(blog);
@@ -139,12 +151,11 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
                             user.setBlog(blog);
                             mPresnter.updateUserInfor(map, Constant.EDITE_BLOG_URL);
                             //修改的弹窗用的同一个 不置空 会显示同一个
-                            appStyleDialogNick = null;
                         }
                     };
-                    appStyleDialogNick.show();
+                    appStyleDialogNick5.show();
                 } else {
-                    appStyleDialogNick.show();
+                    appStyleDialogNick5.show();
                 }
 
             }
@@ -154,6 +165,7 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
         nameArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                checkPermission();
 
             }
         });
@@ -163,22 +175,21 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
                                           @Override
                                           public void onClick(View v) {
 
-                                              if (appStyleDialogNick == null) {
-                                                  appStyleDialogNick = new AppStyleDialog(baseFragmentActivity, -1, Constant.EDITE_NICK) {
+                                              if (appStyleDialogNick2 == null) {
+                                                  appStyleDialogNick2 = new AppStyleDialog(baseFragmentActivity, -1, Constant.EDITE_NICK) {
                                                       @Override
                                                       public void doGetdata(String nick) {
                                                           super.doGetdata(nick);
                                                           user = new UserResponse.ResultsBean();
                                                           Map<String, String> map = new HashMap(1);
-                                                          map.put("nick_name",nick);
+                                                          map.put("nick_name", nick);
                                                           user.setNick_name(nick);
                                                           mPresnter.updateUserInfor(map, Constant.EDITE_NICK);
-                                                          appStyleDialogNick = null;
                                                       }
                                                   };
-                                                  appStyleDialogNick.show();
+                                                  appStyleDialogNick2.show();
                                               } else {
-                                                  appStyleDialogNick.show();
+                                                  appStyleDialogNick2.show();
                                               }
                                           }
                                       }
@@ -187,8 +198,8 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
         sexArrow3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (appStyleDialogNick == null) {
-                    appStyleDialogNick = new AppStyleDialog(baseFragmentActivity, -1, Constant.EDITE_SEX) {
+                if (appStyleDialogNick3 == null) {
+                    appStyleDialogNick3 = new AppStyleDialog(baseFragmentActivity, -1, Constant.EDITE_SEX) {
                         @Override
                         public void doGetGender(int gender) {
                             super.doGetGender(gender);
@@ -198,27 +209,23 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
                                 map.put("gender", gender + "");
                                 user.setGender(gender);
                                 mPresnter.updateUserInfor(map, Constant.EDITE_SEX);
-                                appStyleDialogNick = null;
                             }
                         }
                     };
-                    appStyleDialogNick.show();
+                    appStyleDialogNick3.show();
                 } else {
-                    appStyleDialogNick.show();
+                    appStyleDialogNick3.show();
                 }
-
             }
         });
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case android.R.id.home:
                 removeFragment();
                 break;
-
             default:
         }
         return super.onOptionsItemSelected(item);
@@ -289,27 +296,87 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
         }
     }
 
-
     static final int INTENTFORCAMERA = 1;
     static final int INTENTFORPHOTO = 2;
 
     public void toCamera() {
-
         Intent intentNow = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         Uri uri = null;
+        path = Environment.getExternalStorageDirectory().getPath() + "/yousipic";
+        if (!FileUtils.createOrExistsDir(path)) {
+            ToastUtils.showShort(path + "路径未创建成功");
+            return;
+        }
+        String name = File.separator + CustomApplication.userEntity.getId() + ".jpg";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             //针对Android7.0，需要通过FileProvider封装过的路径，提供给外部调用
             //通过FileProvider创建一个content类型的Uri，进行封装
-            uri = FileProvider.getUriForFile(baseFragmentActivity, "com.bw.dliao", FileUtils.getFileByPath(""));
+            uri = FileProvider.getUriForFile(baseFragmentActivity, BuildConfig.APPLICATION_ID, FileUtils.getFileByPath(path + name));
         } else {
-            uri = Uri.fromFile(FileUtils.getFileByPath(""));
+            uri = Uri.fromFile(FileUtils.getFileByPath(path + name));
         }
-
         intentNow.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         baseFragmentActivity.startActivityForResult(intentNow, INTENTFORCAMERA);
-
-
     }
 
+    private void checkPermission() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            //检查是否授权了读写权限
+            int write = checkSelfPermission(baseFragmentActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            int read = checkSelfPermission(baseFragmentActivity, Manifest.permission.READ_EXTERNAL_STORAGE);
+            if (write != PackageManager.PERMISSION_GRANTED || read != PackageManager.PERMISSION_GRANTED) {
+                //没有授权就去申请
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 300);
+            } else {
+                toCamera();
+            }
+        } else {
+            //低于6.0的版本 如果拒绝了权限 怎么判断是否有权限
+            Log.i("wytings", "------------- Build.VERSION.SDK_INT < 23 ------------");
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        //申请权限结果
+        toCamera();// 每个请求 requestCode 对应一个 code 结果
+        if (requestCode == 300) {
+            Log.i("wytings", "--------------requestCode == 300->" + requestCode + "," + permissions.length + "," + grantResults.length);
+        } else {
+            Log.i("wytings", "--------------requestCode != 300->" + requestCode + "," + permissions + "," + grantResults);
+        }
+    }
 
+    /**
+     *    * 获取SDCARD剩余存储空间
+     *    *
+     *    * @return 0 sd已被挂载占用 1 sd卡内存不足 2 sd可用
+     *    
+     */
+    public static int getAvailableExternalStorageSize() {
+        if (isSDCardExist()) {
+            File path = Environment.getExternalStorageDirectory();
+            StatFs stat = new StatFs(path.getPath());
+            long blockSize = stat.getBlockSize();
+            long availableBlocks = stat.getAvailableBlocks();
+            long memorySize = availableBlocks * blockSize;
+            if (memorySize < 10 * 1024 * 1024) {
+                return 1;
+            } else {
+                return 2;
+            }
+        } else {
+            return 0;
+        }
+    }
+    /**
+     * 是否挂载
+     * @return
+     */
+    public static boolean isSDCardExist() {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

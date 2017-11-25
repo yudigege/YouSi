@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <paths>
+        <!--  path 共享的文件路径  FileProvider 用 name  添加进URIs 内容字段去访问 files/name / 的子目录。 这里子目录是 yousipic  如果是空字符串 相机仍然可用  name不能为空-->
+        <external-path
+            name="yousipic"
+            path="/yousipic" />
+    </paths>
+</resources>
