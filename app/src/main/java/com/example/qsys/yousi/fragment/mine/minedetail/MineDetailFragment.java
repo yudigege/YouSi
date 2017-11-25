@@ -3,6 +3,11 @@ package com.example.qsys.yousi.fragment.mine.minedetail;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +15,7 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.provider.MediaStore;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -34,12 +40,20 @@ import com.example.qsys.yousi.common.widget.updatelisenner.UpdateMIneDetailObser
 import com.example.qsys.yousi.fragment.BaseFragment;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.BindView;
 
+import static android.graphics.BitmapFactory.decodeFile;
 import static android.support.v4.content.ContextCompat.checkSelfPermission;
 
 /**
@@ -56,8 +70,8 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
     Toolbar toolbarInclude;
     @BindView(R.id.appbar_clude)
     AppBarLayout appbarClude;
-    @BindView(R.id.tv_detail_name_mine)
-    TextView tvDetailNameMine;
+    @BindView(R.id.iv_detail_name_mine)
+    ImageView ivDetailNameMine;
     @BindView(R.id.avatar_arrow)
     ImageView nameArrow;
     @BindView(R.id.tv_detail_nick_mine)
@@ -85,7 +99,8 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
     public AppStyleDialog appStyleDialogNick3;
     public AppStyleDialog appStyleDialogNick4;
     public AppStyleDialog appStyleDialogNick5;
-    public String path;
+    public String path = Environment.getExternalStorageDirectory().getPath() + "/yousipic";
+    public String name = File.separator + CustomApplication.userEntity.getId() + ".jpg";
 
 
     @Override
@@ -161,7 +176,7 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
             }
         });
 
-        tvDetailNameMine.setText(CustomApplication.userEntity.getReal_name());
+        ivDetailNameMine.setImageDrawable(ContextCompat.getDrawable(baseFragmentActivity, R.drawable.ic_empty_picture));
         nameArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -302,12 +317,12 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
     public void toCamera() {
         Intent intentNow = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         Uri uri = null;
-        path = Environment.getExternalStorageDirectory().getPath() + "/yousipic";
+
         if (!FileUtils.createOrExistsDir(path)) {
             ToastUtils.showShort(path + "路径未创建成功");
             return;
         }
-        String name = File.separator + CustomApplication.userEntity.getId() + ".jpg";
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             //针对Android7.0，需要通过FileProvider封装过的路径，提供给外部调用
             //通过FileProvider创建一个content类型的Uri，进行封装
@@ -316,7 +331,7 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
             uri = Uri.fromFile(FileUtils.getFileByPath(path + name));
         }
         intentNow.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-        baseFragmentActivity.startActivityForResult(intentNow, INTENTFORCAMERA);
+        startActivityForResult(intentNow, INTENTFORCAMERA);
     }
 
     private void checkPermission() {
@@ -379,4 +394,245 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
             return false;
         }
     }
+
+    /**
+     *    * 读取图片属性：旋转的角度
+     *    *
+     *    * @param path 源信息
+     *    *      图片绝对路径
+     *    * @return degree旋转的角度
+     *    
+     */
+    public static int readPictureDegree(String path) {
+        int degree = 0;
+        try {
+            ExifInterface exifInterface = new ExifInterface(path);
+            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    degree = 90;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    degree = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    degree = 270;
+                    break;
+                default:
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return degree;
+    }
+
+
+    /**
+     *    * 照片路径
+     *    * 压缩后 宽度的尺寸
+     *    * @param path
+     *    * @param specifiedWidth
+     *    
+     */
+    public static Bitmap resizeImage(String path, int specifiedWidth) throws Exception {
+
+
+        Bitmap bitmap = null;
+        FileInputStream inStream = null;
+        File f = new File(path);
+        System.out.println(path);
+        if (!f.exists()) {
+            throw new FileNotFoundException();
+        }
+        try {
+            inStream = new FileInputStream(f);
+            int degree = readPictureDegree(path);
+            BitmapFactory.Options opt = new BitmapFactory.Options();
+//照片不加载到内存 只能读取照片边框信息
+            opt.inJustDecodeBounds = true;
+// 获取这个图片的宽和高
+            decodeFile(path, opt); // 此时返回bm为空
+
+
+            int inSampleSize = 1;
+            final int width = opt.outWidth;
+//      width 照片的原始宽度 specifiedWidth 需要压缩的宽度
+//      1000 980
+            if (width > specifiedWidth) {
+                inSampleSize = (int) (width / (float) specifiedWidth);
+            }
+// 按照 565 来采样 一个像素占用2个字节
+            opt.inPreferredConfig = Bitmap.Config.RGB_565;
+//      图片加载到内存
+            opt.inJustDecodeBounds = false;
+// 等比采样
+            opt.inSampleSize = inSampleSize;
+//      opt.inPurgeable = true;
+// 容易导致内存溢出
+            bitmap = BitmapFactory.decodeStream(inStream, null, opt);
+// bitmap = BitmapFactory.decodeFile(path, opt);
+            if (inStream != null) {
+                try {
+                    inStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    inStream = null;
+                }
+            }
+
+            if (bitmap == null) {
+                return null;
+            }
+            Matrix m = new Matrix();
+            if (degree != 0) {
+//给Matrix 设置旋转的角度
+                m.setRotate(degree);
+                bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, true);
+            }
+            float scaleValue = (float) specifiedWidth / bitmap.getWidth();
+//      等比压缩
+            m.setScale(scaleValue, scaleValue);
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, true);
+            return bitmap;
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     *    * 打开相册
+     *    
+     */
+    public void toPhoto() {
+        try {
+            Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
+            getAlbum.setType("image/*");
+            startActivityForResult(getAlbum, INTENTFORPHOTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case INTENTFORPHOTO:
+//相册
+                try {
+// 必须这样处理，不然在4.4.2手机上会出问题
+                    Uri originalUri = data.getData();
+                    File f = null;
+                    if (originalUri != null) {
+                        f = new File(path + name);
+                        String[] proj = {MediaStore.Images.Media.DATA};
+                        Cursor actualimagecursor = baseFragmentActivity.getContentResolver().query(originalUri, proj, null, null, null);
+                        if (null == actualimagecursor) {
+                            if (originalUri.toString().startsWith("file:")) {
+                                File file = new File(originalUri.toString().substring(7, originalUri.toString().length()));
+                                if (!file.exists()) {
+//地址包含中文编码的地址做utf-8编码
+                                    originalUri = Uri.parse(URLDecoder.decode(originalUri.toString(), "UTF-8"));
+                                    file = new File(originalUri.toString().substring(7, originalUri.toString().length()));
+                                }
+                                FileInputStream inputStream = new FileInputStream(file);
+                                FileOutputStream outputStream = new FileOutputStream(f);
+                                copyStream(inputStream, outputStream);
+                            }
+                        } else {// 系统图库
+                            int actual_image_column_index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                            actualimagecursor.moveToFirst();
+                            String img_path = actualimagecursor.getString(actual_image_column_index);
+                            if (img_path == null) {
+                                InputStream inputStream = baseFragmentActivity.getContentResolver().openInputStream(originalUri);
+                                FileOutputStream outputStream = new FileOutputStream(f);
+                                copyStream(inputStream, outputStream);
+                            } else {
+                                File file = new File(img_path);
+                                FileInputStream inputStream = new FileInputStream(file);
+                                FileOutputStream outputStream = new FileOutputStream(f);
+                                copyStream(inputStream, outputStream);
+                            }
+                        }
+                        Bitmap bitmap = resizeImage(f.getAbsolutePath(), 1080);
+                        int width = bitmap.getWidth();
+                        int height = bitmap.getHeight();
+                        FileOutputStream fos = new FileOutputStream(f.getAbsolutePath());
+                        if (bitmap != null) {
+
+                            if (bitmap.compress(Bitmap.CompressFormat.JPEG, 85, fos)) {
+                                fos.close();
+                                fos.flush();
+                            }
+                            if (!bitmap.isRecycled()) {
+                                bitmap.isRecycled();
+                            }
+
+                            System.out.println("f = " + f.length());
+                            //TODO 上传
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                break;
+            case INTENTFORCAMERA:
+//        相机
+                try {
+
+//file 就是拍照完 得到的原始照片
+                    File file = new File(path + name);
+                    Bitmap bitmap = resizeImage(file.getAbsolutePath(), 1080);
+                    int width = bitmap.getWidth();
+                    int height = bitmap.getHeight();
+                    FileOutputStream fos = new FileOutputStream(file.getAbsolutePath());
+                    if (bitmap != null) {
+                        if (bitmap.compress(Bitmap.CompressFormat.JPEG, 85, fos)) {
+                            fos.close();
+                            fos.flush();
+                        }
+                        ivDetailNameMine.setImageBitmap(bitmap);
+                        if (!bitmap.isRecycled()) {
+//通知系统 回收bitmap
+                            bitmap.isRecycled();
+                        }
+                        System.out.println("f = " + file.length());
+                        //TODO 上传图片
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            default:
+        }
+    }
+
+    //拷贝输入输出流
+    public static void copyStream(InputStream inputStream, OutputStream outStream) throws Exception {
+        try {
+            byte[] buffer = new byte[1024];
+            int len = 0;
+            while ((len = inputStream.read(buffer)) != -1) {
+                outStream.write(buffer, 0, len);
+            }
+            outStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+            if (outStream != null) {
+                outStream.close();
+            }
+        }
+    }
+
+
 }
