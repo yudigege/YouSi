@@ -72,13 +72,12 @@
                         android:textColor="@color/black"
                         android:textSize="@dimen/dialog_title_size" />
 
-                    <TextView
-                        android:id="@+id/tv_detail_name_mine"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <ImageView
+                        android:id="@+id/iv_detail_name_mine"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/avatar_arrow"
-                        tools:text="天龙八部" />
+                        android:layout_toLeftOf="@+id/avatar_arrow" />
 
                     <ImageView
                         android:id="@+id/avatar_arrow"

@@ -100,7 +100,7 @@ public class MineFragment extends BaseFragment implements MinePageView ,UpdateMI
 
     @Override
     public void doViewLogic(Bundle savedInstanceState) {
-        UpdateMIneDetailObserver.setListener(this);
+       UpdateMIneDetailObserver.setListener(this);
         mPresenter = new MinePresenterExtend();
         mPresenter.setPresenterView(this);
         initToolBar(toolbarInclude, false, getResources().getString(R.string.mine), -1, false);

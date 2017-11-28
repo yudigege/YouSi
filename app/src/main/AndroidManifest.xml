@@ -36,8 +36,8 @@
             android:label="@string/title_activity_main2" />
 
         <activity android:name=".activity.IdeaActivity" />
+        <activity android:name=".activity.MineActivity" />
 
-        <activity android:name=".activity.MineActivity"></activity>
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}"

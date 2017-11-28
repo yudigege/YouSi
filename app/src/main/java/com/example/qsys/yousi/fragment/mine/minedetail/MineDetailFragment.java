@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
@@ -15,7 +16,6 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.provider.MediaStore;
 import android.support.design.widget.AppBarLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +27,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.example.qsys.yousi.BuildConfig;
 import com.example.qsys.yousi.CustomApplication;
 import com.example.qsys.yousi.R;
@@ -34,6 +36,7 @@ import com.example.qsys.yousi.bean.BaseResponse;
 import com.example.qsys.yousi.bean.UserResponse;
 import com.example.qsys.yousi.common.Constant;
 import com.example.qsys.yousi.common.util.FileUtils;
+import com.example.qsys.yousi.common.util.LogUtils;
 import com.example.qsys.yousi.common.util.ToastUtils;
 import com.example.qsys.yousi.common.widget.dialog.AppStyleDialog;
 import com.example.qsys.yousi.common.widget.updatelisenner.UpdateMIneDetailObserver;
@@ -125,6 +128,10 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
         //toolbarInclude.setOverflowIcon(ContextCompat.getDrawable(baseFragmentActivity, R.mipmap.ic_launcher));
         actionBar.setTitle(getResources().getString(R.string.mine_infor));
         showMineDetailData();
+
+        RequestBuilder<Drawable> load = Glide.with(baseFragmentActivity)
+                .load(getString(R.string.url) + "users/avatar/" + CustomApplication.userEntity.getId());
+        LogUtils.d(getString(R.string.url) + "users/avatar/" + CustomApplication.userEntity.getId());
     }
 
     private void showMineDetailData() {
@@ -176,7 +183,7 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
             }
         });
 
-        ivDetailNameMine.setImageDrawable(ContextCompat.getDrawable(baseFragmentActivity, R.drawable.ic_empty_picture));
+
         nameArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -263,6 +270,11 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
 
     @Override
     public void showProgressView(Boolean b) {
+        if (b) {
+            showProgressDialog(getString(R.string.on_loade));
+        } else {
+            dismissProgressDialog();
+        }
 
     }
 
@@ -313,6 +325,7 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
 
     static final int INTENTFORCAMERA = 1;
     static final int INTENTFORPHOTO = 2;
+    static final int PHOTO_REQUEST_CUT = 3;
 
     public void toCamera() {
         Intent intentNow = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -343,7 +356,8 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
                 //没有授权就去申请
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 300);
             } else {
-                toCamera();
+                // toCamera();
+                toPhoto();
             }
         } else {
             //低于6.0的版本 如果拒绝了权限 怎么判断是否有权限
@@ -518,7 +532,6 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
     }
 
     @Override
-
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
@@ -536,7 +549,7 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
                             if (originalUri.toString().startsWith("file:")) {
                                 File file = new File(originalUri.toString().substring(7, originalUri.toString().length()));
                                 if (!file.exists()) {
-//地址包含中文编码的地址做utf-8编码
+                                    //地址包含中文编码的地址做utf-8编码
                                     originalUri = Uri.parse(URLDecoder.decode(originalUri.toString(), "UTF-8"));
                                     file = new File(originalUri.toString().substring(7, originalUri.toString().length()));
                                 }
@@ -544,7 +557,8 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
                                 FileOutputStream outputStream = new FileOutputStream(f);
                                 copyStream(inputStream, outputStream);
                             }
-                        } else {// 系统图库
+                            // 系统图库
+                        } else {
                             int actual_image_column_index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                             actualimagecursor.moveToFirst();
                             String img_path = actualimagecursor.getString(actual_image_column_index);
@@ -572,15 +586,15 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
                             if (!bitmap.isRecycled()) {
                                 bitmap.isRecycled();
                             }
-
+                            ivDetailNameMine.setImageBitmap(bitmap);
                             System.out.println("f = " + f.length());
+                            mPresnter.upLoadeAvatar(path + name);
                             //TODO 上传
                         }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
                 break;
             case INTENTFORCAMERA:
 //        相机
@@ -632,6 +646,22 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
                 outStream.close();
             }
         }
+    }
+
+    private void crop(Uri uri) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        intent.putExtra("crop", "true");
+        // 裁剪框的比例，1：1
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        // 裁剪后输出图片的尺寸大小
+        intent.putExtra("outputX", 250);
+        intent.putExtra("outputY", 250);
+        intent.putExtra("outputFormat", "JPEG");// 图片格式
+        intent.putExtra("noFaceDetection", true);// 取消人脸识别
+        intent.putExtra("return-data", true);
+        startActivityForResult(intent, PHOTO_REQUEST_CUT); // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_CUT
     }
 
 

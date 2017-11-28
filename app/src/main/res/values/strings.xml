@@ -68,7 +68,8 @@
     <string name="cancel">取消</string>
     <string name="positive">确定</string>
     <string name="not_null">不能为空</string>
-    <string name="edit_sucess">修改失败</string>
+    <string name="edit_sucess">修改成功</string>
+    <string name="edit_failed">修改失败</string>
     <string name="man">男</string>
     <string name="female">女</string>
     <string name="agree">是</string>
@@ -79,6 +80,7 @@
     <string name="gender">性别</string>
     <string name="personal_bio">个人简介</string>
     <string name="personal_blog">我的主页链接</string>
+    <string name="on_loade">正在上传...</string>
 
 
 </resources>

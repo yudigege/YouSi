@@ -13,4 +13,6 @@ import java.util.Map;
 public abstract class AbstractMineDetailPresenter extends BasePresenter {
     public abstract void updateUserInfor(Map<String, String> map,int editType);
 
+    public abstract void upLoadeAvatar(String avatorUrl);
 }
+

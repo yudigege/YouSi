@@ -8,9 +8,12 @@ import com.example.qsys.yousi.bean.UserResponse;
 
 import java.util.Map;
 
+import okhttp3.MultipartBody;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
@@ -56,6 +59,19 @@ public interface ApiService {
      */
     @PUT("users/{userId}")
     Observable<SuccessResponse> updateUser(@Path("userId") int userId, @QueryMap Map<String, String> map);
+
+    /**
+     * 上传头像图片 表单传输 后台按照表单接受
+     *
+     * @param
+     * @param avatar
+     * @param userIdBody
+     */
+    @POST("users/avatar")/*@Part("userId") RequestBody userId,*/
+    @Multipart
+    Observable<SuccessResponse> upLoadeAvatar(@Part  MultipartBody.Part avatar, @Part MultipartBody.Part userIdBody);
+    //我的情况是混合传递，文件加文字类型 ("pic\"; filename=\"avatar.png\"") RequestBody file):pic是字段名，上传的文件名称为avatar.png，以RequestBody 形式上传
+
     /**
      * 得到所有的书籍数据
      * @return

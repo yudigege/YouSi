@@ -8,7 +8,12 @@ import com.example.qsys.yousi.net.rx.manager.AbstractRxSubscriber;
 import com.example.qsys.yousi.net.rx.manager.NetManager;
 import com.example.qsys.yousi.net.rx.manager.RxSchedulers;
 
+import java.io.File;
 import java.util.Map;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 /**
  * @author hanshaokai
@@ -34,12 +39,38 @@ public class MineDetailPresenterExtend extends AbstractMineDetailPresenter {
                         }
                         getBindView().showResponseData(successResponse);
                         if (successResponse.getCode() != Constant.SCUCESS_COED) {
-                            getBindView().showMessage(((MineDetailFragment) getBindView()).getString(R.string.edit_sucess));
+                            getBindView().showMessage(((MineDetailFragment) getBindView()).getString(R.string.edit_failed));
                         } else {
                             ((MineDetailFragment) getBindView()).setUserInfor(editType);
                         }
                     }
                 });
+    }
+
+    @Override
+    public void upLoadeAvatar(String avatorUrl) {
+        File file = new File(avatorUrl);
+        RequestBody userID = RequestBody.create(MediaType.parse("text/plain"), CustomApplication.userEntity.getId() + "");
+        MultipartBody.Part userIdBody = MultipartBody.Part.createFormData("userId", CustomApplication.userEntity.getId()+"");
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpg"), file);
+        MultipartBody.Part avatorFile = MultipartBody.Part.createFormData("avatar", file.getName(), requestBody);
+        NetManager.getApiService().upLoadeAvatar(avatorFile,userIdBody).compose(RxSchedulers.<SuccessResponse>io_main())
+                .compose(getBindView().<SuccessResponse>bindToLifecycle())
+                .subscribe(new AbstractRxSubscriber<SuccessResponse>(getWeakRefView()) {
+                    @Override
+                    protected void on_Next(SuccessResponse successResponse) {
+                        if (!getBindView().isActive()) {
+                            return;
+                        }
+                        getBindView().showResponseData(successResponse);
+                        if (successResponse.getCode() != Constant.SCUCESS_COED) {
+                            getBindView().showMessage(((MineDetailFragment) getBindView()).getString(R.string.edit_failed));
+                        } else {
+                            getBindView().showMessage(((MineDetailFragment) getBindView()).getString(R.string.edit_sucess));
+                        }
+                    }
+                });
+
 
     }
 
