@@ -50,7 +50,7 @@ public class MineDetailPresenterExtend extends AbstractMineDetailPresenter {
     @Override
     public void upLoadeAvatar(String avatorUrl) {
         File file = new File(avatorUrl);
-        RequestBody userID = RequestBody.create(MediaType.parse("text/plain"), CustomApplication.userEntity.getId() + "");
+        //RequestBody userID = RequestBody.create(MediaType.parse("text/plain"), CustomApplication.userEntity.getId() + "");
         MultipartBody.Part userIdBody = MultipartBody.Part.createFormData("userId", CustomApplication.userEntity.getId()+"");
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpg"), file);
         MultipartBody.Part avatorFile = MultipartBody.Part.createFormData("avatar", file.getName(), requestBody);
@@ -64,9 +64,9 @@ public class MineDetailPresenterExtend extends AbstractMineDetailPresenter {
                         }
                         getBindView().showResponseData(successResponse);
                         if (successResponse.getCode() != Constant.SCUCESS_COED) {
-                            getBindView().showMessage(((MineDetailFragment) getBindView()).getString(R.string.edit_failed));
+                            getBindView().showMessage(((MineDetailFragment) getBindView()).getString(R.string.edit_avatar_failed)+successResponse.getErrors().toString());
                         } else {
-                            getBindView().showMessage(((MineDetailFragment) getBindView()).getString(R.string.edit_sucess));
+                            getBindView().showMessage(((MineDetailFragment) getBindView()).getString(R.string.edit_avatar_sucess));
                         }
                     }
                 });

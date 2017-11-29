@@ -70,6 +70,8 @@
     <string name="not_null">不能为空</string>
     <string name="edit_sucess">修改成功</string>
     <string name="edit_failed">修改失败</string>
+    <string name="edit_avatar_sucess">头像修改成功</string>
+    <string name="edit_avatar_failed">头像修改失败</string>
     <string name="man">男</string>
     <string name="female">女</string>
     <string name="agree">是</string>
@@ -81,6 +83,6 @@
     <string name="personal_bio">个人简介</string>
     <string name="personal_blog">我的主页链接</string>
     <string name="on_loade">正在上传...</string>
-
+    <string name="error_server_msg2">后台不可访问</string>
 
 </resources>

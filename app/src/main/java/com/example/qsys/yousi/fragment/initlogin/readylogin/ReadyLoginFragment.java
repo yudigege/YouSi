@@ -172,7 +172,9 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    loginForm.setVisibility(show ? View.GONE : View.VISIBLE);
+                    if (loginForm != null) {
+                        loginForm.setVisibility(show ? View.GONE : View.VISIBLE);
+                    }
                 }
             });
             loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);

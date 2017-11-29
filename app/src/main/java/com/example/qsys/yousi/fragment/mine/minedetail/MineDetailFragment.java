@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
@@ -27,8 +26,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
 import com.example.qsys.yousi.BuildConfig;
 import com.example.qsys.yousi.CustomApplication;
 import com.example.qsys.yousi.R;
@@ -36,7 +33,7 @@ import com.example.qsys.yousi.bean.BaseResponse;
 import com.example.qsys.yousi.bean.UserResponse;
 import com.example.qsys.yousi.common.Constant;
 import com.example.qsys.yousi.common.util.FileUtils;
-import com.example.qsys.yousi.common.util.LogUtils;
+import com.example.qsys.yousi.common.util.ImageLoadUtils;
 import com.example.qsys.yousi.common.util.ToastUtils;
 import com.example.qsys.yousi.common.widget.dialog.AppStyleDialog;
 import com.example.qsys.yousi.common.widget.updatelisenner.UpdateMIneDetailObserver;
@@ -58,13 +55,10 @@ import butterknife.BindView;
 
 import static android.graphics.BitmapFactory.decodeFile;
 import static android.support.v4.content.ContextCompat.checkSelfPermission;
-
 /**
  * @author hanshaokai
  * @date 2017/10/31 18:01
  */
-
-
 public class MineDetailFragment extends BaseFragment implements MineDetailView {
     public MineDetailPresenterExtend mPresnter;
     @BindView(R.id.tv_title_include)
@@ -103,22 +97,18 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
     public AppStyleDialog appStyleDialogNick4;
     public AppStyleDialog appStyleDialogNick5;
     public String path = Environment.getExternalStorageDirectory().getPath() + "/yousipic";
-    public String name = File.separator + CustomApplication.userEntity.getId() + ".jpg";
-
-
+    public String name = File.separator + System.currentTimeMillis() + ".jpg";
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container) {
         View inflate = inflater.inflate(R.layout.fragment_mine_detail, container, false);
         return inflate;
     }
-
     @Override
     public void doViewLogic(Bundle savedInstanceState) {
         mPresnter = new MineDetailPresenterExtend();
         mPresnter.setPresenterView(this);
         initToolBar();
     }
-
     private void initToolBar() {
         setHasOptionsMenu(true);
         baseFragmentActivity.setSupportActionBar(toolbarInclude);
@@ -128,12 +118,10 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
         //toolbarInclude.setOverflowIcon(ContextCompat.getDrawable(baseFragmentActivity, R.mipmap.ic_launcher));
         actionBar.setTitle(getResources().getString(R.string.mine_infor));
         showMineDetailData();
+        //下载图片
+        ImageLoadUtils.loadAvatar(ivDetailNameMine, baseFragmentActivity, this);
 
-        RequestBuilder<Drawable> load = Glide.with(baseFragmentActivity)
-                .load(getString(R.string.url) + "users/avatar/" + CustomApplication.userEntity.getId());
-        LogUtils.d(getString(R.string.url) + "users/avatar/" + CustomApplication.userEntity.getId());
     }
-
     private void showMineDetailData() {
         tvDetailBioMine.setText(CustomApplication.userEntity.getBio());
         bioArrow4.setOnClickListener(new View.OnClickListener() {
@@ -149,7 +137,6 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
                             map.put("bio", bio);
                             user.setBio(bio);
                             mPresnter.updateUserInfor(map, Constant.EDITE_BIO);
-
                         }
                     };
                     appStyleDialogNick4.show();
@@ -179,11 +166,8 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
                 } else {
                     appStyleDialogNick5.show();
                 }
-
             }
         });
-
-
         nameArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -191,12 +175,10 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
 
             }
         });
-
         tvDetailNickMine.setText(CustomApplication.userEntity.getNick_name());
         nickArrow2.setOnClickListener(new View.OnClickListener() {
                                           @Override
                                           public void onClick(View v) {
-
                                               if (appStyleDialogNick2 == null) {
                                                   appStyleDialogNick2 = new AppStyleDialog(baseFragmentActivity, -1, Constant.EDITE_NICK) {
                                                       @Override
@@ -252,22 +234,21 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
         }
         return super.onOptionsItemSelected(item);
     }
-
     @Override
     public void showResponseData(BaseResponse response) {
-
     }
-
     @Override
     public void showMessage(String smg) {
         ToastUtils.showShort(smg);
+        if (smg.equals(getString(R.string.edit_avatar_sucess))) {
+            CustomApplication.userEntity.setAvatar(getString(R.string.url) + "users/avatar/" + CustomApplication.userEntity.getId() + "/" + name);
+//上传图片成功更新图片地址
+            ImageLoadUtils.loadAvatar(ivDetailNameMine, baseFragmentActivity, this);
+        }
     }
-
     @Override
     public void showEmptyViewByCode(int code, String smg) {
-
     }
-
     @Override
     public void showProgressView(Boolean b) {
         if (b) {
@@ -275,25 +256,20 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
         } else {
             dismissProgressDialog();
         }
-
     }
 
     @Override
     public Boolean isActive() {
         return isAdded();
     }
-
     public static MineDetailFragment newInstance() {
-
         return new MineDetailFragment();
     }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mPresnter.detacheView();
     }
-
     @Override
     public void setUserInfor(int typeEdit) {
         switch (typeEdit) {
@@ -522,6 +498,11 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
      *    
      */
     public void toPhoto() {
+        //创建缓存头像路径
+        if (!FileUtils.createOrExistsDir(path)) {
+            ToastUtils.showShort(path + "路径未创建成功");
+            return;
+        }
         try {
             Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
             getAlbum.setType("image/*");
@@ -576,6 +557,7 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
                         Bitmap bitmap = resizeImage(f.getAbsolutePath(), 1080);
                         int width = bitmap.getWidth();
                         int height = bitmap.getHeight();
+
                         FileOutputStream fos = new FileOutputStream(f.getAbsolutePath());
                         if (bitmap != null) {
 
@@ -586,9 +568,9 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
                             if (!bitmap.isRecycled()) {
                                 bitmap.isRecycled();
                             }
-                            ivDetailNameMine.setImageBitmap(bitmap);
                             System.out.println("f = " + f.length());
                             mPresnter.upLoadeAvatar(path + name);
+
                             //TODO 上传
                         }
                     }
