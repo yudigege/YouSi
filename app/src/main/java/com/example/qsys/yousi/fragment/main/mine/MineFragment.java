@@ -186,6 +186,10 @@ public class MineFragment extends BaseFragment implements MinePageView ,UpdateMI
     @Override
     public void updateMineDetail(String nickName) {
 
+        if (tvNickNameMine==null){
+            ToastUtils.showLong("text控件为空");
+            return;
+        }
         tvNickNameMine2.setText(nickName);
         tvNickNameMine.setText(nickName);
     }

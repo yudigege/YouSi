@@ -6,6 +6,7 @@ import com.example.qsys.yousi.CustomApplication;
 import com.example.qsys.yousi.R;
 import com.example.qsys.yousi.bean.BaseResponse;
 import com.example.qsys.yousi.common.Constant;
+import com.example.qsys.yousi.common.util.LogUtils;
 import com.example.qsys.yousi.common.util.NetworkUtils;
 import com.example.qsys.yousi.common.util.ToastUtils;
 import com.example.qsys.yousi.common.widget.LoadingDialog;
@@ -13,6 +14,7 @@ import com.example.qsys.yousi.fragment.BaseView;
 
 import java.lang.ref.WeakReference;
 
+import retrofit2.HttpException;
 import rx.Subscriber;
 
 /**
@@ -75,7 +77,6 @@ public abstract class AbstractRxSubscriber<T> extends Subscriber<T> {
         super.onStart();
         getBindView().showProgressView(true);
     }
-
     @Override
     public void onNext(T t) {
         getBindView().showProgressView(false);
@@ -94,7 +95,6 @@ public abstract class AbstractRxSubscriber<T> extends Subscriber<T> {
         }
         on_Next(t);
     }
-
     @Override
     public void onError(Throwable e) {
         getBindView().showProgressView(false);
@@ -104,9 +104,19 @@ public abstract class AbstractRxSubscriber<T> extends Subscriber<T> {
             getBindView().showMessage(CustomApplication.getAppContext().getString(R.string.no_net));
             return;
         }
-        //后台不可访问
-        getBindView().showEmptyViewByCode(Constant.SERVER_UNREACH,"");
-        ToastUtils.showLong(CustomApplication.getAppContext().getResources().getString(R.string.error_server_msg, e.getMessage()));
+        // 网络错误
+        if (e instanceof HttpException) {
+            HttpException httpEx = (HttpException) e;
+            String responseMsg = httpEx.getMessage();
+            getBindView().showEmptyViewByCode(Constant.SERVER_UNREACH, "");
+            ToastUtils.showLong(CustomApplication.getAppContext().getResources().getString(R.string.error_server_msg, e.getMessage()));
+        } else {
+            // 其他错误
+            ToastUtils.showLong(e.getMessage());
+            LogUtils.d("非网络错误：" + e.getMessage());
+
+        }
+
     }
 
     /**

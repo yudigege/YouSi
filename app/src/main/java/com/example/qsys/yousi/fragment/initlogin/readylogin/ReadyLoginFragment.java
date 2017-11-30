@@ -154,7 +154,7 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
      * @return
      */
     private boolean isPasswordValid(String password) {
-        return password.length() > 4;
+        return password.length() > 0;
     }
 
 
@@ -182,7 +182,8 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
                     show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+                    if (loginProgress!=null){
+                    loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);}
                 }
             });
         } else {

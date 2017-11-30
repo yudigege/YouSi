@@ -29,6 +29,5 @@ public class ImageLoadUtils {
                 .apply(myOptions)
                 .thumbnail(0.5f)
                 .into(imageView);
-
     }
 }

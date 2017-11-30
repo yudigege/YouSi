@@ -42,6 +42,7 @@ public class MineDetailPresenterExtend extends AbstractMineDetailPresenter {
                             getBindView().showMessage(((MineDetailFragment) getBindView()).getString(R.string.edit_failed));
                         } else {
                             ((MineDetailFragment) getBindView()).setUserInfor(editType);
+                            getBindView().showMessage(((MineDetailFragment) getBindView()).getString(R.string.edit_sucess));
                         }
                     }
                 });

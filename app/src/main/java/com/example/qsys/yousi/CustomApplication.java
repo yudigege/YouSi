@@ -35,7 +35,7 @@ public class CustomApplication extends Application {
         //在 BaseNetProvider 中实现了连接、读、写超时的时间处理，与请求和返回数据的请求头部处理。然后需要在 Application 中去注入 BaseNetProvider:
         NetManager.getInstance().registerProvider(new BaseNetProvider());
         Utils.init(this);
-        initLog();
+       initLog();
 
     }
 

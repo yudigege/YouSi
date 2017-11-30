@@ -60,6 +60,7 @@
                 android:padding="@dimen/cardItem_padding">
 
                 <RelativeLayout
+                    android:id="@+id/rel_avatar_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="5dp">
@@ -73,7 +74,7 @@
                         android:textSize="@dimen/dialog_title_size" />
 
                     <ImageView
-                        android:id="@+id/iv_detail_name_mine"
+                        android:id="@+id/iv_detail_avatar_mine"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_centerVertical="true"

@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.qsys.yousi.BuildConfig;
@@ -67,10 +68,12 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
     Toolbar toolbarInclude;
     @BindView(R.id.appbar_clude)
     AppBarLayout appbarClude;
-    @BindView(R.id.iv_detail_name_mine)
-    ImageView ivDetailNameMine;
+    @BindView(R.id.rel_avatar_container)
+    RelativeLayout rel_avatar_container;
+    @BindView(R.id.iv_detail_avatar_mine)
+    ImageView ivDetailAvatarMine;
     @BindView(R.id.avatar_arrow)
-    ImageView nameArrow;
+    ImageView avatarArrow;
     @BindView(R.id.tv_detail_nick_mine)
     TextView tvDetailNickMine;
     @BindView(R.id.avatar_arrow2)
@@ -119,7 +122,7 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
         actionBar.setTitle(getResources().getString(R.string.mine_infor));
         showMineDetailData();
         //下载图片
-        ImageLoadUtils.loadAvatar(ivDetailNameMine, baseFragmentActivity, this);
+        ImageLoadUtils.loadAvatar(ivDetailAvatarMine, baseFragmentActivity, this);
 
     }
     private void showMineDetailData() {
@@ -168,7 +171,7 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
                 }
             }
         });
-        nameArrow.setOnClickListener(new View.OnClickListener() {
+        rel_avatar_container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkPermission();
@@ -243,7 +246,7 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
         if (smg.equals(getString(R.string.edit_avatar_sucess))) {
             CustomApplication.userEntity.setAvatar(getString(R.string.url) + "users/avatar/" + CustomApplication.userEntity.getId() + "/" + name);
 //上传图片成功更新图片地址
-            ImageLoadUtils.loadAvatar(ivDetailNameMine, baseFragmentActivity, this);
+            ImageLoadUtils.loadAvatar(ivDetailAvatarMine, baseFragmentActivity, this);
         }
     }
     @Override
@@ -338,6 +341,7 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
         } else {
             //低于6.0的版本 如果拒绝了权限 怎么判断是否有权限
             Log.i("wytings", "------------- Build.VERSION.SDK_INT < 23 ------------");
+          toCamera();
         }
     }
     @Override
@@ -593,7 +597,7 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
                             fos.close();
                             fos.flush();
                         }
-                        ivDetailNameMine.setImageBitmap(bitmap);
+                        mPresnter.upLoadeAvatar(path + name);
                         if (!bitmap.isRecycled()) {
 //通知系统 回收bitmap
                             bitmap.isRecycled();

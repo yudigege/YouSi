@@ -182,7 +182,7 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
             @Override
             public void onClick(View view) {
                 llRoot.setVisibility(View.GONE);
-                mPresenter.getDasyReportData(page, pageSize);
+                mPresenter.getDasyReportData(1, pageSize);
             }
         });
         fabAddIdea.setOnClickListener(new View.OnClickListener() {
