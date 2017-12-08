@@ -22,7 +22,7 @@ public class WriteDailyPresenterExtend extends AbstractWriteDailyPresenter {
 
 
     @Override
-    public void postData(String title, String content) {
+    public void postData(Long write_start_time,String title, String content) {
 
         if (title.trim().equals("")) {
             getBindView().showMessage(((WriteDailyFragment) getBindView()).baseFragmentActivity.getResources().getString(R.string.write_title));
@@ -33,8 +33,8 @@ public class WriteDailyPresenterExtend extends AbstractWriteDailyPresenter {
             getBindView().showMessage(((WriteDailyFragment) getBindView()).baseFragmentActivity.getResources().getString(R.string.write_content));
             return;
         }
-
-        NetManager.getApiService().constructReport(null,title, content, CustomApplication.userEntity.getId(), Constant.DAYLIE).compose(RxSchedulers.<SuccessResponse>io_main())
+        long write_end_time = System.currentTimeMillis();
+        NetManager.getApiService().constructReport(write_start_time,write_end_time,null,title, content, CustomApplication.userEntity.getId(), Constant.DAYLIE).compose(RxSchedulers.<SuccessResponse>io_main())
                 .compose(getBindView().<SuccessResponse>bindToLifecycle())
                 .subscribe(new AbstractRxSubscriber<SuccessResponse>(getWeakRefView()) {
                     @Override

@@ -2,6 +2,7 @@ package com.example.qsys.yousi.net.rx.api;
 
 import com.example.qsys.yousi.bean.BookResponse;
 import com.example.qsys.yousi.bean.DaysResportResponse;
+import com.example.qsys.yousi.bean.RecordTrackResponse;
 import com.example.qsys.yousi.bean.SearchKeyWordsItemResponse;
 import com.example.qsys.yousi.bean.SuccessResponse;
 import com.example.qsys.yousi.bean.UserResponse;
@@ -116,11 +117,23 @@ public interface ApiService {
      * @return
      */
     @POST("report/construct")
-    Observable<SuccessResponse> constructReport(@Query("book_name") String book_name, @Query("title") String title, @Query("content") String content, @Query("userId") int userId, @Query("type") int type);
-
+    Observable<SuccessResponse> constructReport(
+            @Query("record_consume_start_time") Long record_consume_start_time
+            ,@Query("record_consume_end_time") Long record_consume_end_time
+            , @Query("book_name") String book_name, @Query("title") String title, @Query("content") String content
+            , @Query("userId") int userId, @Query("type") int type);
     /**
      * 获得搜索频率在前十位的关键词
      */
     @GET("searchrecord/search")
     Observable<SearchKeyWordsItemResponse> getLimitToIndexSearchItem();
+
+    /**
+     * 得到轨迹数据
+     */
+    @GET("recordtrack/{userId}")
+    Observable<RecordTrackResponse> getRecordTrackData(@Path("userId") int userId);
+
+
+
 }

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar_clude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_include"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+                <TextView
+                    android:id="@+id/tv_title_include"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/head_title_size"
+                    android:textStyle="bold"
+                    tools:text="标题" />
+            </LinearLayout>
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/you_si_common_error_view2"/>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+   >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/lightgrey"
+        android:orientation="vertical"
+        android:padding="@dimen/cardItem_padding">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="@dimen/cardItem_padding">
+            <TextView
+                android:id="@+id/tv_track_above_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:minEms="4"
+                android:text="120小时"
+                android:textColor="@color/black" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/tv_track_above_time"
+                android:layout_below="@+id/tv_track_above_time"
+                android:text="记录时长"
+                android:textColor="@color/lightgrey"
+                android:textSize="10sp" />
+            <TextView
+                android:id="@+id/tv_track_above_entries"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:minEms="2"
+                android:text="10条"
+                android:textColor="@color/black" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/tv_track_above_entries"
+                android:layout_below="@+id/tv_track_above_entries"
+                android:text="记录"
+                android:textColor="@color/lightgrey"
+                android:textSize="10sp" />
+            <TextView
+                android:id="@+id/tv_track_continue_days"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:minEms="4"
+                android:text="10天"
+                android:textColor="@color/black" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/tv_track_continue_days"
+                android:layout_below="@+id/tv_track_continue_days"
+                android:text="连续记录"
+                android:textColor="@color/lightgrey"
+                android:textSize="10sp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/cardItem_padding"
+                android:layout_marginRight="@dimen/cardItem_padding"
+                android:background="@color/lightgrey" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/cardItem_padding"
+                android:text="最近7天记录时长/单位：分钟"
+                android:textSize="9sp" />
+
+            <com.example.qsys.yousi.common.widget.customView.RecordTrackView
+                android:id="@+id/record_track_view"
+                android:layout_width="match_parent"
+                android:layout_height="300dp" />
+        </LinearLayout>
+    </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</LinearLayout>

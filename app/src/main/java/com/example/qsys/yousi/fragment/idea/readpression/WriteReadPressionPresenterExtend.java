@@ -22,7 +22,7 @@ public class WriteReadPressionPresenterExtend extends AbstractWriteReadPressionP
 
 
     @Override
-    public void postData(String bookName, String content) {
+    public void postData(Long write_start_time,String bookName, String content) {
 
         if (bookName.trim().equals("")) {
             getBindView().showMessage(((WriteReadPressionFragment) getBindView()).baseFragmentActivity.getResources().getString(R.string.write_title));
@@ -33,8 +33,8 @@ public class WriteReadPressionPresenterExtend extends AbstractWriteReadPressionP
             getBindView().showMessage(((WriteReadPressionFragment) getBindView()).baseFragmentActivity.getResources().getString(R.string.write_content));
             return;
         }
-
-        NetManager.getApiService().constructReport(bookName,null, content, CustomApplication.userEntity.getId(), Constant.READPRESSION).compose(RxSchedulers.<SuccessResponse>io_main())
+        long write_end_time = System.currentTimeMillis();
+        NetManager.getApiService().constructReport(write_start_time,write_end_time,bookName,null, content, CustomApplication.userEntity.getId(), Constant.READPRESSION).compose(RxSchedulers.<SuccessResponse>io_main())
                 .compose(getBindView().<SuccessResponse>bindToLifecycle())
                 .subscribe(new AbstractRxSubscriber<SuccessResponse>(getWeakRefView()) {
                     @Override

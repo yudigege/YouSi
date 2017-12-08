@@ -50,10 +50,13 @@ public class WriteReadPressionFragment extends BaseFragment implements WriteRead
     @BindView(R.id.coordinator)
     CoordinatorLayout coordinator;
     public Dialog dialog;
+    public long write_start_time;
 
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container) {
         View inflate = inflater.inflate(R.layout.fragment_write_read_pression_idea, container, false);
+        write_start_time = System.currentTimeMillis();
+
         return inflate;
     }
 
@@ -149,7 +152,7 @@ public class WriteReadPressionFragment extends BaseFragment implements WriteRead
         imgBtnActionInclude.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresnter.postData(etWriteBookNameRead.getText().toString(), etWriteContentRead.getText().toString());
+                mPresnter.postData(write_start_time,etWriteBookNameRead.getText().toString(), etWriteContentRead.getText().toString());
             }
         });
     }
@@ -237,6 +240,7 @@ public class WriteReadPressionFragment extends BaseFragment implements WriteRead
 
     @Override
     public void clearEtData() {
+        write_start_time = System.currentTimeMillis();
         etWriteBookNameRead.setText("");
         etWriteContentRead.setText("");
     }

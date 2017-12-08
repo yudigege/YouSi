@@ -85,6 +85,7 @@ public abstract class AbstractRxSubscriber<T> extends Subscriber<T> {
             if (((BaseResponse) t).getErrors() != null) {
                 ToastUtils.showLong((String) ((BaseResponse) t).getErrors());
                 getBindView().showEmptyViewByCode(Constant.SERVER_ERROR, (String) ((BaseResponse) t).getErrors());
+                LogUtils.d((String) ((BaseResponse) t).getErrors());
                 getBindView().showProgressView(false);
                 return;
             }

@@ -59,6 +59,8 @@ public class DaysResportResponse extends BaseResponse {
         private String bgcolor;
         private String bgimgUrl;
         private int txtsize;
+        private long record_consume_start_time;
+        private long record_consume_end_time;
 
         public int getId() {
             return id;
@@ -148,7 +150,7 @@ public class DaysResportResponse extends BaseResponse {
             this.bgcolor = bgcolor;
         }
 
-        public Object getBgimgUrl() {
+        public String getBgimgUrl() {
             return bgimgUrl;
         }
 
@@ -162,6 +164,22 @@ public class DaysResportResponse extends BaseResponse {
 
         public void setTxtsize(int txtsize) {
             this.txtsize = txtsize;
+        }
+
+        public long getRecord_consume_start_time() {
+            return record_consume_start_time;
+        }
+
+        public void setRecord_consume_start_time(long record_consume_start_time) {
+            this.record_consume_start_time = record_consume_start_time;
+        }
+
+        public long getRecord_consume_end_time() {
+            return record_consume_end_time;
+        }
+
+        public void setRecord_consume_end_time(long record_consume_end_time) {
+            this.record_consume_end_time = record_consume_end_time;
         }
 
         @Override
@@ -184,6 +202,8 @@ public class DaysResportResponse extends BaseResponse {
             dest.writeString(this.bgcolor);
             dest.writeString(this.bgimgUrl);
             dest.writeInt(this.txtsize);
+            dest.writeLong(this.record_consume_start_time);
+            dest.writeLong(this.record_consume_end_time);
         }
 
         public ResultsBean() {
@@ -203,6 +223,8 @@ public class DaysResportResponse extends BaseResponse {
             this.bgcolor = in.readString();
             this.bgimgUrl = in.readString();
             this.txtsize = in.readInt();
+            this.record_consume_start_time = in.readLong();
+            this.record_consume_end_time = in.readLong();
         }
 
         public static final Parcelable.Creator<ResultsBean> CREATOR = new Parcelable.Creator<ResultsBean>() {
@@ -217,4 +239,5 @@ public class DaysResportResponse extends BaseResponse {
             }
         };
     }
+
 }

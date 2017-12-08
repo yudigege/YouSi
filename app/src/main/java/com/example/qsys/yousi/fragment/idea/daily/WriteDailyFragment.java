@@ -45,7 +45,7 @@ public class WriteDailyFragment extends BaseFragment implements WriteDailyView {
     Unbinder unbinder;
     public WriteDailyPresenterExtend mPresenter;
     public AppStyleDialog dialog;
-
+    public long write_start_time;
     @Override
     public void showResponseData(BaseResponse response) {
         showMessage(response.getMessage());
@@ -84,6 +84,7 @@ public class WriteDailyFragment extends BaseFragment implements WriteDailyView {
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container) {
         View inflate = inflater.inflate(R.layout.fragment_write_daily_idea, container,false);
+        write_start_time = System.currentTimeMillis();
         return inflate;
     }
 
@@ -174,7 +175,7 @@ public class WriteDailyFragment extends BaseFragment implements WriteDailyView {
         img_btn_action_include.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.postData(etWriteTitleDaily.getText().toString(), etWriteContentDaily.getText().toString());
+                mPresenter.postData(write_start_time,etWriteTitleDaily.getText().toString(), etWriteContentDaily.getText().toString());
             }
         });
     }

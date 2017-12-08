@@ -84,5 +84,7 @@
     <string name="personal_blog">我的主页链接</string>
     <string name="on_loade">正在上传...</string>
     <string name="error_server_msg2">后台不可访问</string>
+    <string name="record_track">记录轨迹</string>
+    <string name="record_track_catch">轨迹追踪</string>
 
 </resources>

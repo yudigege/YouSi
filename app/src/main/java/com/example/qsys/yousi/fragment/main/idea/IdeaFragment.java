@@ -1,5 +1,4 @@
 package com.example.qsys.yousi.fragment.main.idea;
-
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -17,9 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
 import com.example.qsys.yousi.R;
 import com.example.qsys.yousi.activity.IdeaActivity;
+import com.example.qsys.yousi.activity.RecordTrackActivity;
 import com.example.qsys.yousi.adapter.idea.IdeaAdapter;
 import com.example.qsys.yousi.bean.BaseResponse;
 import com.example.qsys.yousi.bean.DaysResportResponse;
@@ -34,13 +33,9 @@ import com.example.qsys.yousi.common.widget.recyclerview.SpacesItemDecoration;
 import com.example.qsys.yousi.fragment.BaseFragment;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
-
-
 /**
  * @author hanshaokai
  * @date 2017/10/17 15:19
@@ -214,7 +209,6 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
                                                          bundle.putInt(Constant.IDEA_STYPE, Constant.READPRESSION_DETAIL);
                                                          bundle.putParcelable(Constant.READPRESSION_OBJECT, mDaysReportList.get(position));
                                                          ActivityUtils.startActivity(bundle, baseFragmentActivity, IdeaActivity.class);
-
                                                      }
                                                  }
                                              }
@@ -281,6 +275,9 @@ public class IdeaFragment extends BaseFragment implements IdeaView {
                 Bundle bundle3 = new Bundle();
                 bundle3.putInt(Constant.IDEA_STYPE, Constant.SEARCH_DAILY);
                 ActivityUtils.startActivity(bundle3, getActivity(), IdeaActivity.class);
+                break;
+            case R.id.record_track:
+                ActivityUtils.startActivity(null, getActivity(), RecordTrackActivity.class);
             default:
         }
         return super.onOptionsItemSelected(item);

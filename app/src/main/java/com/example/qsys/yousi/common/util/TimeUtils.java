@@ -1638,7 +1638,7 @@ public class TimeUtils {
      *               </ul>
      * @return 以unit为单位的时间长度
      */
-    private static long millis2TimeSpan(long millis, @TimeConstants.Unit int unit) {
+    public static long millis2TimeSpan(long millis, @TimeConstants.Unit int unit) {
         return millis / unit;
     }
 
