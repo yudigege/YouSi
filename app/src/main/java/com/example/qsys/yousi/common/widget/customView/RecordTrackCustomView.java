@@ -29,7 +29,7 @@ import java.util.List;
  */
 
 
-public class RecordTrackView extends View {
+public class RecordTrackCustomView extends View {
 
     /**
      * 今日拜访图标
@@ -52,7 +52,7 @@ public class RecordTrackView extends View {
     private int monthCount;//默认横坐标数目
     private int selectIndexX = -1;//选中的月份
     private List<Point> scorePoints;
-    private Double[] score;//坐标点 横坐标是定值 竖坐标整数数组
+    private Long[] score;//坐标点 横坐标是定值 竖坐标整数数组
     private float brokenLineWith = 0.5f; //折线宽度
     private int brokenLineColor = 0xff02bbb7;//折线颜色
     private int straightLineColor = 0xffeaeaea;//0xffeaeaea x轴的线颜色
@@ -74,19 +74,19 @@ public class RecordTrackView extends View {
     private int monthVisitSum;
 
 
-    public RecordTrackView(Context context) {
+    public RecordTrackCustomView(Context context) {
         super(context);
         initConfig(context, null);
         init();
     }
 
-    public RecordTrackView(Context context, AttributeSet attrs) {
+    public RecordTrackCustomView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initConfig(context, attrs);
         init();
     }
 
-    public RecordTrackView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public RecordTrackCustomView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initConfig(context, attrs);
         init();
@@ -199,9 +199,9 @@ public class RecordTrackView extends View {
      * @param score 竖坐标
      * @param date 横坐标
      */
-    /*@param monthVisitSum 今日拜访总数 该月内*/
-    public void setScore(ArrayList<Double> score, ArrayList<String> date) {
-        Double[] y = new Double[score.size()];
+
+    public void setScore(List<Long> score, List<String> date) {
+        Long[] y = new Long[score.size()];
         for (int i = 0, num = score.size(); i < num; i++) {
             y[i] = score.get(i);
         }
@@ -213,7 +213,7 @@ public class RecordTrackView extends View {
     }
 
     //赋值 点  触发绘图
-    public void setScore(Double[] score, String[] date) {
+    public void setScore(Long[] score, String[] date) {
         if (score.length != date.length) {
             Toast.makeText(CustomApplication.getAppContext(), "数据不一致", Toast.LENGTH_LONG).show();
             return;
@@ -520,8 +520,11 @@ public class RecordTrackView extends View {
                 r2.top = viewHeight * xToViewTOp + dipToPx(4) + textSize / 2;
                 r2.right = coordinateX + textSize + dipToPx(4);
                 r2.bottom = viewHeight * xToViewTOp + dipToPx(4) + textSize + dipToPx(8);
-                // canvas.drawRoundRect(r2, 10, 10, textPaint);X
+                //canvas.drawRoundRect(r2, 10, 10, textPaint);
             }
+            //绘制月份
+            canvas.drawText(monthText[i], coordinateX, viewHeight * xToViewTOp + dipToPx(4) + textSize + dipToPx(5), textXPaint);
+            textXPaint.setColor(textNormalColor);
         }
     }
 
@@ -733,7 +736,7 @@ public class RecordTrackView extends View {
     }
 
 
-    public static Double getMaxNum(Double args[]) {
+    public static Long getMaxNum(Long args[]) {
         int max = 0;
         for (int i = 0; i < args.length; i++) {
             if (args[i] > args[max]) {
@@ -755,7 +758,7 @@ public class RecordTrackView extends View {
     }
 
     //求Y轴 向上求到整数
-    public static int getIntMaxFormat(Double num) {
+    public static int getIntMaxFormat(Long num) {
         Double format = (num / 10.0);
         return (int) (Math.ceil(format) * 10);
     }

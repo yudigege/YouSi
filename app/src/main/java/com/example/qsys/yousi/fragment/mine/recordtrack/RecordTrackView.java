@@ -1,5 +1,6 @@
 package com.example.qsys.yousi.fragment.mine.recordtrack;
 
+import com.example.qsys.yousi.bean.BaseResponse;
 import com.example.qsys.yousi.fragment.BaseView;
 
 /**
@@ -9,4 +10,9 @@ import com.example.qsys.yousi.fragment.BaseView;
 
 
 public interface    RecordTrackView extends BaseView {
+
+
+    void showDayTrackData(BaseResponse trackDayResponse);
+
+
 }

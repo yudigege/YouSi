@@ -5,6 +5,7 @@ import com.example.qsys.yousi.bean.DaysResportResponse;
 import com.example.qsys.yousi.bean.RecordTrackResponse;
 import com.example.qsys.yousi.bean.SearchKeyWordsItemResponse;
 import com.example.qsys.yousi.bean.SuccessResponse;
+import com.example.qsys.yousi.bean.TrackDayResponse;
 import com.example.qsys.yousi.bean.UserResponse;
 
 import java.util.Map;
@@ -129,11 +130,17 @@ public interface ApiService {
     Observable<SearchKeyWordsItemResponse> getLimitToIndexSearchItem();
 
     /**
-     * 得到轨迹数据
+     * 得到轨迹总表数据
      */
     @GET("recordtrack/{userId}")
     Observable<RecordTrackResponse> getRecordTrackData(@Path("userId") int userId);
 
-
-
+/**
+ * 得到每天轨迹 前七天数据
+ */
+    /**
+     * 得到轨迹总表数据
+     */
+    @GET("trackday/{userId}")
+    Observable<TrackDayResponse> getTrackDayData(@Path("userId") int userId);
 }

@@ -30,11 +30,13 @@
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/you_si_common_error_view2"/>
+    <include
+        layout="@layout/you_si_common_error_view2"/>
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nest_scroll_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
    >
 
     <LinearLayout
@@ -118,7 +120,7 @@
                 android:text="最近7天记录时长/单位：分钟"
                 android:textSize="9sp" />
 
-            <com.example.qsys.yousi.common.widget.customView.RecordTrackView
+            <com.example.qsys.yousi.common.widget.customView.RecordTrackCustomView
                 android:id="@+id/record_track_view"
                 android:layout_width="match_parent"
                 android:layout_height="300dp" />

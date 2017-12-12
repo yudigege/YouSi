@@ -12,4 +12,6 @@ public abstract class RecordTrackShowPresenter extends BasePresenter {
 
 
     public abstract void getRecordTrackData();
+
+    public abstract  void getTrackDayData();
 }

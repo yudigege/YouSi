@@ -1,5 +1,7 @@
 package com.example.qsys.yousi.common.util;
 
+import android.annotation.SuppressLint;
+
 import com.example.qsys.yousi.common.constants.TimeConstants;
 
 import java.text.DateFormat;
@@ -201,6 +203,17 @@ public class TimeUtils {
      */
     public static String millis2String(long millis, DateFormat format) {
         return format.format(new Date(millis));
+    }
+    /**
+     * 时间戳转时间
+     *
+     * @param time 时间戳
+     */
+    public static String millisToYMDate(long time) {
+        Date date = new Date(time);
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd ");
+        String str = format.format(date);
+        return str;
     }
 
     /**

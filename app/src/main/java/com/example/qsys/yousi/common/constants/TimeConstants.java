@@ -24,6 +24,7 @@ public  final class TimeConstants {
      * 分与毫秒的倍数
      */
     public static final int MIN = 60000;
+    public static final Long MINL = 60000L;
     /**
      * 时与毫秒的倍数
      */

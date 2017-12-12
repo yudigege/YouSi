@@ -26,6 +26,18 @@ public class RecordTrackShowPresenterExtend extends RecordTrackShowPresenter {
     }
 
     @Override
+    public void getTrackDayData() {
+        NetManager.getApiService().getTrackDayData(CustomApplication.userEntity.getId()).compose(RxSchedulers.<BaseResponse>io_main())
+                .compose(getBindView().<BaseResponse>bindToLifecycle())
+                .subscribe(new AbstractRxSubscriber<BaseResponse>(getWeakRefView()) {
+                    @Override
+                    public void on_Next(BaseResponse baseResponse) {
+                        ((RecordTrackView)getBindView()).showDayTrackData(baseResponse);
+                    }
+                });
+    }
+
+    @Override
     public void start() {
 
     }
