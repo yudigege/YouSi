@@ -11,8 +11,6 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.StatFs;
 import android.provider.MediaStore;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.FileProvider;
@@ -99,7 +97,7 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
     public AppStyleDialog appStyleDialogNick3;
     public AppStyleDialog appStyleDialogNick4;
     public AppStyleDialog appStyleDialogNick5;
-    public String path = Environment.getExternalStorageDirectory().getPath() + "/yousipic";
+    public String path = Constant.URLAVATOR;
     public String name = File.separator + System.currentTimeMillis() + ".jpg";
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container) {
@@ -355,39 +353,7 @@ public class MineDetailFragment extends BaseFragment implements MineDetailView {
         }
     }
 
-    /**
-     *    * 获取SDCARD剩余存储空间
-     *    *
-     *    * @return 0 sd已被挂载占用 1 sd卡内存不足 2 sd可用
-     *    
-     */
-    public static int getAvailableExternalStorageSize() {
-        if (isSDCardExist()) {
-            File path = Environment.getExternalStorageDirectory();
-            StatFs stat = new StatFs(path.getPath());
-            long blockSize = stat.getBlockSize();
-            long availableBlocks = stat.getAvailableBlocks();
-            long memorySize = availableBlocks * blockSize;
-            if (memorySize < 10 * 1024 * 1024) {
-                return 1;
-            } else {
-                return 2;
-            }
-        } else {
-            return 0;
-        }
-    }
-    /**
-     * 是否挂载
-     * @return
-     */
-    public static boolean isSDCardExist() {
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+
 
     /**
      *    * 读取图片属性：旋转的角度

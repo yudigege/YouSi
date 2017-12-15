@@ -1,8 +1,11 @@
 package com.example.qsys.yousi.common.util;
 
 import android.content.Context;
+import android.os.Environment;
+import android.os.StatFs;
 import android.os.storage.StorageManager;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -92,5 +95,40 @@ public class SDCardUtils {
             e.printStackTrace();
         }
         return paths;
+    }
+
+
+    /**
+     *    * 获取SDCARD剩余存储空间
+     *    *
+     *    * @return 0 sd已被挂载占用 1 sd卡内存不足 2 sd可用
+     *    
+     */
+    public static int getAvailableExternalStorageSize() {
+        if (isSDCardExist()) {
+            File path = Environment.getExternalStorageDirectory();
+            StatFs stat = new StatFs(path.getPath());
+            long blockSize = stat.getBlockSize();
+            long availableBlocks = stat.getAvailableBlocks();
+            long memorySize = availableBlocks * blockSize;
+            if (memorySize < 10 * 1024 * 1024) {
+                return 1;
+            } else {
+                return 2;
+            }
+        } else {
+            return 0;
+        }
+    }
+    /**
+     * 是否挂载
+     * @return
+     */
+    public static boolean isSDCardExist() {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

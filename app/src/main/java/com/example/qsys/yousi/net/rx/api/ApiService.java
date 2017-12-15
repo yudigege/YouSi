@@ -82,6 +82,13 @@ public interface ApiService {
     Observable<BookResponse> getAllBooks();
 
     /**
+     * 得到所有的文本名字
+     *
+     * @return
+     */
+    @POST("file")
+    Observable<BookResponse> getAllFileName();
+    /**
      * 得到登录人的所有日志和读后感
      * @param userId
      * @return
@@ -143,4 +150,5 @@ public interface ApiService {
      */
     @GET("trackday/{userId}")
     Observable<TrackDayResponse> getTrackDayData(@Path("userId") int userId);
+
 }

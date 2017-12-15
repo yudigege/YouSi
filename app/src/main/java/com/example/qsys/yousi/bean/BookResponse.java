@@ -54,6 +54,26 @@ public class BookResponse extends BaseResponse {
         private String lifecourse;
         private String deathtime;
         private String birthtime;
+        /*下载进度 不属于下载字段*/
+        private Double percent = 0.0;
+
+        private Boolean isVIsiblePercent=false;
+
+        public Boolean getVIsiblePercent() {
+            return isVIsiblePercent;
+        }
+
+        public void setVIsiblePercent(Boolean VIsiblePercent) {
+            isVIsiblePercent = VIsiblePercent;
+        }
+
+        public Double getPercent() {
+            return percent;
+        }
+
+        public void setPercent(Double percent) {
+            this.percent = percent;
+        }
 
         public int getId() {
             return id;

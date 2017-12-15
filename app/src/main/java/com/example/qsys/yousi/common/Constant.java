@@ -1,5 +1,7 @@
 package com.example.qsys.yousi.common;
 
+import android.os.Environment;
+
 import com.example.qsys.yousi.CustomApplication;
 import com.example.qsys.yousi.R;
 
@@ -95,4 +97,12 @@ public class Constant {
      * 登录情况 相关信息
      */
     public static String LOGIN_DETAIL = "login_detail";
+    /**
+     * 放置本地头像地址
+     */
+    public  static  String URLAVATOR=Environment.getExternalStorageDirectory().getPath() + "/yousipic";
+    /**
+     * 放置本地文本地址
+     */
+    public  static  String BOOKPATH=Environment.getExternalStorageDirectory().getPath() + "/yousibook";
 }

@@ -1,9 +1,15 @@
 package com.example.qsys.yousi.db;
 
 import com.example.qsys.yousi.CustomApplication;
+import com.example.qsys.yousi.net.rx.download.DownInfo;
+
+import org.greenrobot.greendao.query.QueryBuilder;
+
+import java.util.List;
 
 import yousi.DaoMaster;
 import yousi.DaoSession;
+import yousi.DownInfoDao;
 
 /**
  * @author hanshaokai
@@ -38,5 +44,59 @@ public class GreenDaoManager {
     public DaoSession getNewSession() {
         mDaoSession = mDaoMaster.newSession();
         return mDaoSession;
+    }
+    public void save(DownInfo info){
+        DaoSession daoSession = mDaoMaster.newSession();
+        DownInfoDao downInfoDao = daoSession.getDownInfoDao();
+        downInfoDao.insert(info);
+    }
+
+    public void update(DownInfo info){
+
+        DaoSession daoSession = mDaoMaster.newSession();
+        DownInfoDao downInfoDao = daoSession.getDownInfoDao();
+        downInfoDao.update(info);
+    }
+
+    public void deleteDowninfo(DownInfo info){
+
+        DaoSession daoSession = mDaoMaster.newSession();
+        DownInfoDao downInfoDao = daoSession.getDownInfoDao();
+        downInfoDao.delete(info);
+    }
+
+
+    public DownInfo queryDownBy(long Id) {
+
+        DaoSession daoSession = mDaoMaster.newSession();
+        DownInfoDao downInfoDao = daoSession.getDownInfoDao();
+        QueryBuilder<DownInfo> qb = downInfoDao.queryBuilder();
+        qb.where(DownInfoDao.Properties.Id.eq(Id));
+        List<DownInfo> list = qb.list();
+        if(list.isEmpty()){
+            return null;
+        }else{
+            return list.get(0);
+        }
+    }
+    public DownInfo queryDownBy(String url) {
+
+        DaoSession daoSession = mDaoMaster.newSession();
+        DownInfoDao downInfoDao = daoSession.getDownInfoDao();
+        QueryBuilder<DownInfo> qb = downInfoDao.queryBuilder();
+        qb.where(DownInfoDao.Properties.Url.eq(url));
+        List<DownInfo> list = qb.list();
+        if(list.isEmpty()){
+            return null;
+        }else{
+            return list.get(0);
+        }
+    }
+    public List<DownInfo> queryDownAll() {
+
+        DaoSession daoSession = mDaoMaster.newSession();
+        DownInfoDao downInfoDao = daoSession.getDownInfoDao();
+        QueryBuilder<DownInfo> qb = downInfoDao.queryBuilder();
+        return qb.list();
     }
 }
