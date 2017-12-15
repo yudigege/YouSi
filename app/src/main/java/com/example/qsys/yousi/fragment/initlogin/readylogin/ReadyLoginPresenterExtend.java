@@ -1,5 +1,6 @@
 package com.example.qsys.yousi.fragment.initlogin.readylogin;
 
+import com.example.qsys.yousi.bean.SuccessResponse;
 import com.example.qsys.yousi.bean.UserResponse;
 import com.example.qsys.yousi.net.rx.manager.AbstractRxSubscriber;
 import com.example.qsys.yousi.net.rx.manager.NetManager;
@@ -47,7 +48,6 @@ public class ReadyLoginPresenterExtend extends AbstractReadyLoginPresenter {
                 .subscribe(new AbstractRxSubscriber<UserResponse>(getWeakRefView()) {
                     @Override
                     protected void on_Next(UserResponse userResponse) {
-                        getBindView().showProgressView(false);
                         getBindView().showResponseData(userResponse);
                     }
                 });
@@ -56,6 +56,22 @@ public class ReadyLoginPresenterExtend extends AbstractReadyLoginPresenter {
             return;
         }
 
+    }
+
+    @Override
+    public void toRegister(String account) {
+        NetManager.getApiService().toRegister(account).compose(RxSchedulers.<SuccessResponse>io_main())
+                .compose(getBindView().<SuccessResponse>bindToLifecycle())
+                .subscribe(new AbstractRxSubscriber<SuccessResponse>(getWeakRefView()) {
+                    @Override
+                    protected void on_Next(SuccessResponse successResponse) {
+                        if (successResponse.getCode() != 1) {
+                            getBindView().showMessage("注册失败");
+                        } else {
+                            getBindView().showMessage("注册成功");
+                        }
+                    }
+                });
     }
 
     @Override

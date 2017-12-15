@@ -12,4 +12,5 @@ public interface ReadyLoginView extends BaseView {
      * 备用
      */
     void doView();
+
 }

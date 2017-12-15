@@ -1,5 +1,6 @@
 package com.example.qsys.yousi.fragment.idea.daily;
 
+import com.example.qsys.yousi.CustomApplication;
 import com.example.qsys.yousi.R;
 import com.example.qsys.yousi.bean.SuccessResponse;
 import com.example.qsys.yousi.common.Constant;
@@ -21,7 +22,7 @@ public class WriteDailyPresenterExtend extends AbstractWriteDailyPresenter {
 
 
     @Override
-    public void postData(String title, String content) {
+    public void postData(Long write_start_time,String title, String content) {
 
         if (title.trim().equals("")) {
             getBindView().showMessage(((WriteDailyFragment) getBindView()).baseFragmentActivity.getResources().getString(R.string.write_title));
@@ -32,8 +33,8 @@ public class WriteDailyPresenterExtend extends AbstractWriteDailyPresenter {
             getBindView().showMessage(((WriteDailyFragment) getBindView()).baseFragmentActivity.getResources().getString(R.string.write_content));
             return;
         }
-
-        NetManager.getApiService().constructReport(title, content, 11, Constant.DAYLIE).compose(RxSchedulers.<SuccessResponse>io_main())
+        long write_end_time = System.currentTimeMillis();
+        NetManager.getApiService().constructReport(write_start_time,write_end_time,null,title, content, CustomApplication.userEntity.getId(), Constant.DAYLIE).compose(RxSchedulers.<SuccessResponse>io_main())
                 .compose(getBindView().<SuccessResponse>bindToLifecycle())
                 .subscribe(new AbstractRxSubscriber<SuccessResponse>(getWeakRefView()) {
                     @Override
@@ -41,13 +42,11 @@ public class WriteDailyPresenterExtend extends AbstractWriteDailyPresenter {
                         if (!getBindView().isActive()) {
                             return;
                         }
-                        getBindView().showProgressView(false);
                         getBindView().showResponseData(successResponse);
                         if (successResponse.getCode() == Constant.SCUCESS_COED) {
                             ((WriteDailyFragment) getBindView()).clearEtData();
                         }
                     }
                 });
-
     }
 }

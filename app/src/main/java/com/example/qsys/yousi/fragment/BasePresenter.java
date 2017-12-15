@@ -46,4 +46,5 @@ public abstract class BasePresenter<T extends BaseView> {
     public WeakReference<BaseView> getWeakRefView() {
         return weakRefView;
     }
+
 }

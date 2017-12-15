@@ -10,5 +10,5 @@ import com.example.qsys.yousi.fragment.BaseView;
 
 
 public abstract class AbstractWriteDailyPresenter extends BasePresenter<BaseView> {
-    public abstract void postData(String title, String content);
+    public abstract void postData(Long  write_start_time,String title, String content);
 }

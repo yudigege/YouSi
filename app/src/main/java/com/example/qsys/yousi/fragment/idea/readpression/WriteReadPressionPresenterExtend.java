@@ -1,5 +1,6 @@
 package com.example.qsys.yousi.fragment.idea.readpression;
 
+import com.example.qsys.yousi.CustomApplication;
 import com.example.qsys.yousi.R;
 import com.example.qsys.yousi.bean.SuccessResponse;
 import com.example.qsys.yousi.common.Constant;
@@ -21,9 +22,9 @@ public class WriteReadPressionPresenterExtend extends AbstractWriteReadPressionP
 
 
     @Override
-    public void postData(String title, String content) {
+    public void postData(Long write_start_time,String bookName, String content) {
 
-        if (title.trim().equals("")) {
+        if (bookName.trim().equals("")) {
             getBindView().showMessage(((WriteReadPressionFragment) getBindView()).baseFragmentActivity.getResources().getString(R.string.write_title));
             return;
         }
@@ -32,8 +33,8 @@ public class WriteReadPressionPresenterExtend extends AbstractWriteReadPressionP
             getBindView().showMessage(((WriteReadPressionFragment) getBindView()).baseFragmentActivity.getResources().getString(R.string.write_content));
             return;
         }
-
-        NetManager.getApiService().constructReport(title, content, 11, Constant.READPRESSION).compose(RxSchedulers.<SuccessResponse>io_main())
+        long write_end_time = System.currentTimeMillis();
+        NetManager.getApiService().constructReport(write_start_time,write_end_time,bookName,null, content, CustomApplication.userEntity.getId(), Constant.READPRESSION).compose(RxSchedulers.<SuccessResponse>io_main())
                 .compose(getBindView().<SuccessResponse>bindToLifecycle())
                 .subscribe(new AbstractRxSubscriber<SuccessResponse>(getWeakRefView()) {
                     @Override
@@ -41,7 +42,6 @@ public class WriteReadPressionPresenterExtend extends AbstractWriteReadPressionP
                         if (!getBindView().isActive()) {
                             return;
                         }
-                        getBindView().showProgressView(false);
                         getBindView().showResponseData(successResponse);
                         if (successResponse.getCode() == Constant.SCUCESS_COED) {
                             ((WriteReadPressionFragment) getBindView()).clearEtData();

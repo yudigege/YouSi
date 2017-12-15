@@ -43,17 +43,20 @@ public class WriteReadPressionFragment extends BaseFragment implements WriteRead
     @BindView(R.id.appbar_clude)
     AppBarLayout appbarClude;
     @BindView(R.id.et_write_title_read)
-    EditText etWriteTitleRead;
+    EditText etWriteBookNameRead;
     @BindView(R.id.et_write_content_read)
     EditText etWriteContentRead;
 
     @BindView(R.id.coordinator)
     CoordinatorLayout coordinator;
     public Dialog dialog;
+    public long write_start_time;
 
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container) {
         View inflate = inflater.inflate(R.layout.fragment_write_read_pression_idea, container, false);
+        write_start_time = System.currentTimeMillis();
+
         return inflate;
     }
 
@@ -91,7 +94,7 @@ public class WriteReadPressionFragment extends BaseFragment implements WriteRead
             @Override
             public void afterTextChanged(Editable s) {
                 //在指定位置之前插入
-                if (s.length() == 0 && etWriteTitleRead.getText().toString().length() == 0) {
+                if (s.length() == 0 && etWriteBookNameRead.getText().toString().length() == 0) {
                     imgBtnActionInclude.setImageDrawable(ContextCompat.getDrawable(baseFragmentActivity, R.mipmap.ic_send_default));
                     imgBtnActionInclude.setEnabled(false);
                 } else {
@@ -101,7 +104,7 @@ public class WriteReadPressionFragment extends BaseFragment implements WriteRead
                 LogUtils.d("find", "afterTextChangedlength==" + s.length());
             }
         });
-        etWriteTitleRead.addTextChangedListener(new TextWatcher() {
+        etWriteBookNameRead.addTextChangedListener(new TextWatcher() {
             /**
              * @param s
              * @param start 代表开始变化的位置
@@ -149,14 +152,14 @@ public class WriteReadPressionFragment extends BaseFragment implements WriteRead
         imgBtnActionInclude.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresnter.postData(etWriteTitleRead.getText().toString(), etWriteContentRead.getText().toString());
+                mPresnter.postData(write_start_time,etWriteBookNameRead.getText().toString(), etWriteContentRead.getText().toString());
             }
         });
     }
 
     @Override
     public void showResponseData(BaseResponse response) {
-
+        showMessage(response.getMessage());
     }
 
     @Override
@@ -165,7 +168,7 @@ public class WriteReadPressionFragment extends BaseFragment implements WriteRead
     }
 
     @Override
-    public void showEmptyViewByCode(int code) {
+    public void showEmptyViewByCode(int code, String smg) {
 
     }
 
@@ -190,7 +193,7 @@ public class WriteReadPressionFragment extends BaseFragment implements WriteRead
             case android.R.id.home:
                 if (
                         !etWriteContentRead.getText().toString().trim().equals("") ||
-                                !etWriteTitleRead.getText().toString().trim().equals("")
+                                !etWriteBookNameRead.getText().toString().trim().equals("")
                         ) {
                     if (dialog == null) {
                         dialog = new AppStyleDialog(baseFragmentActivity, -1, baseFragmentActivity.getResources().getString(R.string.is_quit_edit)
@@ -237,7 +240,8 @@ public class WriteReadPressionFragment extends BaseFragment implements WriteRead
 
     @Override
     public void clearEtData() {
-        etWriteTitleRead.setText("");
+        write_start_time = System.currentTimeMillis();
+        etWriteBookNameRead.setText("");
         etWriteContentRead.setText("");
     }
 }

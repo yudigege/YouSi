@@ -10,7 +10,8 @@ public abstract class AbstractIdeaPresenter extends BasePresenter {
     /**
      * 得到日志和读后感
      */
-    abstract void getDasyReportData();
+    abstract void getDasyReportData(int page,int pageSiz);
 
 
+    public abstract void getDasyReportMoreData(int page, int pageSize);
 }

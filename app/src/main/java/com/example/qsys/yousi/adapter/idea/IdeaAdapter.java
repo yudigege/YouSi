@@ -1,6 +1,7 @@
 package com.example.qsys.yousi.adapter.idea;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import com.example.qsys.yousi.R;
 import com.example.qsys.yousi.bean.DaysResportResponse;
 import com.example.qsys.yousi.common.Constant;
 import com.example.qsys.yousi.common.util.TimeUtils;
+import com.example.qsys.yousi.common.widget.recyclerview.OnItemViewClickLisener;
 
 import java.util.List;
 
@@ -21,6 +23,7 @@ import java.util.List;
 
 
 public class IdeaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private OnItemViewClickLisener onItemViewClickLisener;
     private Context context;
     private List<DaysResportResponse.ResultsBean> mDaysReportList;
     public final LayoutInflater inflater;
@@ -47,7 +50,7 @@ public class IdeaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof IdeaViewHolderContent) {
             IdeaViewHolderContent ideaViewHolderContent = (IdeaViewHolderContent) holder;
             ideaViewHolderContent.content.setText(mDaysReportList.get(position / 2).getContent());
@@ -55,12 +58,16 @@ public class IdeaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     ? mDaysReportList.get(position / 2).getTitle()
                     : mDaysReportList.get(position / 2).getBookname());
             ideaViewHolderContent.type.setText(mDaysReportList.get(position / 2).getType() == Constant.DAYLIE ? "日志" : "读后感");
+            ideaViewHolderContent.btnCheckDetail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemViewClickLisener.itemViewClick(position / 2,mDaysReportList.get(position / 2).getType() == Constant.DAYLIE ? Constant.DAYLIE : Constant.READPRESSION);
+                }
+            });
         } else if (holder instanceof IdeaViewHolderTime) {
             IdeaViewHolderTime ideaViewHolderTime = (IdeaViewHolderTime) holder;
-            ideaViewHolderTime.time.setText(TimeUtils.millis2String(mDaysReportList.get(position / 2).getCreatetime()));
-
+            ideaViewHolderTime.time.setText(TimeUtils.getFriendlyTimeSpanByNow(mDaysReportList.get(position / 2).getCreatetime()));
         }
-
     }
 
     @Override
@@ -95,13 +102,19 @@ public class IdeaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public TextView type;
         public TextView content;
         public TextView title;
+        public AppCompatButton btnCheckDetail;
 
         public IdeaViewHolderContent(View itemView) {
             super(itemView);
             type = (TextView) itemView.findViewById(R.id.idea_item_type);
             content = (TextView) itemView.findViewById(R.id.idea_content);
             title = (TextView) itemView.findViewById(R.id.idea_content_title);
+            btnCheckDetail = (AppCompatButton) itemView.findViewById(R.id.btn_check_detail);
         }
-
     }
+
+    public void setOnItemViewClicLisener(OnItemViewClickLisener onItemViewClickLisener) {
+        this.onItemViewClickLisener = onItemViewClickLisener;
+    }
+
 }

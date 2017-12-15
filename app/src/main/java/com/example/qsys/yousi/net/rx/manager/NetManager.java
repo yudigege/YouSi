@@ -1,23 +1,43 @@
 package com.example.qsys.yousi.net.rx.manager;
 
 import com.example.qsys.yousi.common.Constant;
+import com.example.qsys.yousi.db.GreenDaoManager;
 import com.example.qsys.yousi.net.rx.api.ApiService;
+import com.example.qsys.yousi.net.rx.api.HttpDownService;
 import com.example.qsys.yousi.net.rx.base.NetProvider;
 import com.example.qsys.yousi.net.rx.base.RequestHandler;
+import com.example.qsys.yousi.net.rx.download.DownInfo;
+import com.example.qsys.yousi.net.rx.download.DownLoadInterceptor;
+import com.example.qsys.yousi.net.rx.download.DownState;
+import com.example.qsys.yousi.net.rx.exception.HttpTimeException;
+import com.example.qsys.yousi.net.rx.exception.RetryWhenNetWorkException;
+import com.example.qsys.yousi.net.rx.subscribers.ProgressDownSubscriber;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.CookieJar;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by hanshaokai on 2017/10/11 17:52
@@ -32,6 +52,18 @@ public class NetManager {
     private Map<String, Retrofit> retrofitMap = new HashMap<>();
     private Map<String, OkHttpClient> clientMap = new HashMap<>();
 
+    // 记录下载数据
+    private Set<DownInfo> downInfos;
+    //回调sub 队列
+    private HashMap<String, ProgressDownSubscriber> subMap;
+    //数据库类
+    private GreenDaoManager db;
+
+    private NetManager() {
+        downInfos = new HashSet<>();
+        subMap = new HashMap<>();
+        db = GreenDaoManager.getInstance();
+    }
 
     public static NetManager getInstance() {
         if (instance == null) {
@@ -183,7 +215,7 @@ public class NetManager {
 
     /**
      *  得到配置好的retrofit
-      */
+     */
 
     public static Retrofit retrofitClient() {
         return NetManager.getInstance().getRetrofit(Constant.
@@ -193,4 +225,161 @@ public class NetManager {
     public static ApiService getApiService() {
         return NetManager.retrofitClient().create(ApiService.class);
     }
+
+    public static HttpDownService getDownLoadService() {
+        return NetManager.retrofitClient().create(HttpDownService.class);
+    }
+
+
+    /**
+     * 开始下载
+     */
+    public void startDown(final DownInfo info) {
+        //正在下载不处理
+        if (info == null || subMap.get(info.getUrl()) != null){
+            subMap.get(info.getUrl()).setDownInfo(info);
+            return;
+        }
+        //添加回调处理类
+        ProgressDownSubscriber subscriber = new ProgressDownSubscriber(info);
+        //记录回调sub
+        subMap.put(info.getUrl(), subscriber);
+        //获取service 多次请求公用一个service
+        HttpDownService httpDownService;
+        if (downInfos.contains(info)) {
+            httpDownService = info.getService();
+        } else {
+            DownLoadInterceptor interceptor = new DownLoadInterceptor(subscriber);
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            //手动创建一个OKHttpClient 并设置超时时间
+            builder.connectTimeout(info.getConnectonTime(), TimeUnit.SECONDS);
+            builder.addInterceptor(interceptor);
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .client(builder.build())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                    .baseUrl(Constant.BASE_URL)
+                    .build();
+            httpDownService = retrofit.create(HttpDownService.class);
+            info.setService(httpDownService);
+            downInfos.add(info);
+        }
+//得到rx对象 上一次下载的位置开始下载
+        //getUrl 得到书名 带 文件扩展名  后台暂不支持断点下载
+        httpDownService.downLoadFile("bytes=" + info.getReadLength() + "-", info.getUrl())
+        /*指定线程*/
+                .subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.io())
+        /*失败后的retry 配置*/
+                .retryWhen(new RetryWhenNetWorkException())
+        /*读取下载写入文件*/
+                .map(new Func1<ResponseBody, DownInfo>() {
+                    @Override
+                    public DownInfo call(ResponseBody responseBody) {
+
+                        writeCaches(responseBody, new File(info.getSavePath()), info);
+                        return info;
+                    }
+                })
+                /*回调线程*/
+                .observeOn(AndroidSchedulers.mainThread())
+                 /*数据回调*/
+                .subscribe(subscriber);
+    }
+
+    /**
+     * 停止下载
+     */
+    public void stopDown(DownInfo info) {
+        if (info == null) {
+            return;
+        }
+        info.setState(DownState.STOP);
+        info.getListener().onStop();
+        if (subMap.containsKey(info.getUrl())) {
+            ProgressDownSubscriber subscriber = subMap.get(info.getUrl());
+            subscriber.unsubscribe();
+            subMap.remove(info.getUrl());
+        }
+        /*保存数据库信息和本地文件*/
+        db.save(info);
+    }
+
+    /*暂停下载*/
+    public void pause(DownInfo info) {
+        if (info == null) {
+            return;
+        }
+        info.setState(DownState.PAUSE);
+        info.getListener().onPuase();
+        if (subMap.containsKey(info.getUrl())) {
+            ProgressDownSubscriber subscriber = subMap.get(info.getUrl());
+            subscriber.unsubscribe();
+            subMap.remove(info.getUrl());
+        }
+/*这里需要讲info 信息写入到数据中可自由扩展 用自己项目的数据库*/
+        db.update(info);
+    }
+
+    /*停止全部下载*/
+    public void stopAllDown() {
+        for (DownInfo downInfo : downInfos) {
+            startDown(downInfo);
+        }
+        subMap.clear();
+        downInfos.clear();
+    }
+
+    /*暂停全部下载*/
+
+    public void pauseAll() {
+        for (DownInfo downInfo : downInfos) {
+            pause(downInfo);
+        }
+        subMap.clear();
+        downInfos.clear();
+    }
+
+    /*返回全部正在下载的数据*/
+    public Set<DownInfo> getDownInfos() {
+        return downInfos;
+    }
+
+    /*移除下载数据*/
+    public void remove(DownInfo info) {
+        subMap.remove(info.getUrl());
+        downInfos.remove(info);
+    }
+
+    public void writeCaches(ResponseBody responseBody, File file, DownInfo info) {
+        try {
+            RandomAccessFile randomAccessFile = null;
+            FileChannel channelOut = null;
+            InputStream inputStream = null;
+
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();   }
+                long allLength = 0 == info.getCountLength() ? responseBody.contentLength()
+                        : info.getReadLength() + responseBody.contentLength();
+                inputStream = responseBody.byteStream();
+                randomAccessFile = new RandomAccessFile(file, "rwd");
+                channelOut = randomAccessFile.getChannel();
+                MappedByteBuffer mappedByteBuffer = channelOut.map(FileChannel.MapMode.READ_WRITE
+                        , info.getReadLength(), allLength - info.getReadLength());
+                byte[] buffer = new byte[1024 * 4];
+                int len;
+                while ((len = inputStream.read(buffer)) != -1) {
+                    mappedByteBuffer.put(buffer, 0, len);
+                }
+
+        } catch (IOException e) {
+            throw new HttpTimeException(e.getMessage());
+        }
+    }
+
+
 }
+
+
+

@@ -26,8 +26,11 @@ import com.example.qsys.yousi.bean.BaseResponse;
 import com.example.qsys.yousi.bean.UserResponse;
 import com.example.qsys.yousi.common.Constant;
 import com.example.qsys.yousi.common.util.ActivityUtils;
+import com.example.qsys.yousi.common.util.SPUtils;
 import com.example.qsys.yousi.common.util.ToastUtils;
+import com.example.qsys.yousi.common.widget.dialog.AppStyleDialog;
 import com.example.qsys.yousi.fragment.BaseFragment;
+
 import butterknife.BindView;
 
 /**
@@ -49,6 +52,10 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
     @BindView(R.id.login_form)
     ScrollView loginForm;
     public AbstractReadyLoginPresenter mPresenter;
+    public String account;
+    public AppStyleDialog appStyleDialog;
+    public String password;
+
     @Override
     public View initView(LayoutInflater inflater, ViewGroup container) {
         View view = inflater.inflate(R.layout.fragment_ready_login
@@ -61,6 +68,23 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
 
     @Override
     public void doViewLogic(Bundle savedInstanceState) {
+        setListener();
+        checKLoginState();
+
+    }
+
+    private void checKLoginState() {
+        //如果已登录过 直接登录
+        SPUtils spUtils = SPUtils.getInstance(Constant.LOGIN_DETAIL);
+        boolean isLogin = spUtils.getBoolean(Constant.LOGIN_IS_OR_NOT, false);
+        if (isLogin) {
+            password = spUtils.getString(Constant.PASSWORD);
+            account = spUtils.getString(Constant.ACCOUNT);
+            mPresenter.toLogin(account, password);
+        }
+    }
+
+    private void setListener() {
         etPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -83,12 +107,11 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
      * 登录
      */
     private void attemptLogin() {
-
         // 初始
         atvAccount.setError(null);
         etPassword.setError(null);
-        String account = atvAccount.getText().toString();
-        String password = etPassword.getText().toString();
+        account = atvAccount.getText().toString();
+        password = etPassword.getText().toString();
         boolean cancel = false;
         View focusView = null;
         // 检查有效性
@@ -131,7 +154,7 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
      * @return
      */
     private boolean isPasswordValid(String password) {
-        return password.length() > 4;
+        return password.length() > 0;
     }
 
 
@@ -149,7 +172,9 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    loginForm.setVisibility(show ? View.GONE : View.VISIBLE);
+                    if (loginForm != null) {
+                        loginForm.setVisibility(show ? View.GONE : View.VISIBLE);
+                    }
                 }
             });
             loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);
@@ -157,7 +182,8 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
                     show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+                    if (loginProgress!=null){
+                    loginProgress.setVisibility(show ? View.VISIBLE : View.GONE);}
                 }
             });
         } else {
@@ -173,11 +199,25 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
                 ToastUtils.showShort(getResources().getString(R.string.login_sucess));
                 //登录成功后存起来登录的信息
                 CustomApplication.userEntity = ((UserResponse) user).getResults();
+                //将账号密码保存到缓存
+                SPUtils spUtils = SPUtils.getInstance(Constant.LOGIN_DETAIL);
+                spUtils.put(Constant.PASSWORD, password);
+                spUtils.put(Constant.ACCOUNT, account);
+                spUtils.put(Constant.LOGIN_IS_OR_NOT, true);
                 //跳转到主页
                 ActivityUtils.startActivity(baseFragmentActivity, MainActivity.class);
+                baseFragmentActivity.finish();
                 break;
             case Constant.USER_NOT_EXIT:
                 ToastUtils.showShort(getResources().getString(R.string.user_not_exit));
+                    appStyleDialog = new AppStyleDialog(baseFragmentActivity, -1, account) {
+                        @Override
+                        public void doConfirm() {
+                            super.doConfirm();
+                            mPresenter.toRegister(account);
+                        }
+                    };
+                    appStyleDialog.show();
                 break;
             case Constant.USER_PASSWORD_ERRO:
                 ToastUtils.showShort(getResources().getString(R.string.password_errro));
@@ -194,7 +234,7 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
 
     @Override
 
-    public void showEmptyViewByCode(int code) {
+    public void showEmptyViewByCode(int code, String smg) {
 
 
     }
@@ -216,4 +256,6 @@ public class ReadyLoginFragment extends BaseFragment implements ReadyLoginView {
     public void doView() {
 
     }
+
+
 }

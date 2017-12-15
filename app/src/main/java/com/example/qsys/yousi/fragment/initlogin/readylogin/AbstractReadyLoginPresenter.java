@@ -17,4 +17,12 @@ public abstract class AbstractReadyLoginPresenter extends BasePresenter {
      */
     abstract  void toLogin(String count, String password);
 
+    /**
+     * 执行注册操作
+     *
+     * @param account
+     */
+    public abstract void toRegister(String account);
+
+
 }

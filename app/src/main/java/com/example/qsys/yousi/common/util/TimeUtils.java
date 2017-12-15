@@ -1,5 +1,7 @@
 package com.example.qsys.yousi.common.util;
 
+import android.annotation.SuppressLint;
+
 import com.example.qsys.yousi.common.constants.TimeConstants;
 
 import java.text.DateFormat;
@@ -201,6 +203,17 @@ public class TimeUtils {
      */
     public static String millis2String(long millis, DateFormat format) {
         return format.format(new Date(millis));
+    }
+    /**
+     * 时间戳转时间
+     *
+     * @param time 时间戳
+     */
+    public static String millisToYMDate(long time) {
+        Date date = new Date(time);
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd ");
+        String str = format.format(date);
+        return str;
     }
 
     /**
@@ -728,7 +741,8 @@ public class TimeUtils {
         long now = System.currentTimeMillis();
         long span = now - millis;
         if (span < 0) {
-            return String.format("%tc", millis);}// U can read http://www.apihome.cn/api/java/Formatter.html to understand it.
+            // U can read http://www.apihome.cn/api/java/Formatter.html to understand it.
+            return String.format("%tc", millis);}
             if (span < 1000) {
                 return "刚刚";
             } else if (span < TimeConstants.MIN) {
@@ -743,11 +757,31 @@ public class TimeUtils {
             } else if (millis >= wee - TimeConstants.DAY) {
                 return String.format("昨天%tR", millis);
             } else {
-                return String.format("%tF", millis);
+                return String.format("%tc", millis);
             }
-        }
-
         /**
+         * c，星期六 十月 27 14:21:20 CST 2007
+         F，2007-10-27
+         D，10/27/07
+         r，02:25:51 下午
+         T，14:28:16
+         R，14:28
+         b, 月份简称
+         B, 月份全称
+         a, 星期简称
+         A, 星期全称
+         C, 年前两位（不足两位补零）
+         y, 年后两位（不足两位补零）
+         j, 当年的第几天
+         m, 月份（不足两位补零）
+         d, 日期（不足两位补零）
+         e, 日期（不足两位不补零）
+
+         复制代码
+         */
+    }
+
+    /**
          * 获取与给定时间等于时间差的时间戳
          *
          * @param millis   给定时间
@@ -1617,7 +1651,7 @@ public class TimeUtils {
      *               </ul>
      * @return 以unit为单位的时间长度
      */
-    private static long millis2TimeSpan(long millis, @TimeConstants.Unit int unit) {
+    public static long millis2TimeSpan(long millis, @TimeConstants.Unit int unit) {
         return millis / unit;
     }
 

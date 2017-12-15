@@ -4,16 +4,17 @@ import android.content.Context;
 
 import com.example.qsys.yousi.CustomApplication;
 import com.example.qsys.yousi.R;
+import com.example.qsys.yousi.bean.BaseResponse;
 import com.example.qsys.yousi.common.Constant;
 import com.example.qsys.yousi.common.util.LogUtils;
 import com.example.qsys.yousi.common.util.NetworkUtils;
 import com.example.qsys.yousi.common.util.ToastUtils;
 import com.example.qsys.yousi.common.widget.LoadingDialog;
 import com.example.qsys.yousi.fragment.BaseView;
-import com.example.qsys.yousi.net.rx.exception.ServerException;
 
 import java.lang.ref.WeakReference;
 
+import retrofit2.HttpException;
 import rx.Subscriber;
 
 /**
@@ -75,52 +76,48 @@ public abstract class AbstractRxSubscriber<T> extends Subscriber<T> {
     public void onStart() {
         super.onStart();
         getBindView().showProgressView(true);
-        //on_Start();
-//6.0及6.0以上drawable indeterminateDrawable动画不起作用
-       /* if (showDialog) {
-            LoadingDialog.showDialogForLoading((Activity) mContext, msg, true);
-        }*/
     }
-
-
     @Override
     public void onNext(T t) {
+        getBindView().showProgressView(false);
+        if (t instanceof BaseResponse) {
+            //判断返回的数据在后台是否查询出错
+            if (((BaseResponse) t).getErrors() != null) {
+                ToastUtils.showLong((String) ((BaseResponse) t).getErrors());
+                getBindView().showEmptyViewByCode(Constant.SERVER_ERROR, (String) ((BaseResponse) t).getErrors());
+                LogUtils.d((String) ((BaseResponse) t).getErrors());
+                getBindView().showProgressView(false);
+                return;
+            }
+            // 返回内容 是否为空的代码 1 不为空 0 为空
+            if (((BaseResponse) t).getResultsNotNull() != Constant.NOT_NULL) {
+                getBindView().showEmptyViewByCode(Constant.NO_CONTENT, "");
+            }
+        }
         on_Next(t);
     }
-
     @Override
     public void onError(Throwable e) {
         getBindView().showProgressView(false);
-        LogUtils.d("网络错误。。。。。。。。" + e.getCause());
-       /* if (showDialog)
-            LoadingDialog.cancelDialogForLoading();*/
-        e.printStackTrace();
-        LogUtils.d(e.toString());
-        //网络
+        //网络没打开
         if (!NetworkUtils.isConnected()) {
-            // on_Error(CustomApplication.getAppContext().getString(R.string.no_net), Constant.NET_UNABLE);
-            getBindView().showEmptyViewByCode(Constant.NET_UNABLE);
+            getBindView().showEmptyViewByCode(Constant.NET_UNABLE,"");
             getBindView().showMessage(CustomApplication.getAppContext().getString(R.string.no_net));
+            return;
         }
-        //服务器
-        else if (e instanceof ServerException) {
-            // on_Error(e.getMessage(), Constant.SERVER_ERROR);
-            getBindView().showEmptyViewByCode(Constant.SERVER_ERROR);
-            getBindView().showMessage(e.getMessage());
+        // 网络错误
+        if (e instanceof HttpException) {
+            HttpException httpEx = (HttpException) e;
+            String responseMsg = httpEx.getMessage();
+            getBindView().showEmptyViewByCode(Constant.SERVER_UNREACH, "");
+            ToastUtils.showLong(CustomApplication.getAppContext().getResources().getString(R.string.error_server_msg, e.getMessage()));
+        } else {
+            // 其他错误
+            ToastUtils.showLong(e.getMessage());
+            LogUtils.d("非网络错误：" + e.getMessage());
 
-            ToastUtils.showShort(CustomApplication.getAppContext().getResources().getString(R.string.error_server_msg, e.getMessage()));
-
-
-        }
-        //其它
-        else {
-            // on_Error(CustomApplication.getAppContext().getString(R.string.net_error), Constant.UN_RECOGNICTION);
-            getBindView().showEmptyViewByCode(Constant.UN_RECOGNICTION);
-            //  getBindView().showMessage(CustomApplication.getAppContext().getString(R.string.net_error));
-            getBindView().showMessage(e.getMessage());
         }
 
-        getBindView().showProgressView(false);
     }
 
     /**
@@ -129,19 +126,5 @@ public abstract class AbstractRxSubscriber<T> extends Subscriber<T> {
      * @param t
      */
     protected abstract void on_Next(T t);
-
-    /**
-     * onError
-     *
-     * @param message
-     * @param requstCode
-     */
-    // protected abstract void on_Error(String message, int requstCode);
-
-    /**
-     * onStart
-     */
-    // protected abstract void on_Start();
-
 }
         

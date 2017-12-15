@@ -35,9 +35,9 @@ public class ActivityUtils {
     public static boolean isActivityExists(@NonNull final String packageName, @NonNull final String className) {
         Intent intent = new Intent();
         intent.setClassName(packageName, className);
-        return !(Utils.getContext().getPackageManager().resolveActivity(intent, 0) == null ||
-                intent.resolveActivity(Utils.getContext().getPackageManager()) == null ||
-                Utils.getContext().getPackageManager().queryIntentActivities(intent, 0).size() == 0);
+        return !(Utils.getApp().getPackageManager().resolveActivity(intent, 0) == null ||
+                intent.resolveActivity(Utils.getApp().getPackageManager()) == null ||
+                Utils.getApp().getPackageManager().queryIntentActivities(intent, 0).size() == 0);
     }
 
     /**
@@ -118,7 +118,7 @@ public class ActivityUtils {
      * @param cls 全类名
      */
     public static void startActivity(@NonNull final String pkg, @NonNull final String cls) {
-        startActivity(Utils.getContext(), null, pkg, cls, null);
+        startActivity(Utils.getApp(), null, pkg, cls, null);
     }
 
     /**
@@ -129,7 +129,7 @@ public class ActivityUtils {
      * @param cls    全类名
      */
     public static void startActivity(@NonNull final Bundle extras, @NonNull final String pkg, @NonNull final String cls) {
-        startActivity(Utils.getContext(), extras, pkg, cls, extras);
+        startActivity(Utils.getApp(), extras, pkg, cls, extras);
     }
 
     /**
@@ -140,7 +140,7 @@ public class ActivityUtils {
      * @param options 动画
      */
     public static void startActivity(@NonNull final String pkg, @NonNull final String cls, @NonNull final Bundle options) {
-        startActivity(Utils.getContext(), null, pkg, cls, options);
+        startActivity(Utils.getApp(), null, pkg, cls, options);
     }
 
     /**
@@ -152,7 +152,7 @@ public class ActivityUtils {
      * @param options 动画
      */
     public static void startActivity(@NonNull final Bundle extras, @NonNull final String pkg, @NonNull final String cls, @NonNull final Bundle options) {
-        startActivity(Utils.getContext(), extras, pkg, cls, options);
+        startActivity(Utils.getApp(), extras, pkg, cls, options);
     }
 
     private static void startActivity(Context context, Bundle extras, String pkg, String cls, Bundle options) {
@@ -179,7 +179,7 @@ public class ActivityUtils {
         Intent intent = new Intent(Intent.ACTION_MAIN, null);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        PackageManager pm = Utils.getContext().getPackageManager();
+        PackageManager pm = Utils.getApp().getPackageManager();
         List<ResolveInfo> info = pm.queryIntentActivities(intent, 0);
         for (ResolveInfo aInfo : info) {
             if (aInfo.activityInfo.packageName.equals(packageName)) {

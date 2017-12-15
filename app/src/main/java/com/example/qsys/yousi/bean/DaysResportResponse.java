@@ -1,5 +1,8 @@
 package com.example.qsys.yousi.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
@@ -26,7 +29,7 @@ public class DaysResportResponse extends BaseResponse {
         this.results = results;
     }
 
-    public static class ResultsBean {
+    public static class ResultsBean implements Parcelable {
         /**
          * id : 16
          * type : 1
@@ -56,6 +59,8 @@ public class DaysResportResponse extends BaseResponse {
         private String bgcolor;
         private String bgimgUrl;
         private int txtsize;
+        private long record_consume_start_time;
+        private long record_consume_end_time;
 
         public int getId() {
             return id;
@@ -145,7 +150,7 @@ public class DaysResportResponse extends BaseResponse {
             this.bgcolor = bgcolor;
         }
 
-        public Object getBgimgUrl() {
+        public String getBgimgUrl() {
             return bgimgUrl;
         }
 
@@ -160,5 +165,79 @@ public class DaysResportResponse extends BaseResponse {
         public void setTxtsize(int txtsize) {
             this.txtsize = txtsize;
         }
+
+        public long getRecord_consume_start_time() {
+            return record_consume_start_time;
+        }
+
+        public void setRecord_consume_start_time(long record_consume_start_time) {
+            this.record_consume_start_time = record_consume_start_time;
+        }
+
+        public long getRecord_consume_end_time() {
+            return record_consume_end_time;
+        }
+
+        public void setRecord_consume_end_time(long record_consume_end_time) {
+            this.record_consume_end_time = record_consume_end_time;
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(this.id);
+            dest.writeInt(this.type);
+            dest.writeString(this.content);
+            dest.writeString(this.title);
+            dest.writeString(this.uuid);
+            dest.writeValue(this.createtime);
+            dest.writeValue(this.updatetime);
+            dest.writeString(this.bookname);
+            dest.writeString(this.keywords);
+            dest.writeInt(this.userid);
+            dest.writeString(this.bgcolor);
+            dest.writeString(this.bgimgUrl);
+            dest.writeInt(this.txtsize);
+            dest.writeLong(this.record_consume_start_time);
+            dest.writeLong(this.record_consume_end_time);
+        }
+
+        public ResultsBean() {
+        }
+
+        protected ResultsBean(Parcel in) {
+            this.id = in.readInt();
+            this.type = in.readInt();
+            this.content = in.readString();
+            this.title = in.readString();
+            this.uuid = in.readString();
+            this.createtime = (Long) in.readValue(Long.class.getClassLoader());
+            this.updatetime = (Long) in.readValue(Long.class.getClassLoader());
+            this.bookname = in.readString();
+            this.keywords = in.readString();
+            this.userid = in.readInt();
+            this.bgcolor = in.readString();
+            this.bgimgUrl = in.readString();
+            this.txtsize = in.readInt();
+            this.record_consume_start_time = in.readLong();
+            this.record_consume_end_time = in.readLong();
+        }
+
+        public static final Parcelable.Creator<ResultsBean> CREATOR = new Parcelable.Creator<ResultsBean>() {
+            @Override
+            public ResultsBean createFromParcel(Parcel source) {
+                return new ResultsBean(source);
+            }
+
+            @Override
+            public ResultsBean[] newArray(int size) {
+                return new ResultsBean[size];
+            }
+        };
     }
+
 }

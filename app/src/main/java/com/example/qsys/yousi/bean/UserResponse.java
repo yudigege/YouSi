@@ -8,7 +8,8 @@ public class UserResponse extends BaseResponse{
 
 
     /**
-     * results : {"id":50,"gender":1,"mobile":"12345678","email":"邮编","avatar":"头像","job":"it","company":"公司","bio":"个人简介","blog":"博客地址","github":"wqeqwe","nickName":"都是","createTime":null,"updateTime":null,"realName":"真是名字"}
+     * results : {"id":50,"gender":1,"mobile":"12345678","email":"邮编","real_name":"真是名字","nick_name":"sdfdsdfad","avatar":"头像","job":"it","company":"公司","bio":"个人简介","blog":"博客地址","github":"wqeqwe","create_time":1506593273000,"update_time":1506593273000}
+     * errors : null
      */
 
     private ResultsBean results;
@@ -27,32 +28,32 @@ public class UserResponse extends BaseResponse{
          * gender : 1
          * mobile : 12345678
          * email : 邮编
+         * real_name : 真是名字
+         * nick_name : sdfdsdfad
          * avatar : 头像
          * job : it
          * company : 公司
          * bio : 个人简介
          * blog : 博客地址
          * github : wqeqwe
-         * nickName : 都是
-         * createTime : null
-         * updateTime : null
-         * realName : 真是名字
+         * create_time : 1506593273000
+         * update_time : 1506593273000
          */
 
         private int id;
         private int gender;
         private String mobile;
         private String email;
+        private String real_name;
+        private String nick_name;
         private String avatar;
         private String job;
         private String company;
         private String bio;
         private String blog;
         private String github;
-        private String nickName;
-        private Long createTime;
-        private Long updateTime;
-        private String realName;
+        private long create_time;
+        private long update_time;
 
         public int getId() {
             return id;
@@ -84,6 +85,22 @@ public class UserResponse extends BaseResponse{
 
         public void setEmail(String email) {
             this.email = email;
+        }
+
+        public String getReal_name() {
+            return real_name;
+        }
+
+        public void setReal_name(String real_name) {
+            this.real_name = real_name;
+        }
+
+        public String getNick_name() {
+            return nick_name;
+        }
+
+        public void setNick_name(String nick_name) {
+            this.nick_name = nick_name;
         }
 
         public String getAvatar() {
@@ -134,36 +151,20 @@ public class UserResponse extends BaseResponse{
             this.github = github;
         }
 
-        public String getNickName() {
-            return nickName;
+        public long getCreate_time() {
+            return create_time;
         }
 
-        public void setNickName(String nickName) {
-            this.nickName = nickName;
+        public void setCreate_time(long create_time) {
+            this.create_time = create_time;
         }
 
-        public Long getCreateTime() {
-            return createTime;
+        public long getUpdate_time() {
+            return update_time;
         }
 
-        public void setCreateTime(Long createTime) {
-            this.createTime = createTime;
-        }
-
-        public Long getUpdateTime() {
-            return updateTime;
-        }
-
-        public void setUpdateTime(Long updateTime) {
-            this.updateTime = updateTime;
-        }
-
-        public String getRealName() {
-            return realName;
-        }
-
-        public void setRealName(String realName) {
-            this.realName = realName;
+        public void setUpdate_time(long update_time) {
+            this.update_time = update_time;
         }
     }
 }

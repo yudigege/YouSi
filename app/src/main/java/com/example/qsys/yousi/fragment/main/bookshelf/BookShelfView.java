@@ -8,6 +8,11 @@ import com.example.qsys.yousi.fragment.BaseView;
 
 public interface BookShelfView extends BaseView {
 
-
-
+    /**
+     * 回调进度 和位置
+     * @param readLength
+     * @param countLength
+     * @param postion
+     */
+    void showLoadePercent(long readLength, long countLength,int postion);
 }
